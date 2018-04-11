@@ -1,0 +1,6 @@
+Uitleg probleem
+
+kaart maken voor visualisatie probleem; kritieke sporen rood, andere zwart
+score functie introduceren
+
+data structuur?

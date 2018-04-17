@@ -2,9 +2,6 @@
  * updat niet de hele tijd laten triggeren
 */
 
-
-
-
 // Google Map
 var map;
 var bounds;
@@ -65,36 +62,72 @@ $(function() {
         bounds = map.getBounds();
         ne = bounds.getNorthEast();
         sw = bounds.getSouthWest();
-        update();
-        connections();
+
+
+        // hier een if else statement die kiest welke update+connection je runt, gebaseerd op een value van eeparameter uit html
+        if (window.location.href=="https://ide50-barry-de-vries123.cs50.io:8080/nationaal"){
+            nederland()
+        } else{
+            holland()
+        }
     });
     // configure UI once Google Map is idle (i.e., loaded)
     google.maps.event.addListenerOnce(map, "idle", configure);
 
 });
 
+function nederland()
+{
+    update_nederland();
+    connections_nederland();
+}
+
+function holland()
+{
+    update_holland();
+    connections_holland();
+}
+
 /**
  * Adds marker for place to map.
  */
-function addMarker(place)
+function addMarker(station)
 {
     // initialize anchor for marker
-    var myLatLng = new google.maps.LatLng(place["latitude"], place["longitude"]);
+    var myLatLng = new google.maps.LatLng(station["latitude"], station["longitude"]);
+    var critical = station["critical"];
 
-    var icon = {
+    var icon_red = {
         url: '/static/red_dot.png',
         scaledSize: new google.maps.Size(10, 10),
         origin: new google.maps.Point(0, 0),
         anchor: new google.maps.Point(5, 5)
     }
 
-    // create marker
-    var marker = new google.maps.Marker({
-        title: place.name,
-        position: myLatLng,
-        icon: icon
-        });
-    marker.setMap(map);
+    var icon_blue = {
+        url: '/static/blue_dot.png',
+        scaledSize: new google.maps.Size(10, 10),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(5, 5)
+    }
+
+    if (critical == "Kritiek\n") {
+        // create marker
+        var marker = new google.maps.Marker({
+            title: station.name,
+            position: myLatLng,
+            icon: icon_red
+            });
+        marker.setMap(map);
+    } else {
+        // create marker
+        var marker = new google.maps.Marker({
+            title: station.name,
+            position: myLatLng,
+            icon: icon_blue
+            });
+        marker.setMap(map);
+    }
 
     // add marker to our list of markers
     markers.push(marker);
@@ -116,9 +149,9 @@ function configure()
 }
 
 /**
- * Updates UI's markers.
+ * Updates UI's markers for holland.
  */
-function update()
+function update_holland()
 {
     // get places within bounds (asynchronously)
     var parameters = {
@@ -127,7 +160,7 @@ function update()
         sw: sw.lat() + "," + sw.lng()
     };
 
-    $.getJSON(Flask.url_for("update"), parameters)
+    $.getJSON(Flask.url_for("update_holland"), parameters)
     .done(function(station_dict, textStatus, jqXHR) {
 
        // add new markers to map
@@ -142,7 +175,7 @@ function update()
     });
 };
 
-function connections()
+function connections_holland()
 {
     var parameters = {
         ne: ne.lat() + "," + ne.lng(),
@@ -150,7 +183,57 @@ function connections()
         sw: sw.lat() + "," + sw.lng()
     };
 
-    $.getJSON(Flask.url_for("connections"), parameters)
+    $.getJSON(Flask.url_for("connections_holland"), parameters)
+    .done(function(connection_dict, textStatus, jqXHR) {
+       // add new line to map
+       for (var i = 0; i < connection_dict.length; i++)
+       {
+           addLine(connection_dict[i]);
+       }
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+        // log error to browser's console
+        console.log(errorThrown.toString());
+    });
+}
+
+
+/**
+ * Updates UI's markers for nederland
+ */
+function update_nederland()
+{
+    // get places within bounds (asynchronously)
+    var parameters = {
+        ne: ne.lat() + "," + ne.lng(),
+        q: $("#q").val(),
+        sw: sw.lat() + "," + sw.lng()
+    };
+
+    $.getJSON(Flask.url_for("update_nederland"), parameters)
+    .done(function(station_dict, textStatus, jqXHR) {
+
+       // add new markers to map
+       for (var i = 0; i < station_dict.length; i++)
+       {
+           addMarker(station_dict[i]);
+       }
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+        // log error to browser's console
+        console.log(errorThrown.toString());
+    });
+};
+
+function connections_nederland()
+{
+    var parameters = {
+        ne: ne.lat() + "," + ne.lng(),
+        q: $("#q").val(),
+        sw: sw.lat() + "," + sw.lng()
+    };
+
+    $.getJSON(Flask.url_for("connections_nederland"), parameters)
     .done(function(connection_dict, textStatus, jqXHR) {
        // add new line to map
        for (var i = 0; i < connection_dict.length; i++)
@@ -165,14 +248,14 @@ function connections()
 }
 
 /**
- * Adds marker for place to map.
+ * Adds marker for station to map.
  */
-function addLine(place)
+function addLine(station)
 {
-    var lat1 = Number(place["latitude1"]);
-    var lng1 = Number(place["longitude1"]);
-    var lat2 = Number(place["latitude2"]);
-    var lng2 = Number(place["longitude2"]);
+    var lat1 = Number(station["latitude1"]);
+    var lng1 = Number(station["longitude1"]);
+    var lat2 = Number(station["latitude2"]);
+    var lng2 = Number(station["longitude2"]);
 
     // initialize anchor for marker
     var linePart =[

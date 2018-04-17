@@ -100,3 +100,5 @@ ENV/
 # mypy
 .mypy_cache/
 demo/.DS_Store
+
+.DS_Store

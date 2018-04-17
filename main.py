@@ -1,7 +1,7 @@
-from classes import Stations as st
-from classes import Connections as cs
-from classes import Route as rt
-from classes import Solution as sn
+from Classes import Stations as st
+from Classes import Connections as cs
+from Classes import Route as rt
+from Classes import Solution as sn
 import random
 
 connections = list()
@@ -12,7 +12,7 @@ def holland_main():
 def load_connections():
     """Loads the connections into the designated object."""
     connection_list = []
-    connections_file = open("original_files/ConnectiesHolland.csv")
+    connections_file = open("Data/ConnectiesHolland.csv")
     # Split line on comma and load in class
     for line in connections_file:
         obj = line.split(',')
@@ -22,7 +22,7 @@ def load_connections():
 def load_stations():
     """Loads the stations from the CSV file into the designated object."""
     station_list = []
-    station_file = open("original_files/StationsHolland.csv")
+    station_file = open("Data/StationsHolland.csv")
     # Determine cirtical stations and add to class
     for line in station_file:
         obj = line.split(',')

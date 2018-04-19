@@ -10,13 +10,14 @@ def load_connections():
 
 def load_stations():
     """Loads the stations from the CSV file into the designated object."""
+    connection_list = load_connections()
     station_list = []
     station_file = open("Data/StationsHolland.csv")
     # Determine cirtical stations and add to class
     for line in station_file:
         obj = line.split(',')
         if obj[3] == "Kritiek\n":
-            station = st.Stations(obj[0], obj[1], obj[2], True)
+            station = st.Stations(obj[0], obj[1], obj[2], True, connection_list)
             # Make list of critical stations
             station_list.append(station)
         else:

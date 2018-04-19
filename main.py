@@ -6,7 +6,6 @@ import random
 
 connections = list()
 def holland_main():
-    load_connections()
     load_stations()
 
 

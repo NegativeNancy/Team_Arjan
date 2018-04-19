@@ -4,5 +4,3 @@ class Connections(object):
         self.begin = begin
         self.end = end
         self.time = time
-
-    

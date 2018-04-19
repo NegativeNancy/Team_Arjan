@@ -1,5 +1,8 @@
+import /loading_files as loading_files
+
 class Stations(object):
-    def __init__(self, name, x, y, critical = False, connection_list):
+    loading_files.load_connections()
+    def __init__(self, name, x, y, critical = False):
         self.neighbor_list = []
         for connection in connection_list:
             if connection[0] == name:

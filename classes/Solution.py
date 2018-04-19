@@ -5,7 +5,7 @@ class Solution():
         """Initialise class."""
         self.solution_list = solution_list
 
-    def socre(self, p):
+    def score(self, p):
         """Compute score of solution."""
         # Compute time spent on rails
         self.min = 0
@@ -17,3 +17,7 @@ class Solution():
 
         # The actual function
         self.s = p*10000-(self.t*20+self.min/10)
+
+
+greedy function die ieder stap kprste spppr kiest
+if niet kan dan gewoon random stap.     

@@ -10,6 +10,7 @@ def load_connections():
 
 def load_stations():
     """Loads the stations from the CSV file into the designated object."""
+    .................0000
     connection_list = load_connections()
     station_list = []
     station_file = open("Data/StationsHolland.csv")

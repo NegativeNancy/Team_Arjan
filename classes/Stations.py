@@ -1,11 +1,11 @@
 class Stations(object):
     def __init__(self, name, x, y, critical = False, connection_list):
-        neighbor_list = []
+        self.neighbor_list = []
         for connection in connection_list:
             if connection[0] == name:
-                neighbor_list.append((connection[1], connection[2]))
+                self.neighbor_list.append((connection[1], connection[2]))
             elif connection[1] == name:
-                neighbor_list.append((connection[0], connection[2]))
+                self.neighbor_list.append((connection[0], connection[2]))
 
         self.name = name
         self.x = x

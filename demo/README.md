@@ -1,4 +1,10 @@
 # Team_Arjan
 
-To run this demo you will need to have a running flask setup.
-You can use pip with the requirements file to install the required librarys.
+### Prerequisites to run:
+
+The code has been written in python 3.6.5. 
+The requirements.txt file contains all necessary packages to run the code.
+Using pip, you can install those packages using:
+
+`pip install -r requirements.txt`
+

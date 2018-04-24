@@ -1,20 +1,10 @@
-import /loading_files as loading_files
-
 class Stations(object):
-    loading_files.load_connections()
-    def __init__(self, name, x, y, critical = False):
-        self.neighbor_list = []
-        for connection in connection_list:
-            if connection[0] == name:
-                self.neighbor_list.append((connection[1], connection[2]))
-            elif connection[1] == name:
-                self.neighbor_list.append((connection[0], connection[2]))
+    def __init__(self, name, critical = False):
 
         self.name = name
-        self.x = x
-        self.y = y
         self.critical = critical
-        self.neighbors = neighbor_list # de root van een linked list van neighbors
+        self.neighbors = []
+        self.been = False
 
     def critical_stations(self, station_list):
         """"Loops over stations and returns a list with all critical stations."""

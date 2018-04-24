@@ -1,15 +1,21 @@
 class Solution():
     """Class that holds possible solutions and computes their score."""
 
-    def __init__(self, solution_list):
+    def __init__(self, solution_list, station_dict):
         """Initialise class."""
         self.solution_list = solution_list
+        self.station_dict = station_dict
 
-    def score(self, p):
-        """Computes score of solution.
+    def score(self, number_of_all_critical_stations):
+        """Returns score of solution."""
+        self.number_critical_stations = 0
+        for key, value in station_dict:
+            if value.critical == True and value.been == True:
+                self.number_critical_stations += 1
 
-        Bereken p in score functie.
-        """
+        self.p = self.number_critical_stations / self.number_of_all_critical_stations * 100
+        
+
         # Compute time spent on rails
         self.min = 0
         for traject in self.solution_list:

@@ -4,6 +4,7 @@ class Stations(object):
         self.name = name
         self.critical = critical
         self.neighbors = []
+        self.been = False
 
     def critical_stations(self, station_list):
         """"Loops over stations and returns a list with all critical stations."""

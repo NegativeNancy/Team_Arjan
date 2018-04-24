@@ -23,13 +23,13 @@ def load_stations():
         obj = line.split(',')
 
         if (station_dict[obj[0]].critical == True or station_dict[obj[1]].critical == True):
-            station_dict[obj[0]].neighbors.append((obj[1], obj[2], True))
-            station_dict[obj[1]].neighbors.append((obj[0], obj[2], True))
+            station_dict[obj[0]].neighbors.append((obj[1], obj[2], True, False))
+            station_dict[obj[1]].neighbors.append((obj[0], obj[2], True, False))
 
 
         else:
-            station_dict[obj[0]].neighbors.append((obj[1], obj[2], False))
-            station_dict[obj[1]].neighbors.append((obj[0], obj[2], False))
+            station_dict[obj[0]].neighbors.append((obj[1], obj[2], False, False))
+            station_dict[obj[1]].neighbors.append((obj[0], obj[2], False, False))
 
     for key,value in station_dict.items():
         print(value.name, value.critical, value.neighbors)

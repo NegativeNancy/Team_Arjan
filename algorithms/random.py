@@ -1,5 +1,5 @@
 """
-We pogen een random solution te vinden.
+Create a random sollution.
 """
 
 from classes import Stations as st
@@ -8,8 +8,10 @@ from classes import Solution as sn
 import loading_files as lf
 import random as rd
 
+
 max_trains = 7
 max_minutes = 120
+
 
 def random():
     station_dict = loading_files.load_stations()
@@ -34,7 +36,7 @@ def random():
                 # add new step to route
                 connection_list.append(connection)
                 route.connection_list = connection_list
-            # if so, break jout of loop
+            # if so, break out of loop
             else:
                 break
 

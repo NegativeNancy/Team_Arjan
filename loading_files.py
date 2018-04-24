@@ -22,7 +22,8 @@ def load_stations():
     for line in connections_file:
         obj = line.split(',')
 
-        if (station_dict[obj[0]].critical == True or station_dict[obj[1]].critical == True):
+        if (station_dict[obj[0]].critical == True
+            or station_dict[obj[1]].critical == True):
             station_dict[obj[0]].neighbors.append((obj[1], obj[2], True, False))
             station_dict[obj[1]].neighbors.append((obj[0], obj[2], True, False))
 

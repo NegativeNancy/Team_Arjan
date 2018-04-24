@@ -64,8 +64,9 @@ $(function() {
         sw = bounds.getSouthWest();
 
 
-        // hier een if else statement die kiest welke update+connection je runt, gebaseerd op een value van eeparameter uit html
-        if (window.location.href=="https://ide50-barry-de-vries123.cs50.io:8080/nationaal"){
+        // hier een if else statement die kiest welke update+connection je runt,
+        // gebaseerd op een value van eeparameter uit html
+        if (window.location.href=="http://127.0.0.1:5000/nationaal"){
             nederland()
         } else{
             holland()

@@ -6,7 +6,10 @@ class Solution():
         self.solution_list = solution_list
 
     def score(self, p):
-        """Compute score of solution."""
+        """Computes score of solution.
+
+        Bereken p in score functie.
+        """
         # Compute time spent on rails
         self.min = 0
         for traject in self.solution_list:
@@ -19,5 +22,5 @@ class Solution():
         self.s = p*10000-(self.t*20+self.min/10)
 
 
-greedy function die ieder stap kprste spppr kiest
-if niet kan dan gewoon random stap.     
+# greedy function die ieder stap kprste spppr kiest
+# if niet kan dan gewoon random stap.

@@ -10,7 +10,7 @@ def load_stations():
     # Determine cirtical stations and add to class
     for line in station_file:
         obj = line.split(',')
-        if obj[3] == "Kritiek\n":
+        if obj[3] == "Kritiek\n" or obj[3] == "Kritiek\r\n":
             station = st.Stations(obj[0],  True)
             # Make list of critical stations
         else:
@@ -22,19 +22,17 @@ def load_stations():
     for line in connections_file:
         obj = line.split(',')
 
+        # Distinguish between critical neighbours and non-critical neighbours
         if (station_dict[obj[0]].critical == True
             or station_dict[obj[1]].critical == True):
             station_dict[obj[0]].neighbors.append((obj[1], obj[2], True, False))
             station_dict[obj[1]].neighbors.append((obj[0], obj[2], True, False))
 
-
         else:
             station_dict[obj[0]].neighbors.append((obj[1], obj[2], False, False))
             station_dict[obj[1]].neighbors.append((obj[0], obj[2], False, False))
 
-    for key,value in station_dict.items():
-        print(value.name, value.critical, value.neighbors)
-
+    return station_dict
 
 
 

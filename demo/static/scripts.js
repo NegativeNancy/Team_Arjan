@@ -64,8 +64,9 @@ $(function() {
         sw = bounds.getSouthWest();
 
 
-        // hier een if else statement die kiest welke update+connection je runt, gebaseerd op een value van eeparameter uit html
-        if (window.location.href=="https://ide50-barry-de-vries123.cs50.io:8080/nationaal"){
+        // hier een if else statement die kiest welke update+connection je runt,
+        // gebaseerd op een value van eeparameter uit html
+        if (window.location.href=="/nationaal"){
             nederland()
         } else{
             holland()
@@ -111,7 +112,7 @@ function addMarker(station)
         anchor: new google.maps.Point(5, 5)
     }
 
-    if (critical == "Kritiek\n") {
+    if (critical == "Kritiek\r\n" || critical = "Kritiek\n") {
         // create marker
         var marker = new google.maps.Marker({
             title: station.name,

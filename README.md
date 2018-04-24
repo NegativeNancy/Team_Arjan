@@ -2,16 +2,6 @@
 
 ***Heuristieken spring 2018.***
 
-## Running the program
-
-### Prerequisites to run:
-
-The code has been written in python 3.6.5. 
-The requirements.txt file contains all necessary packages to run the code.
-Using pip, you can install those packages using:
-
-`pip install -r requirements.txt`
-
 ### File structure:
 
 The files are structured in folders with names that describe their contents.

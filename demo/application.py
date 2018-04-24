@@ -30,12 +30,6 @@ def load_stations_holland():
     station_dict = list()
     for line in station_file:
         obj = line.split(',')
-        # if obj[3] == "Kritiek\n":
-        #     station = st.Stations(obj[0], obj[1], obj[2], True)
-        #     # Is dit wel een goed idee?
-        #     station_list.append(station)
-        # else:
-        #     station = st.Stations(obj[0], obj[1], obj[2])
 
         # Adding variabels to dictionary so it can be used in visualisation.
         station_dict.append({"name": obj[0], "latitude": obj[1],
@@ -64,12 +58,6 @@ def load_stations_nederland():
     station_dict = list()
     for line in station_file:
         obj = line.split(',')
-        # if obj[3] == "Kritiek\n":
-        #     station = st.Stations(obj[0], obj[1], obj[2], True)
-        #     # Is dit wel een goed idee?
-        #     station_list.append(station)
-        # else:
-        #     station = st.Stations(obj[0], obj[1], obj[2])
 
         # Adding variabels to dictionary so it can be used in visualisation.
         station_dict.append({"name": obj[0], "latitude": obj[1],
@@ -80,6 +68,7 @@ def load_stations_nederland():
 # configure application
 app = Flask(__name__)
 JSGlue(app)
+
 
 # ensure responses aren't cached
 if app.config["DEBUG"]:

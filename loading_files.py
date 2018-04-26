@@ -27,10 +27,10 @@ def load_stations():
         # Distinguish between critical neighbours and non-critical neighbours
         if (station_dict[obj[0]].critical is True
                 or station_dict[obj[1]].critical is True):
-            station_dict[obj[0]].neighbors.append((obj[1], obj[2], True, False))
-            station_dict[obj[1]].neighbors.append((obj[0], obj[2], True, False))
+            station_dict[obj[0]].neighbors.append([obj[1], obj[2], True, False])
+            station_dict[obj[1]].neighbors.append([obj[0], obj[2], True, False])
         else:
-            station_dict[obj[0]].neighbors.append((obj[1], obj[2], False, False))
-            station_dict[obj[1]].neighbors.append((obj[0], obj[2], False, False))
+            station_dict[obj[0]].neighbors.append([obj[1], obj[2], False, False])
+            station_dict[obj[1]].neighbors.append([obj[0], obj[2], False, False])
 
     return station_dict

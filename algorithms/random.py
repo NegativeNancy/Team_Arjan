@@ -5,7 +5,7 @@ Create a random sollution.
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
-import loading_files as lf
+import loading_files as load
 import random as rd
 
 
@@ -14,7 +14,7 @@ max_minutes = 120
 
 
 def random():
-    station_dict = lf.load_stations()
+    station_dict = load.load_stations()
     route_list = []
     station_dict_key_list = []
 
@@ -32,9 +32,9 @@ def random():
             # check wheter route won't be longer then allowed
             if next_station[1] + route.time() < max_minutes:
                 for neighbor in station_dict[current_station].neighbors :
-                    if neighbor[0] == next_station:
+                    if neighbor[0] == next_station[0]:
                         neighbor[3] = True
-                for neighbor in station_dict[next_station].neighbors:
+                for neighbor in station_dict[next_station[0]].neighbors:
                     if neighbor[0] == current_station:
                         neighbor[3] = True
 

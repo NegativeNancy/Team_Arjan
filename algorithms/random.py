@@ -54,7 +54,8 @@ def random():
 
     solution = sn.Solution(route_list, station_dict)
 
-    for i in range(max_trains):
-        print(solution.solution_list[i].connection_list)
+    # for i in range(max_trains):
+    #     print(solution.solution_list[i].connection_list)
+    #     print("\n")
 
     return solution, station_dict

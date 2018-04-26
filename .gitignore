@@ -102,3 +102,4 @@ ENV/
 demo/.DS_Store
 
 .DS_Store
+main.py

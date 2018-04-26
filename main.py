@@ -12,8 +12,8 @@ import random
 def main():
     # connections = list()
     # station_list = holland_main()
-    solution = random_alg()
-    print(solution)
+    solution,station_dict = random_alg()
+    print(solution.score())
 
 
 def holland_main():

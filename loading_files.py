@@ -19,6 +19,8 @@ def load_stations():
 
         station_dict[obj[0]] = station
 
+    station_file.close()
+
     connections_file = open("Data/ConnectiesHolland.csv")
     for line in connections_file:
         obj = line.split(',')
@@ -33,4 +35,5 @@ def load_stations():
             station_dict[obj[0]].neighbors.append([obj[1], obj[2], False, False])
             station_dict[obj[1]].neighbors.append([obj[0], obj[2], False, False])
 
+    connections_file.close()
     return station_dict

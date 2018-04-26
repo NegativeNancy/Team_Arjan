@@ -10,4 +10,3 @@ class Route():
         for connection in self.connection_list:
             time += connection["time"]
         return time
-z

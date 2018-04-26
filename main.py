@@ -13,7 +13,7 @@ def main():
     # connections = list()
     # station_list = holland_main()
     solution = random_alg()
-    print(solution.solution_list)
+    print(solution)
 
 
 def holland_main():
@@ -21,7 +21,7 @@ def holland_main():
 
 
 def random_alg():
-    ra.random()
+    return ra.random()
 
 if __name__ == "__main__":
     main()

@@ -27,9 +27,6 @@ def random():
         current_station = rd.choice(station_dict_key_list)
 
         while True:
-            print(max_trains)
-            # print(route.time())
-            # select next station
             next_station = rd.choice(station_dict[current_station].neighbors)
 
             # check wheter route won't be longer then allowed
@@ -40,7 +37,6 @@ def random():
                 # add new step to route
                 connection_list.append(connection)
                 route.connection_list = connection_list
-                print(route.connection_list)
             # if so, break out of loop
             else:
                 break
@@ -49,5 +45,8 @@ def random():
         route_list.append(route)
 
     solution = sn.Solution(route_list, station_dict)
+
+    for i in range(max_trains):
+        print(solution.solution_list[i].connection_list)
 
     return solution

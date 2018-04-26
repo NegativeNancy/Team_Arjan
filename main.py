@@ -5,14 +5,13 @@ from classes import Route as rt
 from classes import Solution as sn
 from algorithms import random as ra
 import loading_files as load
-import random, sys, getopt
-
-
+import random, sys, getopt, csv, os.path, datetime
 
 def main(argv):
 
     time = 0
     algo = ''
+    score = 0
 
     try:
         opts, args = getopt.getopt(argv,"ht:a",["times=", "algorithm="])
@@ -30,9 +29,27 @@ def main(argv):
             algo = arg
 
     if times > 0:
-        for i in range(times): 
-            solution,station_dict = random_alg()
-            print(solution.score())
+        folder_output = "data/scores"
+        filename = datetime.datetime.now().strftime("scores__%d-%m-%Y_%I:%M:%S.csv")
+
+        outfile = os.path.join(folder_output, filename)
+
+        with open(outfile, 'w', newline='') as csvfile:
+            spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+ 
+            for i in range(times): 
+                solution,station_dict = random_alg()
+                temp = solution.score()
+                spamwriter.writerow([temp])
+
+                if score < temp:
+                    score = temp
+                    print(score)
+
+
+        print("\n")
+        print("Times runned: ", times)
+        print("Highst score: ", score)
     else:
         solution,station_dict = random_alg()
         print(solution.score())
@@ -48,3 +65,5 @@ def random_alg():
 
 if __name__ == "__main__":
     main(sys.argv[1:])
+
+   

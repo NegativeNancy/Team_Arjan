@@ -11,7 +11,7 @@ def load_stations():
     for line in station_file:
         obj = line.split(',')
 
-        # Make list of stations ans specify if station is critical
+        # Make list of stations and specify if station is critical
         if obj[3] == "Kritiek\n" or obj[3] == "Kritiek\r\n":
             station = st.Stations(obj[0],  True)
         else:

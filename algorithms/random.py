@@ -14,22 +14,25 @@ max_minutes = 120
 
 
 def random():
-    station_dict = loading_files.load_stations()
+    station_dict = lf.load_stations()
     route_list = []
+    station_dict_key_list = []
+
+    for key in station_dict:
+        station_dict_key_list.append(key)
 
     for i in range(max_trains):
         connection_list = []
         route = rt.Route(connection_list)
-        current_station = rd.choice(station_dict.key())
+        current_station = rd.choice(station_dict_key_list)
 
         while True:
 
             # select next station
-            random_int = rd.randomint(length(station_dict[current_station].neighbors))
-            next_station = station_dict[current_station].neighbors[random_next]
+            next_station = rd.choice(station_dict[current_station].neighbors)
 
             # check wheter route won't be longer then allowed
-            if next_station + route.time < max_minutes:
+            if next_station[1] + route.time() < max_minutes:
                 connection = [current_station, next_station[0], next_station[1]]
 
                 current_station = next_station[0]

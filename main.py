@@ -10,9 +10,10 @@ import random
 
 
 def main():
-    connections = list()
-    station_list = holland_main()
-    random_alg()
+    # connections = list()
+    # station_list = holland_main()
+    solution = random_alg()
+    print(solution)
 
 
 def holland_main():
@@ -21,3 +22,6 @@ def holland_main():
 
 def random_alg():
     ra.random()
+
+if __name__ == "__main__":
+    main()

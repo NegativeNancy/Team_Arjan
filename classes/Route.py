@@ -5,7 +5,7 @@ class Route():
         """Initialise class."""
         self.connection_list = connection_list
 
-    def time(self, connection_list):
+    def time(self):
         self.time = 0
         for connection in self.connection_list:
             self.time += connection[time]

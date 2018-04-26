@@ -4,24 +4,52 @@ from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
 from algorithms import random as ra
-import loading_files as lf
-import random
+import loading_files as load
+import random, sys, getopt
 
 
 
-def main():
+def main(argv):
     # connections = list()
     # station_list = holland_main()
-    solution = random_alg()
-    print(solution)
+
+    time = 0
+    algo = ''
+    try:
+        opts, args = getopt.getopt(argv,"ht:a",["times=", "algorithm="])
+    except getopt.GetoptError:
+        print ('Use main.py -h to view all possible arguments')
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt == '-h':
+            print ('main.py -t or --times = <times to run>, -a or --algorithm \
+                == <algorithm to run>')
+        elif opt in ("-t", "--times"):
+            times = int(arg)
+        elif opt in ("-a", "--algorithm"):
+            algo = arg
+
+    if times > 0:
+        for i in range(times): 
+            solution = random_alg()
+            print(solution)
+    else:
+        solution = random_alg()
+        print(solution)
+
+
+    sys.exit(1)
+
 
 
 def holland_main():
-    lf.load_stations()
+    load.load_stations()
 
 
 def random_alg():
     return ra.random()
+    
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

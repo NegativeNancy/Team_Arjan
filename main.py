@@ -5,7 +5,7 @@ from classes import Route as rt
 from classes import Solution as sn
 from algorithms import random as ra
 import loading_files as load
-import random, sys, getopt, csv, os.path, datetime
+import random, sys, getopt, csv, os, os.path, datetime
 
 def main(argv):
 
@@ -29,8 +29,8 @@ def main(argv):
             algo = arg
 
     if times > 0:
-        folder_output = "data/scores"
-        filename = datetime.datetime.now().strftime("scores__%d-%m-%Y_%I:%M:%S.csv")
+        folder_output = "./data/scores/"
+        filename = datetime.datetime.now().strftime("scores__%Y-%m-%d__%I%M%S.csv")
 
         outfile = os.path.join(folder_output, filename)
 

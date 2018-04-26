@@ -6,7 +6,8 @@ class Route():
         self.connection_list = connection_list
 
     def time(self):
-        self.time = 0
+        time = 0
         for connection in self.connection_list:
-            self.time += connection[time]
-        return self.time
+            time += connection["time"]
+        return time
+z

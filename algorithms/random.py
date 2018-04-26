@@ -31,6 +31,14 @@ def random():
 
             # check wheter route won't be longer then allowed
             if next_station[1] + route.time() < max_minutes:
+                for neighbor in station_dict[current_station].neighbors :
+                    if neighbor[0] == next_station[0]:
+                        neighbor[3] = True
+                for neighbor in station_dict[next_station[0]].neighbors:
+                    if neighbor[0] == current_station:
+                        neighbor[3] = True
+
+
                 connection = {"begin": current_station, "end":next_station[0], "time":next_station[1]}
 
                 current_station = next_station[0]
@@ -50,4 +58,4 @@ def random():
         print(solution.solution_list[i].connection_list)
         print("\n")
 
-    return solution
+    return solution, station_dict

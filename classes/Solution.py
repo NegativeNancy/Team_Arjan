@@ -6,26 +6,32 @@ class Solution():
         self.solution_list = solution_list
         self.station_dict = station_dict
 
-    def score(self, number_of_all_critical_stations):
+    def score(self):
         """Returns score of solution."""
-        self.number_critical_stations = 0
-        for key, value in station_dict:
-            if value.critical == True and value.been == True:
-                self.number_critical_stations += 1
 
-        self.p = self.number_critical_stations / self.number_of_all_critical_stations * 100
-        
+        number_critical_stations = 0
+        number_of_all_critical_stations = 0
+        for key in self.station_dict:
+            for route in self.station_dict[key].neighbors:
+                if route[2] == True and route[3] == True:
+                    number_critical_stations += 1
+                if route[2] == True:
+                    number_of_all_critical_stations += 1
+
+        p = number_critical_stations / number_of_all_critical_stations
 
         # Compute time spent on rails
-        self.min = 0
-        for traject in self.solution_list:
-            self.min += traject.time
+        min = 0
+        for route in self.solution_list:
+            min += route.time()
 
         # Routes used in solution equals length of solution list
-        self.t = len(self.solution_list)
+        t = len(self.solution_list)
 
         # The actual function
-        self.s = p*10000-(self.t*20+self.min/10)
+        score = p*10000-(t*20+min/10)
+
+        return score
 
 
 # greedy function die ieder stap kprste spppr kiest

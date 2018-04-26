@@ -10,11 +10,10 @@ import random, sys, getopt
 
 
 def main(argv):
-    # connections = list()
-    # station_list = holland_main()
 
     time = 0
     algo = ''
+
     try:
         opts, args = getopt.getopt(argv,"ht:a",["times=", "algorithm="])
     except getopt.GetoptError:
@@ -32,15 +31,11 @@ def main(argv):
 
     if times > 0:
         for i in range(times): 
-            solution = random_alg()
-            print(solution)
+            solution,station_dict = random_alg()
+            print(solution.score())
     else:
-        solution = random_alg()
-        print(solution)
-
-
-    sys.exit(1)
-
+        solution,station_dict = random_alg()
+        print(solution.score())
 
 
 def holland_main():

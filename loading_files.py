@@ -22,6 +22,7 @@ def load_stations():
     connections_file = open("Data/ConnectiesHolland.csv")
     for line in connections_file:
         obj = line.split(',')
+        obj[2] = obj[2].replace(" ", "")
 
         # Distinguish between critical neighbours and non-critical neighbours
         if (station_dict[obj[0]].critical is True

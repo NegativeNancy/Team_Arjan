@@ -30,6 +30,7 @@ def random():
 
             # select next station
             next_station = rd.choice(station_dict[current_station].neighbors)
+            print(max_trains)
 
             # check wheter route won't be longer then allowed
             if next_station[1] + route.time() < max_minutes:

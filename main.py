@@ -4,17 +4,19 @@ from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
 from algorithms import random as ra
+import testplotlib as pd
 import loading_files as load
-import random, sys, getopt, csv, os, os.path, datetime
+import random, sys, getopt, csv, os, os.path, datetime, time
 
 def main(argv):
 
-    time = 0
+    start_time = time.time()
     algo = ''
+    visual = False;
     score = 0
 
     try:
-        opts, args = getopt.getopt(argv,"ht:a",["times=", "algorithm="])
+        opts, args = getopt.getopt(argv,"ht:a:v",["times=", "algorithm=", "visual="])
     except getopt.GetoptError:
         print ('Use main.py -h to view all possible arguments')
         sys.exit(2)
@@ -27,6 +29,8 @@ def main(argv):
             times = int(arg)
         elif opt in ("-a", "--algorithm"):
             algo = arg
+        elif opt in ("-v", "--visual"):
+            visual = True;
 
     if times > 0:
         folder_output = "./data/scores/"
@@ -46,13 +50,14 @@ def main(argv):
                     score = temp
                     print(score)
 
-
-        print("\n")
-        print("Times runned: ", times)
-        print("Highst score: ", score)
+        run_time = time.time() - start_time
+        
+        print_score(run_time, times, score, outfile, visual)
+        exit(1)
     else:
         solution,station_dict = random_alg()
-        print(solution.score())
+        print_score(run_time, times, score, outfile)
+        exit(1)
 
 
 def holland_main():
@@ -61,6 +66,21 @@ def holland_main():
 
 def random_alg():
     return ra.random()
+
+
+def create_visual(filename):
+    pd.plot_data(filename)
+
+
+def print_score(run_time, times_run, score, outfile, visual):
+    print("\n")
+    print("Time to run: ", run_time)
+
+    if (visual):
+        create_visual(outfile)
+
+    print("Times runned: ", times_run)
+    print("Highst score: ", score)
     
 
 if __name__ == "__main__":

@@ -13,7 +13,6 @@ def plot_data(file_name):
     """
     with open(file_name) as file:
         values = []
-        print("one")
         x = []
         count = 0
         for line in file:
@@ -41,8 +40,6 @@ def plot_data(file_name):
     #     new_y.append(new_val)
     # print(new_y)
     # print(new_x)
-    plt.bar(new_x, sorted(new_y), color="rebeccapurple", align="center")
-    plt.ylabel('score')
-    plt.show()
-
-plot_data("data/scores/scores__26-04-2018_03_25_56.csv")
+    # plt.bar(new_x, sorted(new_y), color="rebeccapurple", align="center")
+    # plt.ylabel('score')
+    # plt.show()

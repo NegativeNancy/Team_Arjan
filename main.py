@@ -1,14 +1,18 @@
-"""RailNL optimal route finder"""
-
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
 from algorithms import random as ra
-import testplotlib as pd
+import plot_data as pd
 import loading_files as load
 import random, sys, getopt, csv, os, os.path, datetime, time
 
 def main(argv):
+    """ Main function calling all algorithms.
+
+    Args:
+        args: Command-line argument that determines which algortihm
+            should be called. Can include prompt for visualisation.
+    """
 
     start_time = time.time()
     algo = ''
@@ -41,9 +45,9 @@ def main(argv):
 
         with open(outfile, 'w', newline='') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
- 
-            for i in range(times): 
-                solution,station_dict = random_alg()
+
+            for i in range(times):
+                solution,station_dict = random_alg(7, 120)
                 temp = solution.score()
                 spamwriter.writerow([temp])
 
@@ -52,39 +56,56 @@ def main(argv):
                     print(score)
 
         run_time = time.time() - start_time
-        
+
         print_score(run_time, times, score, outfile, visual)
         exit(1)
     else:
-        solution,station_dict = random_alg()
+        solution,station_dict = random_alg(7, 120)
         print_score(run_time, times, score, outfile)
         exit(1)
 
 
 def holland_main():
+    """ Load stations. """
     load.load_stations()
 
 
-def random_alg():
-    return ra.random()
+def random_alg(max_trains, max_minutes):
+    """ Random solution.
+
+    Returns:
+        A random solution.
+    """
+    return ra.random(max_trains, max_minutes)
 
 
 def create_visual(filename):
+    """ Create plot from data.
+
+    Args:
+        filename: Datafile to plot data from.
+    """
     pd.plot_data(filename)
 
 
-def print_score(run_time, times_run, score, outfile, visual):
-    print("\n")
-    print("Time to run: ", run_time)
+def print_score(run_time, times_ran, score, outfile, visual):
+    """ Prints score of solution.
 
-    if (visual):
+    Args:
+        run_time: Amount of times algortihm should be run.
+        times_run: Times algorithm has ran.
+        score: Score of solution.
+        outfile: Outfile to write data to.
+        visual: Boolean determining whether to visualise the data.
+    """
+    print("\n Time to run: ", run_time)
+
+    if visual:
         create_visual(outfile)
 
-    print("Times runned: ", times_run)
-    print("Highst score: ", score)
-    
+    print("Times ran: ", times_ran)
+    print("Highest score: ", score)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-
-   

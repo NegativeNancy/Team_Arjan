@@ -12,8 +12,9 @@ def main(argv):
 
     start_time = time.time()
     algo = ''
-    visual = False;
+    visual = False
     score = 0
+    times = 0
 
     try:
         opts, args = getopt.getopt(argv,"ht:a:v",["times=", "algorithm=", "visual="])

@@ -19,6 +19,8 @@ def main(argv):
     visual = False
     score = 0
     times = 0
+    outfile = 0
+    visual = 0
 
     try:
         opts, args = getopt.getopt(argv,"ht:a:v",["times=", "algorithm=", "visual="])
@@ -30,6 +32,7 @@ def main(argv):
         if opt == '-h':
             print ('main.py -t or --times = <times to run>, -a or --algorithm \
                 == <algorithm to run>')
+            exit(1)
         elif opt in ("-t", "--times"):
             times = int(arg)
         elif opt in ("-a", "--algorithm"):
@@ -61,7 +64,8 @@ def main(argv):
         exit(1)
     else:
         solution,station_dict = random_alg(7, 120)
-        print_score(run_time, times, score, outfile)
+        run_time = time.time() - start_time
+        print_score(run_time, times, score, outfile, visual)
         exit(1)
 
 
@@ -98,7 +102,7 @@ def print_score(run_time, times_ran, score, outfile, visual):
         outfile: Outfile to write data to.
         visual: Boolean determining whether to visualise the data.
     """
-    print("\n Time to run: ", run_time)
+    print("\nTime to run: ", run_time)
 
     if visual:
         create_visual(outfile)

@@ -2,11 +2,16 @@ from classes import Stations as st
 
 
 def load_stations():
-    """Loads the stations from the CSV file into the designated object.
-    Also load in the connections ad neighbors to each station."""
+    """ Loads data from files and makes objects out of the data.
+
+    Returns:
+        A dictionary with the station as key and the neighbours as properties.
+
+    """
 
     station_dict = {}
     station_file = open("data/StationsHolland.csv")
+
     # Determine cirtical stations and add to class
     for line in station_file:
         obj = line.split(',')

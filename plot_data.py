@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 def plot_data(file_name):
     """Plots the scores from the found solutions.
 
-    Parameters:
-    Takes one parameter, name of the fileself.
+    Args:
+        file_name: Datafile to plot from.
 
     Returns:
-    Two line plots, one sorted, one not sorted. And one bar chart, sorted..
+        Two line plots, one sorted, one not sorted. And one bar chart, sorted.
     """
     with open(file_name) as file:
         values = []

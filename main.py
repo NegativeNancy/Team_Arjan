@@ -30,8 +30,7 @@ def main(argv):
 
     required = parser.add_argument_group('Required argument')
     required.add_argument('-a', '--algorithm', action='store', dest="algorithm",
-        choices=['random', 'greedy'], 
-        help="specify which algorithm to run - default: random")
+        choices=['random', 'greedy'], required=True, help="specify which algorithm to run")
 
     optional = parser.add_argument_group('Optional arguments')
     
@@ -53,7 +52,6 @@ def main(argv):
     algo = args.algorithm
     score = 0
     outfile = 0
-    solution,stations_dict = 0
 
     # Create filename to save scores in.
     folder_output = "./data/scores/"
@@ -71,7 +69,8 @@ def main(argv):
             elif (algo == 'random'):
                 solution,station_dict = random_alg(7, 120)
             else:
-                print("Ypu mother focker")
+                print("You mother forker")
+                exit()
             
             temp = solution.score()
             spamwriter.writerow([temp])
@@ -84,7 +83,7 @@ def main(argv):
 
     print_score(run_time, times, score, outfile, visual, store)
 
-    if (store == True):
+    if (store != True):
         os.remove(outfile)
 
     exit(1)

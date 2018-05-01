@@ -66,11 +66,11 @@ def greedy(max_trains, max_minutes):
         print(end_station)
 
         index = 0
-        best_index = 0
+        best_index = 0 # while loop om hele route te creëren
         been = False
-        current_station = begin_station
-        next_station = end_station
-        for neighbor in station_dict[current_station].neighbors:
+        current_station = begin_station # ik denk dat deze twee statements niet nodig zijn
+        next_station = end_station      # verder kun je gelijk de eerste connectie appenden.
+        for neighbor in station_dict[current_station].neighbors: # twee keer doen voor begin en eind station (functie van maken?)
             # Determine closest critical neighbor that has not been explored
             if neighbor[1] < best_time and neighbor[2] and not neighbor[3]:
                 best_time = neighbor[1]
@@ -90,14 +90,14 @@ def greedy(max_trains, max_minutes):
 
 
 
-            connection = {"begin": station_dict[current_station].name, "end": next_station[0], "time": next_station[1]}
-            print(connection)
-            current_station = next_station[0]
-
+            connection = {"begin": station_dict[current_station].name, "end": next_station[0], "time": next_station[1]} # dit blok tot 99 wil je terug indenten
+            print(connection)                                                                                           # zodat je pas nadat je de beste connectie vind, die connectie append
+            current_station = next_station[0]                                                                           # vergeet ook niet om de verbindingen (twee keer) op gebruikt te zetten
+                                                                                                                        # dit misschien ook in een functie gooien
             # Add new step to route
             connection_list.append(connection)
             route.connection_list = connection_list
-        route_list.append(route)
+        route_list.append(route) # dit meot na de while loop staan, dus als je je hele route hebt gemaakt.
 
     solution = sn.Solution(route_list, station_dict)
 

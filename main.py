@@ -2,6 +2,7 @@ from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
 from algorithms import random as ra
+from algorithms import greedy_algorithm as ga
 import plot_data as pd
 import loading_files as load
 import random, sys, getopt, csv, os, os.path, datetime, time, argparse
@@ -22,6 +23,7 @@ def main(argv):
             store the results.
     """
 
+    # Store start time of program.
     start_time = time.time()
 
     parser = MyParser(description='RailNL Discription!', add_help=False)
@@ -31,16 +33,16 @@ def main(argv):
     #     required=True, help="specify which algorithm to run")
 
     optional = parser.add_argument_group('Optional arguments')
-    # optional.add_argument('-a', '--algorithm', action='store', dest="algorithm",
-    #     help="specify which algorithm to run")
+    optional.add_argument('-a', '--algorithm', action='store', dest="algorithm",
+        default='random', help="specify which algorithm to run default: random")
     optional.add_argument("-h", "--help", action="help",
         help="show this help message and exit")
     optional.add_argument('-s', '--store', action='store_true', 
-        help="store the results in a .scv file")
+        help="store the results in a .scv file\n default: false")
     optional.add_argument('-t', '--times', action='store', type=int, nargs='?',
-        const=0, default=1, help="specify how many times to run", )
+        const=0, default=1, help="specify how many times to run\n default: 1", )
     optional.add_argument('-v', '--visual', action='store_true', 
-        help="create visual of the results")
+        help="create visual of the results\n default: false")
     optional.add_argument('--version', action='version', version='%(prog)s 0.1')
 
     args = parser.parse_args()
@@ -48,19 +50,27 @@ def main(argv):
     visual = args.visual
     times = args.times
     store = args.store
+    algo = args.algorithm
     score = 0
     outfile = 0
+    solution,stations_dict = None
 
+    # Create filename to save scores in.
     folder_output = "./data/scores/"
     filename = datetime.datetime.now().strftime("scores__%Y-%m-%d__%I%M%S.csv")
-
     outfile = os.path.join(folder_output, filename)
 
+    # Open file and create writer to enter score in to the file.
     with open(outfile, 'w', newline='') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|',
+            quoting=csv.QUOTE_MINIMAL)
 
         for i in range(times):
-            solution,station_dict = random_alg(7, 120)
+            # if (algo == 'greedy'):
+            #     solution,station_dict = greedy_alg(7, 120)
+            # else:
+            #     solution,station_dict = random_alg(7, 120)
+            
             temp = solution.score()
             spamwriter.writerow([temp])
 
@@ -89,6 +99,15 @@ def random_alg(max_trains, max_minutes):
         A random solution.
     """
     return ra.random(max_trains, max_minutes)
+
+
+def greedy_alg(max_trains, max_minutes):
+    """ Greedy solution.
+
+    Returns:
+        A Greedy solution.
+    """
+    return ga.greedy(max_trains, max_minutes)
 
 
 def create_visual(filename):

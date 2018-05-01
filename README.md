@@ -24,6 +24,8 @@ The following arguments can be given:
 
 `-v` or `--visual` 		- Create visualization
 
+`-s` or `--save` 		- Save the output in an .csv file
+
 To run the visual you will need to run the following command first:
 
 `pip install -r requirements.txt`

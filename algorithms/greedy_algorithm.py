@@ -39,7 +39,6 @@ def greedy(max_trains, max_minutes):
         # Variables for greedy algorithm
         connection_list = []
         route = rt.Route(connection_list)
-        current_station = rd.choice(station_dict_key_list)
 
         # Arbitrarally chosen time, might need improvement
         best_time = 1000
@@ -69,7 +68,8 @@ def greedy(max_trains, max_minutes):
         index = 0
         best_index = 0
         been = False
-        next_station = current_station
+        current_station = begin_station
+        next_station = end_station
         for neighbor in station_dict[current_station].neighbors:
             # Determine closest critical neighbor that has not been explored
             if neighbor[1] < best_time and neighbor[2] and not neighbor[3]:
@@ -95,6 +95,3 @@ def greedy(max_trains, max_minutes):
             # Add new step to route
             connection_list.append(connection)
             route.connection_list = connection_list
-
-
-greedy(7, 120)

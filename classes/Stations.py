@@ -13,11 +13,12 @@ class Stations(object):
         """Appends station to neighbor list.
 
         Args:
-        name: A string with the name of the neighbor.
-        travel_time: Integer with traveltime from origin to neighbor.
-        critical: Boolean which is true if the origin or neighbor is
+            name: A string with the name of the neighbor.
+            travel_time: Integer with traveltime from origin to neighbor.
+            critical: Boolean which is true if the origin or neighbor is
                   a critical station.
-        Finally the neighbor gets another boolean to keep track of its
+                  
+        Finally, the neighbor gets another boolean to keep track of its
         usage in the current solutionself.
         """
 

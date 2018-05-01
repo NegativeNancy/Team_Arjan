@@ -24,8 +24,9 @@ The following arguments can be given:
 
 `-v` or `--visual` 		- Create visualization
 
-<!--ToDo-->
-<!--Create list of command-line options-->
+To run the visual you will need to run the following command first:
+
+`pip install -r requirements.txt`
  
 ## Authors:
 Ivo den Hertog, Emma Hokken, and Barry de Vries.

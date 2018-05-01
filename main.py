@@ -28,21 +28,21 @@ def main(argv):
 
     parser = MyParser(description='RailNL Discription!', add_help=False)
 
-    # required = parser.add_argument_group('Required argument')
-    # required.add_argument('-a', '--algorithm', action='store', dest="algorithm",
-    #     required=True, help="specify which algorithm to run")
+    required = parser.add_argument_group('Required argument')
+    required.add_argument('-a', '--algorithm', action='store', dest="algorithm",
+        choices=['random', 'greedy'], 
+        help="specify which algorithm to run - default: random")
 
     optional = parser.add_argument_group('Optional arguments')
-    optional.add_argument('-a', '--algorithm', action='store', dest="algorithm",
-        default='random', help="specify which algorithm to run default: random")
+    
     optional.add_argument("-h", "--help", action="help",
         help="show this help message and exit")
     optional.add_argument('-s', '--store', action='store_true', 
-        help="store the results in a .scv file\n default: false")
+        help="store the results in a .scv file - default: false")
     optional.add_argument('-t', '--times', action='store', type=int, nargs='?',
-        const=0, default=1, help="specify how many times to run\n default: 1", )
+        const=0, default=1, help="specify how many times to run - default: 1", )
     optional.add_argument('-v', '--visual', action='store_true', 
-        help="create visual of the results\n default: false")
+        help="create visual of the results - default: false")
     optional.add_argument('--version', action='version', version='%(prog)s 0.1')
 
     args = parser.parse_args()
@@ -53,7 +53,7 @@ def main(argv):
     algo = args.algorithm
     score = 0
     outfile = 0
-    solution,stations_dict = None
+    solution,stations_dict = 0
 
     # Create filename to save scores in.
     folder_output = "./data/scores/"
@@ -66,10 +66,12 @@ def main(argv):
             quoting=csv.QUOTE_MINIMAL)
 
         for i in range(times):
-            # if (algo == 'greedy'):
-            #     solution,station_dict = greedy_alg(7, 120)
-            # else:
-            #     solution,station_dict = random_alg(7, 120)
+            if (algo == 'greedy'):
+                solution,station_dict = greedy_alg(7, 120)
+            elif (algo == 'random'):
+                solution,station_dict = random_alg(7, 120)
+            else:
+                print("Ypu mother focker")
             
             temp = solution.score()
             spamwriter.writerow([temp])

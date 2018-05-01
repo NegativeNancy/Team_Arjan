@@ -13,10 +13,20 @@ In order to use the code with standard configuration, use the following code for
 
 `python main.py`
 
+
 #### Command-line options:
 
-<!--ToDo-->
-<!--Create list of command-line options-->
+The following arguments can be given:
+
+`-a` or `--algorythm` 	- Specify which algorythm to run
+
+`-t` or `--times` 		- Specify how many times the algorithm runs
+
+`-v` or `--visual` 		- Create visualization
+
+To run the visual you will need to run the following command first:
+
+`pip install -r requirements.txt`
  
 ## Authors:
 Ivo den Hertog, Emma Hokken, and Barry de Vries.

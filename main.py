@@ -16,10 +16,9 @@ class MyParser(argparse.ArgumentParser):
 
 def main(argv):
     """ Main function calling all algorithms.
-
     Args:
         args: Command-line argument that determines which algortihm
-            should be called. Can include prompt for visualisation and to 
+            should be called. Can include prompt for visualisation and to
             store the results.
     """
 
@@ -33,14 +32,14 @@ def main(argv):
         choices=['random', 'greedy'], required=True, help="specify which algorithm to run")
 
     optional = parser.add_argument_group('Optional arguments')
-    
+
     optional.add_argument("-h", "--help", action="help",
         help="show this help message and exit")
-    optional.add_argument('-s', '--store', action='store_true', 
+    optional.add_argument('-s', '--store', action='store_true',
         help="store the results in a .scv file - default: false")
     optional.add_argument('-t', '--times', action='store', type=int, nargs='?',
         const=0, default=1, help="specify how many times to run - default: 1", )
-    optional.add_argument('-v', '--visual', action='store_true', 
+    optional.add_argument('-v', '--visual', action='store_true',
         help="create visual of the results - default: false")
     optional.add_argument('--version', action='version', version='%(prog)s 0.1')
 
@@ -71,7 +70,7 @@ def main(argv):
             else:
                 print("You mother forker")
                 exit()
-            
+
             temp = solution.score()
             spamwriter.writerow([temp])
 
@@ -96,6 +95,10 @@ def holland_main():
 def random_alg(max_trains, max_minutes):
     """ Random solution.
 
+    Args:
+        max_trains: Maximum amount of trains the solution may use.
+        max_minutes: Maximum amount of minutes the solution may take.
+
     Returns:
         A random solution.
     """
@@ -104,6 +107,10 @@ def random_alg(max_trains, max_minutes):
 
 def greedy_alg(max_trains, max_minutes):
     """ Greedy solution.
+
+    Args:
+        max_trains: Maximum amount of trains the solution may use.
+        max_minutes: Maximum amount of minutes the solution may take.
 
     Returns:
         A Greedy solution.

@@ -82,7 +82,9 @@ def greedy(max_trains, max_minutes):
             index += 1
             if been:
                 next_station =  station_dict[current_station].neighbors[best_index]
+                been = False
             else:
+                been = False
                 print("new route up next")
                 break
 
@@ -95,3 +97,8 @@ def greedy(max_trains, max_minutes):
             # Add new step to route
             connection_list.append(connection)
             route.connection_list = connection_list
+        route_list.append(route)
+
+    solution = sn.Solution(route_list, station_dict)
+
+    return solution, station_dict

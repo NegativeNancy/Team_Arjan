@@ -13,7 +13,16 @@ In order to use the code with standard configuration, use the following code for
 
 `python main.py`
 
+
 #### Command-line options:
+
+The following arguments can be given:
+
+`-a` or `--algorythm` 	- Specify which algorythm to run
+
+`-t` or `--times` 		- Specify how many times the algorithm runs
+
+`-v` or `--visual` 		- Create visualization
 
 <!--ToDo-->
 <!--Create list of command-line options-->

@@ -4,70 +4,78 @@ from classes import Solution as sn
 from algorithms import random as ra
 import plot_data as pd
 import loading_files as load
-import random, sys, getopt, csv, os, os.path, datetime, time
+import random, sys, getopt, csv, os, os.path, datetime, time, argparse
+
+class MyParser(argparse.ArgumentParser):
+    """ Class that allows us to run help message when no arguments are given"""
+    def error(self, message):
+        sys.stderr.write('error: %s\n' % message)
+        self.print_help()
+        sys.exit(2)
 
 def main(argv):
     """ Main function calling all algorithms.
 
     Args:
         args: Command-line argument that determines which algortihm
-            should be called. Can include prompt for visualisation.
+            should be called. Can include prompt for visualisation and to 
+            store the results.
     """
 
     start_time = time.time()
-    algo = ''
-    visual = False
+
+    parser = MyParser(description='RailNL Discription!', add_help=False)
+
+    # required = parser.add_argument_group('Required argument')
+    # required.add_argument('-a', '--algorithm', action='store', dest="algorithm",
+    #     required=True, help="specify which algorithm to run")
+
+    optional = parser.add_argument_group('Optional arguments')
+    # optional.add_argument('-a', '--algorithm', action='store', dest="algorithm",
+    #     help="specify which algorithm to run")
+    optional.add_argument("-h", "--help", action="help",
+        help="show this help message and exit")
+    optional.add_argument('-s', '--store', action='store_true', 
+        help="store the results in a .scv file")
+    optional.add_argument('-t', '--times', action='store', type=int, nargs='?',
+        const=0, default=1, help="specify how many times to run", )
+    optional.add_argument('-v', '--visual', action='store_true', 
+        help="create visual of the results")
+    optional.add_argument('--version', action='version', version='%(prog)s 0.1')
+
+    args = parser.parse_args()
+
+    visual = args.visual
+    times = args.times
+    store = args.store
     score = 0
-    times = 0
     outfile = 0
-    visual = 0
 
-    try:
-        opts, args = getopt.getopt(argv,"ht:a:v",["times=", "algorithm=", "visual="])
-    except getopt.GetoptError:
-        print ('Use main.py -h to view all possible arguments')
-        sys.exit(2)
+    folder_output = "./data/scores/"
+    filename = datetime.datetime.now().strftime("scores__%Y-%m-%d__%I%M%S.csv")
 
-    for opt, arg in opts:
-        if opt == '-h':
-            print ('main.py -t or --times = <times to run>, -a or --algorithm \
-                == <algorithm to run>')
-            exit(1)
-        elif opt in ("-t", "--times"):
-            times = int(arg)
-        elif opt in ("-a", "--algorithm"):
-            algo = arg
-        elif opt in ("-v", "--visual"):
-            visual = True;
+    outfile = os.path.join(folder_output, filename)
 
-    if times > 0:
-        folder_output = "./data/scores/"
-        filename = datetime.datetime.now().strftime("scores__%Y-%m-%d__%I%M%S.csv")
+    with open(outfile, 'w', newline='') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
-        outfile = os.path.join(folder_output, filename)
+        for i in range(times):
+            solution,station_dict = random_alg(7, 120)
+            temp = solution.score()
+            spamwriter.writerow([temp])
 
-        with open(outfile, 'w', newline='') as csvfile:
-            spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            if score < temp:
+                score = temp
+                print(score)
 
-            for i in range(times):
-                solution,station_dict = random_alg(7, 120)
-                temp = solution.score()
-                spamwriter.writerow([temp])
+    run_time = time.time() - start_time
 
-                if score < temp:
-                    score = temp
-                    print(score)
+    print_score(run_time, times, score, outfile, visual, store)
 
-        run_time = time.time() - start_time
+    if (store == True):
+        os.remove(outfile)
 
-        print_score(run_time, times, score, outfile, visual)
-        exit(1)
-    else:
-        solution,station_dict = random_alg(7, 120)
-        run_time = time.time() - start_time
-        print_score(run_time, times, score, outfile, visual)
-        exit(1)
-
+    exit(1)
 
 def holland_main():
     """ Load stations. """
@@ -92,7 +100,7 @@ def create_visual(filename):
     pd.plot_data(filename)
 
 
-def print_score(run_time, times_ran, score, outfile, visual):
+def print_score(run_time, times_ran, score, outfile, visual, store):
     """ Prints score of solution.
 
     Args:
@@ -103,12 +111,14 @@ def print_score(run_time, times_ran, score, outfile, visual):
         visual: Boolean determining whether to visualise the data.
     """
     print("\nTime to run: ", run_time)
+    print("Times ran: ", times_ran)
+    print("Highest score: ", score)
+
+    if store:
+        print("File stored as: ", outfile)
 
     if visual:
         create_visual(outfile)
-
-    print("Times ran: ", times_ran)
-    print("Highest score: ", score)
 
 
 if __name__ == "__main__":

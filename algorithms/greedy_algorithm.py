@@ -65,40 +65,55 @@ def greedy(max_trains, max_minutes):
         print(begin_station)
         print(end_station)
 
-        index = 0
-        best_index = 0 # while loop om hele route te creëren
-        been = False
-        current_station = begin_station # ik denk dat deze twee statements niet nodig zijn
-        next_station = end_station      # verder kun je gelijk de eerste connectie appenden.
-        for neighbor in station_dict[current_station].neighbors: # twee keer doen voor begin en eind station (functie van maken?)
-            # Determine closest critical neighbor that has not been explored
-            if neighbor[1] < best_time and neighbor[2] and not neighbor[3]:
-                best_time = neighbor[1]
+        while (True)
+            index = 0
+            best_index = 0 # while loop om hele route te creëren
+            been = False
+            current_station = begin_station # ik denk dat deze twee statements niet nodig zijn
+            next_station = end_station      # verder kun je gelijk de eerste connectie appenden.
+            for neighbor in station_dict[current_station].neighbors: # twee keer doen voor begin en eind station (functie van maken?)
+                # Determine closest critical neighbor that has not been explored
+                if neighbor[1] < best_time and neighbor[2] and not neighbor[3]:
+                    best_time = neighbor[1]
 
-                # Remember index where best neighbor is
-                best_index = index
-                been = True
+                    # Remember index where best neighbor is
+                    best_index = index
+                    been = True
 
-            index += 1
-            if been:
-                next_station =  station_dict[current_station].neighbors[best_index]
-                been = False
-            else:
-                been = False
-                print("new route up next")
-                break
+                index += 1
+                if been:
+                    next_station =  station_dict[current_station].neighbors[best_index]
+                    been = False
+                else:
+                    been = False
+                    print("new route up next")
+                    break
 
 
 
-            connection = {"begin": station_dict[current_station].name, "end": next_station[0], "time": next_station[1]} # dit blok tot 99 wil je terug indenten
-            print(connection)                                                                                           # zodat je pas nadat je de beste connectie vind, die connectie append
-            current_station = next_station[0]                                                                           # vergeet ook niet om de verbindingen (twee keer) op gebruikt te zetten
-                                                                                                                        # dit misschien ook in een functie gooien
-            # Add new step to route
+                connection = {"begin": station_dict[current_station].name, "end": next_station[0], "time": next_station[1]} # dit blok tot 99 wil je terug indenten
+                print(connection)                                                                                           # zodat je pas nadat je de beste connectie vind, die connectie append
+                current_station = next_station[0]                                                                           # vergeet ook niet om de verbindingen (twee keer) op gebruikt te zetten
+                                                                                                                            # dit misschien ook in een functie gooien
+                # Add new step to route
             connection_list.append(connection)
             route.connection_list = connection_list
-        route_list.append(route) # dit meot na de while loop staan, dus als je je hele route hebt gemaakt.
+
+        # add newly created route to route_list
+        route_list.append(route) # dit moet na de while loop staan, dus als je je hele route hebt gemaakt.
 
     solution = sn.Solution(route_list, station_dict)
 
     return solution, station_dict
+
+
+
+def determine_joint_closest_neighbor(begin_station, end_station):
+    """ Finds the closest unused, critical neighbor of two stations.
+
+    Args:
+        begin_station, end_station: Station names as strings.
+
+    Returns:
+        Name of the closest neighbor and to which station it's a neighbor.
+    """

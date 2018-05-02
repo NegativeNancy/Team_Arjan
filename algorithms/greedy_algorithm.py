@@ -123,6 +123,52 @@ def determine_joint_closest_neighbor(begin_station, end_station):
         Name of the closest neighbor and to which station it's a neighbor.
     """
 
+    travel_time = 0
+    new_station_index = 0
+    best_new_station_index = 0
+    neighbor_of_begin_station = True
+
+    # Loop over neighbors of begin_station
+    for neighbor in station_dict[begin_station].neighbors:
+        new_station_index += 1
+        # Check that connection is critical and not used yet
+        if neighbor[2] == True and neighbor[3] == False:
+            if travel_time == 0 or neighbor[1] < travel_time:
+                travel_time = neighbor[1]
+                best_end_station_index = new_station_index
+
+    # reset index of best new station
+    new_station_index = 0
+
+    # Loop over neighbors of end_station
+    for neighbor in station_dict[end_station].neighbors:
+        new_station_index += 1
+        # Check that connection is critical and not used yet
+        if neighbor[2] == True and neighbor[3] == False:
+            if travel_time == 0 or neighbor[1] < travel_time:
+                travel_time = neighbor[1]
+                best_end_station_index = new_station_index
+                neighbor_of_begin_station = False
+
+    if neighbor_of_begin_station:
+        station_dict[begin_station].neighbors[best_new_station_index - 1][3] = True
+        for neighbor in station_dict[end_station].neighbors:
+            if neighbor[0] == begin_station:
+                neighbor[3] = True
+
+        name_new_station = station_dict[begin_station].neighbors[best_new_station_index - 1][0]
+        return name_new_station, begin_station
+
+    else:
+        station_dict[end_station].neighbors[best_new_station_index - 1][3] = True
+        for neighbor in station_dict[begin_station].neighbors:
+            if neighbor[0] == end_station:
+                neighbor[3] = True
+
+        name_new_station = station_dict[end_station].neighbors[best_new_station_index - 1][0]
+        return name_new_station, end_station
+
+
 
 def set_been_to_true(station_dict, begin_station, end_station, best_end_station_index):
     """ Sets been property of station to true.

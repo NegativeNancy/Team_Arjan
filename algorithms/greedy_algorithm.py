@@ -113,7 +113,7 @@ def greedy(max_trains, max_minutes):
 
 
 
-def determine_joint_closest_neighbor(begin_station, end_station):
+def determine_joint_closest_neighbor(begin_station, end_station, station_dict):
     """ Finds the closest unused, critical neighbor of two stations.
 
     Args:
@@ -167,7 +167,7 @@ def determine_joint_closest_neighbor(begin_station, end_station):
             neighbor[3] = True
 
     name_new_station = station_dict[end_station].neighbors[best_new_station_index][0]
-    return name_new_station, end_station
+    return name_new_station, new_station
 
 
 
@@ -184,3 +184,32 @@ def set_been_to_true(station_dict, begin_station, end_station, best_end_station_
         if neighbor[0] == begin_station:
             neighbor[3] = True
             break
+
+def closest_neighbor(station, station_dict):
+    """ Find closest not used, critical neighbor for a station.
+
+    Args:
+        station: Name of station whose neighbor we seek.
+        station_dict: Current station dict.
+
+    Returns:
+        name of closest neighbor
+        index of neighbor in neighbor_list of station
+        time to travel to neighbor from station
+    """
+
+    travel_time = 0
+    new_station_index = 0
+    best_new_station_index = 0
+    # Loop over neighbors of begin_station
+    for neighbor in station_dict[station].neighbors:
+        # Check that connection is critical and not used yet
+        if neighbor[2] == True and neighbor[3] == False:
+            if travel_time == 0 or neighbor[1] < travel_time:
+                travel_time = neighbor[1]
+                best_end_station_index = new_station_index
+        new_station_index += 1
+
+    name_new_station = station_dict[station].neighbors[best_new_station_index][0]
+    travel_time = station_dict[station].neighbors[best_new_station_index][1]
+    return name_new_station, best_new_station_index, travel_time

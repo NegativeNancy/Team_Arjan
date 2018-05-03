@@ -54,15 +54,21 @@ def main(argv):
     algo = args.algorithm
     load = args.load
 
-
-
-    score = 0
-    outfile = 0
+    if (load == 'nederland'):
+        station_dict = load_file(True, True)
+    elif (load == 'nederland-simple'):
+        lstation_dict = load_file(True, False)
+    elif (load == 'holland'):
+        station_dict = load_file(False, True)
+    elif (load == 'holland-simple'):
+        station_dict = load_file(False, False)
 
     # Create filename to save scores in.
     folder_output = "./data/scores/"
     filename = datetime.datetime.now().strftime("scores__%Y-%m-%d__%I%M%S.csv")
     outfile = os.path.join(folder_output, filename)
+
+    score = 0
 
     # Open file and create writer to enter score in to the file.
     with open(outfile, 'w', newline='') as csvfile:
@@ -71,9 +77,9 @@ def main(argv):
 
         for i in range(times):
             if (algo == 'greedy'):
-                solution,station_dict = greedy_alg(7, 120)
+                solution,station_dict = greedy_alg(station_dict, 7, 120)
             elif (algo == 'random'):
-                solution,station_dict = random_alg(7, 120)
+                solution,station_dict = random_alg(station_dict, 7, 120)
             else:
                 print("You mother forker")
                 exit()
@@ -92,26 +98,10 @@ def main(argv):
     if (store != True):
         os.remove(outfile)
 
-    print(load)
-
-
-    if (load == 'nederland'):
-        load_file(True, True)
-    elif (load == 'nederland-simple'):
-        load_file(True, False)
-    elif (load == 'holland'):
-        load_file(False, True)
-    elif (load == 'holland-simple'):
-        load_file(False, False)
-
     exit(1)
 
-def holland_main():
-    """ Load stations. """
-    load.load_stations()
 
-
-def random_alg(max_trains, max_minutes):
+def random_alg(station_dict, max_trains, max_minutes):
     """ Random solution.
 
     Args:
@@ -121,10 +111,10 @@ def random_alg(max_trains, max_minutes):
     Returns:
         A random solution.
     """
-    return ra.random(max_trains, max_minutes)
+    return ra.random(station_dict, max_trains, max_minutes)
 
 
-def greedy_alg(max_trains, max_minutes):
+def greedy_alg(station_dict, max_trains, max_minutes):
     """ Greedy solution.
 
     Args:
@@ -134,7 +124,7 @@ def greedy_alg(max_trains, max_minutes):
     Returns:
         A Greedy solution.
     """
-    return ga.greedy(max_trains, max_minutes)
+    return ga.greedy(station_dict, max_trains, max_minutes)
 
 
 def create_visual(filename):
@@ -166,16 +156,24 @@ def print_score(run_time, times_ran, score, outfile, visual, store):
     if visual:
         create_visual(outfile)
 
+
 def load_file(file, critical):
     if (file == True and critical == True):
         print("Nederland Loaded")
+        station_dict = load.load_stations(True, True)
+        return station_dict
     elif (file == True and critical == False):
         print("Nederland Simple Loaded")
+        station_dict = load.load_stations(True, False)
+        return station_dict
     elif (file == False and critical == True):
         print("Holland Loaded")
+        station_dict = load.load_stations(False, True)
+        return station_dict
     elif (file == False and critical == False):
         print("Holland Simple Loaded")
-
+        station_dict = load.load_stations(False, False)
+        return station_dict
 
 
 if __name__ == "__main__":

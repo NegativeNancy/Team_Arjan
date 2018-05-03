@@ -1,24 +1,31 @@
 from classes import Stations as st
 
 
-def load_stations():
+def load_stations(netherland, all_critical):
     """ Loads data from files and makes objects out of the data.
 
+    Args:
+        netherland: Boolean that is true if want to load netherland,
+                    otherwise is false.
+        all_critical: Boolean that is true if we want all stations to be
+                      critical, is false otherwise.
     Returns:
         A dictionary with the station as key and the neighbours as properties.
-
     """
 
     station_dict = {}
-    station_file = open("data/StationsHolland.csv")
+    if netherland:
+        station_file = open("data/StationsNationaal.csv")
+    else:
+        station_file = open("data/StationsHolland.csv")
 
     # Determine cirtical stations and add to class
     for line in station_file:
         obj = line.split(',')
 
         # Make list of stations and specify if station is critical
-        if obj[3] == "Kritiek\n" or obj[3] == "Kritiek\r\n":
-            station = st.Stations(obj[0],  True)
+        if all_critical or obj[3] == "Kritiek\n" or obj[3] == "Kritiek\r\n":
+            station = st.Stations(obj[0], True)
         else:
             station = st.Stations(obj[0])
 
@@ -26,7 +33,11 @@ def load_stations():
 
     station_file.close()
 
-    connections_file = open("Data/ConnectiesHolland.csv")
+    if netherland:
+        connections_file = open("data/ConnectiesNationaal.csv")
+    else:
+        connections_file = open("data/ConnectiesHolland.csv")
+        
     for line in connections_file:
         obj = line.split(',')
         obj[2] = int(obj[2])

@@ -13,7 +13,7 @@ from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def greedy(max_trains, max_minutes):
+def greedy(station_dict, max_trains, max_minutes):
     """ Greedy algorithm that hopes to fin the perfect solutioinself.
     Args:
         max_trains: Maximum amount of trains allowed in solution.
@@ -22,7 +22,7 @@ def greedy(max_trains, max_minutes):
     Returns;
         The solution: a combination of routes.
     """
-    station_dict = load.load_stations()
+
     route_list = []
     station_dict_key_list = []
 
@@ -39,9 +39,6 @@ def greedy(max_trains, max_minutes):
         # Variables for greedy algorithm
         connection_list = []
         route = rt.Route(connection_list)
-
-        # Arbitrarally chosen time, might need improvement
-        best_time = 1000
 
         # Find best begin station
         # Loop over station dict
@@ -66,7 +63,6 @@ def greedy(max_trains, max_minutes):
             break
 
         set_been_to_true(station_dict, begin_station, end_station, best_end_station_index)
-        next_station = station_dict[begin_station].neighbors[best_end_station_index]
         connection = {"begin": begin_station, "end": end_station, "time": neighbor[1]}
 
         # Add new step to route
@@ -77,27 +73,42 @@ def greedy(max_trains, max_minutes):
             result = determine_joint_closest_neighbor(begin_station, end_station, station_dict)
             new_station = result[0]
             neighbor_of_new_station = result[1]
+            found_new_station = result[2]
 
-            time_to = station_dict[neighbor_of_new_station].neighbors[result[2]][1]
-            if time_to + route.time() > max_minutes:
+            if not found_new_station:
                 break
 
-            set_been_to_true(station_dict, neighbor_of_new_station, new_station, result[2])
+            if neighbor_of_new_station == begin_station:
 
-            connection = {"begin": station_dict[neighbor_of_new_station].name, "end": new_station, "time": time_to} # dit blok tot 99 wil je terug indenten
-                                                                                                                            # dit misschien ook in een functie gooien
+                time_to = station_dict[begin_station].neighbors[result[2]][1]
+                if time_to + route.time() > max_minutes:
+                    break
+                set_been_to_true(station_dict, begin_station, new_station, result[2])
+
+                connection = {"begin": begin_station, "end": new_station, "time": time_to}
+                begin_station = new_station
+
+            elif neighbor_of_new_station == end_station:
+
+                time_to = station_dict[end_station].neighbors[result[2]][1]
+                if time_to + route.time() > max_minutes:
+                    break
+                set_been_to_true(station_dict, end_station, new_station, result[2])
+
+                connection = {"begin": end_station, "end": new_station, "time": time_to}
+                end_staion = new_station
+
+            else:
+                print ("Something went wrong!")
+                break
+
             # Add new step to route
+
             connection_list.append(connection)
             route.connection_list = connection_list
 
-            if neighbor_of_new_station == begin_station:
-                begin_station = new_station
-
-            else:
-                end_staion = new_station
-
         # Add newly created route to route_list
-        route_list.append(route) # dit moet na de while loop staan, dus als je je hele route hebt gemaakt.
+        route_list.append(route)
 
     solution = sn.Solution(route_list, station_dict)
 
@@ -121,36 +132,39 @@ def determine_joint_closest_neighbor(begin_station, end_station, station_dict):
     new_station_index = 0
     best_new_station_index = 0
     neighbor_of_begin_station = True
+    found_suitable_result = False
 
     # Loop over neighbors of begin_station
-    for neighbor in station_dict[begin_station].neighbors:      # make a function for this
+    for neighbor in station_dict[begin_station].neighbors:
         # Check that connection is critical and not used yet
         if neighbor[2] == True and neighbor[3] == False:
             if travel_time == 0 or neighbor[1] < travel_time:
                 travel_time = neighbor[1]
                 best_new_station_index = new_station_index
+                found_suitable_result = True
         new_station_index += 1
 
     # Reset index of best new station
     new_station_index = 0
 
     # Loop over neighbors of end_station
-    for neighbor in station_dict[end_station].neighbors:        # make a function for this
+    for neighbor in station_dict[end_station].neighbors:
         # Check that connection is critical and not used yet
         if neighbor[2] == True and neighbor[3] == False:
             if travel_time == 0 or neighbor[1] < travel_time:
                 travel_time = neighbor[1]
                 best_new_station_index = new_station_index
                 neighbor_of_begin_station = False
+                found_suitable_result = True
         new_station_index += 1
 
     if neighbor_of_begin_station:
         name_new_station = station_dict[begin_station].neighbors[best_new_station_index][0]
-        return name_new_station, begin_station, best_new_station_index
+        return name_new_station, begin_station, best_new_station_index, found_suitable_result
 
 
     name_new_station = station_dict[end_station].neighbors[best_new_station_index][0]
-    return name_new_station, end_station, best_new_station_index
+    return name_new_station, end_station, best_new_station_index, found_suitable_result
 
 
 

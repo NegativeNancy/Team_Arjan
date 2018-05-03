@@ -58,8 +58,6 @@ def greedy(max_trains, max_minutes):
                 end_station_index += 1
 
         set_been_to_true(station_dict, begin_station, end_station, best_end_station_index)
-        print("begin", begin_station)
-        print("end", end_station)
         next_station = station_dict[begin_station].neighbors[best_end_station_index]
         connection = {"begin": begin_station, "end": end_station, "time": neighbor[1]}
 
@@ -67,46 +65,18 @@ def greedy(max_trains, max_minutes):
         connection_list.append(connection)
         route.connection_list = connection_list
 
-        #print(connection)
-        current_station = end_station
         while True:
-            index = 0
-            best_index = 0
-            been = False
-
             result = determine_joint_closest_neighbor(begin_station, end_station, station_dict)
-            begin_station = result[0]
-            end_station = result[1]
-            #print(result)
-            #print(station_dict[begin_station].neighbors[0])
+            new_station = result[0]
+            neighbor_of_new_station = result[1]
 
-            # for neighbor in station_dict[current_station].neighbors: # twee keer doen voor begin en eind station (functie van maken?)
-            #     # Determine closest critical neighbor that has not been explored
-            #
-            #     index += 1
-            #     if neighbor[1] < best_time and neighbor[2] and not neighbor[3]:
-            #         best_time = neighbor[1]
-            #
-            #         # Remember index where best neighbor is
-            #         best_index = index
-            #         been = True
-            #
-            #     if been:
-            #         next_station =  station_dict[current_station].neighbors[best_index]
-            #         set_been_to_true(station_dict, station_dict[current_station].name, next_station[0], best_index)
-            #         been = False
-            #     else:
-            #         been = False
-            #     #    print("new route up next")
-            #         break
-            #
-
-            if next_station[1] + route.time() > max_minutes:
+            time_to = station_dict[neighbor_of_new_station].neighbors[result[2]][1]
+            if time_to + route.time() > max_minutes:
                 break
 
-            connection = {"begin": station_dict[current_station].name, "end": next_station[0], "time": next_station[1]} # dit blok tot 99 wil je terug indenten
-            #print(connection)                                                                                           # zodat je pas nadat je de beste connectie vind, die connectie append
-            current_station = next_station[0]                                                                           # vergeet ook niet om de verbindingen (twee keer) op gebruikt te zetten
+            set_been_to_true(station_dict, neighbor_of_new_station, new_station, result[2])
+
+            connection = {"begin": station_dict[neighbor_of_new_station].name, "end": new_station, "time": time_to} # dit blok tot 99 wil je terug indenten
                                                                                                                             # dit misschien ook in een functie gooien
             # Add new step to route
             connection_list.append(connection)
@@ -114,9 +84,8 @@ def greedy(max_trains, max_minutes):
 
             if next_station[1] + route.time() > max_minutes:
                 break
-        # add newly created route to route_list
+        # Add newly created route to route_list
         route_list.append(route) # dit moet na de while loop staan, dus als je je hele route hebt gemaakt.
-
     solution = sn.Solution(route_list, station_dict)
 
     return solution, station_dict
@@ -160,19 +129,10 @@ def determine_joint_closest_neighbor(begin_station, end_station, station_dict):
                 neighbor_of_begin_station = False
         new_station_index += 1
 
-    if neighbor_of_begin_station == True:
-        print("neighbor of begin")
-        # Set the 'been' properties to True
-        set_been_to_true(station_dict, begin_station, end_station, best_new_station_index)
+    if neighbor_of_begin_station:
         name_new_station = station_dict[begin_station].neighbors[best_new_station_index][0]
         return name_new_station, begin_station, best_new_station_index
 
-    # Set the 'been' properties to True if new station added at end of route
-    set_been_to_true(station_dict, end_station, begin_station, best_new_station_index)
-    # station_dict[end_station].neighbors[best_new_station_index][3] = True
-    # for neighbor in station_dict[begin_station].neighbors:
-    #     if neighbor[0] == end_station:
-    #         neighbor[3] = True
 
     name_new_station = station_dict[end_station].neighbors[best_new_station_index][0]
     return name_new_station, end_station, best_new_station_index
@@ -187,12 +147,6 @@ def set_been_to_true(station_dict, begin_station, end_station, best_end_station_
         end_station: Station where connection ends.
         best_end_station_index: index of best station found.
     """
-
-    print(best_end_station_index)
-    print(begin_station)
-    #print(station_dict)
-    print(station_dict[begin_station].name)
-
     station_dict[begin_station].neighbors[best_end_station_index][3] = True
     for neighbor in station_dict[end_station].neighbors:
         if neighbor[0] == begin_station:

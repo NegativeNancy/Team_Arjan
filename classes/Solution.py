@@ -47,3 +47,4 @@ class Solution():
         for route in self.solution_list:
             for connection in route.connection_list:
                 print ("begin:", connection["begin"], "end:", connection["end"] )
+            print("End of route")

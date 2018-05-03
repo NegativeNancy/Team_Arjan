@@ -35,6 +35,7 @@ def greedy(max_trains, max_minutes):
         end_station = st.Stations("fake_end",  False)
         end_station_index = 0
         best_end_station_index = 0
+        found_another_station = False
         # Variables for greedy algorithm
         connection_list = []
         route = rt.Route(connection_list)
@@ -55,7 +56,14 @@ def greedy(max_trains, max_minutes):
                         end_station = neighbor[0]
                         travel_time = neighbor[1]
                         best_end_station_index = end_station_index
+                        found_another_station = True
                 end_station_index += 1
+
+        if not found_another_station:
+            solution = sn.Solution(route_list, station_dict)
+            solution.print_solution()
+            return solution, station_dict
+            break
 
         set_been_to_true(station_dict, begin_station, end_station, best_end_station_index)
         next_station = station_dict[begin_station].neighbors[best_end_station_index]
@@ -82,11 +90,18 @@ def greedy(max_trains, max_minutes):
             connection_list.append(connection)
             route.connection_list = connection_list
 
-            if next_station[1] + route.time() > max_minutes:
-                break
+            if neighbor_of_new_station == begin_station:
+                begin_station = new_station
+
+            else:
+                end_staion = new_station
+
         # Add newly created route to route_list
         route_list.append(route) # dit moet na de while loop staan, dus als je je hele route hebt gemaakt.
+
     solution = sn.Solution(route_list, station_dict)
+
+    solution.print_solution()
 
     return solution, station_dict
 

@@ -42,6 +42,9 @@ def main(argv):
     optional.add_argument('-v', '--visual', action='store_true',
         help="create visual of the results - default: false")
     optional.add_argument('--version', action='version', version='%(prog)s 0.1')
+    optional.add_argument('-l', '--load', action='store', default='nederland',
+        choices=['nederland', 'nederland-simple', 'holland', 'holland-simple'],
+        help='specify which stationfiles needs to be loaded - default: nederland')
 
     args = parser.parse_args()
 
@@ -49,6 +52,10 @@ def main(argv):
     times = args.times
     store = args.store
     algo = args.algorithm
+    load = args.load
+
+
+
     score = 0
     outfile = 0
 
@@ -84,6 +91,18 @@ def main(argv):
 
     if (store != True):
         os.remove(outfile)
+
+    print(load)
+
+
+    if (load == 'nederland'):
+        load_file(True, True)
+    elif (load == 'nederland-simple'):
+        load_file(True, False)
+    elif (load == 'holland'):
+        load_file(False, True)
+    elif (load == 'holland-simple'):
+        load_file(False, False)
 
     exit(1)
 
@@ -146,6 +165,17 @@ def print_score(run_time, times_ran, score, outfile, visual, store):
 
     if visual:
         create_visual(outfile)
+
+def load_file(file, critical):
+    if (file == True and critical == True):
+        print("Nederland Loaded")
+    elif (file == True and critical == False):
+        print("Nederland Simple Loaded")
+    elif (file == False and critical == True):
+        print("Holland Loaded")
+    elif (file == False and critical == False):
+        print("Holland Simple Loaded")
+
 
 
 if __name__ == "__main__":

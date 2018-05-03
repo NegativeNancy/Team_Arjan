@@ -5,6 +5,10 @@ import Connections as cs
 from flask import Flask, jsonify, render_template, request, url_for
 from flask_jsglue import JSGlue
 
+# configure application
+app = Flask(__name__)
+JSGlue(app)
+
 
 def holland_main():
     load_connections()
@@ -63,11 +67,6 @@ def load_stations_nederland():
         station_dict.append({"name": obj[0], "latitude": obj[1],
                              "longitude": obj[2], "critical": obj[3]})
     return station_dict
-
-
-# configure application
-app = Flask(__name__)
-JSGlue(app)
 
 
 # ensure responses aren't cached

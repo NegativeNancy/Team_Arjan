@@ -4,7 +4,7 @@ from classes import Solution as sn
 import loading_files as load
 import random as rd
 
-def random(max_trains, max_minutes):
+def random(station_dict, max_trains, max_minutes):
     """ Finds a set of random routes.
 
     Args:
@@ -15,7 +15,7 @@ def random(max_trains, max_minutes):
         solution: A set of routes, which are a list of connections.
         station_dict: Dictionary of made connections.
     """
-    station_dict = load.load_stations()
+
     route_list = []
     station_dict_key_list = []
 

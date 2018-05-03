@@ -13,8 +13,8 @@ from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def iterative_1(max_trains, max_minutes):
-    station_dict = load.load_stations()
+def iterative_1(station_dict, max_trains, max_minutes):
+
     route_list = []
     station_dict_key_list = []
     solution = sn.Solution(route_list, station_dict)

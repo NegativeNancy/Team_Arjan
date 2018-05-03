@@ -60,36 +60,46 @@ def greedy(max_trains, max_minutes):
         set_been_to_true(station_dict, begin_station, end_station, best_end_station_index)
         print("begin", begin_station)
         print("end", end_station)
-        # print(best_end_station_index)
-        # print(station_dict[end_station].name)
         next_station = station_dict[begin_station].neighbors[best_end_station_index]
         connection = {"begin": begin_station, "end": end_station, "time": neighbor[1]}
+
+        # Add new step to route
+        connection_list.append(connection)
+        route.connection_list = connection_list
+
         #print(connection)
         current_station = end_station
         while True:
             index = 0
             best_index = 0
             been = False
-            for neighbor in station_dict[current_station].neighbors: # twee keer doen voor begin en eind station (functie van maken?)
-                # Determine closest critical neighbor that has not been explored
 
-                index += 1
-                if neighbor[1] < best_time and neighbor[2] and not neighbor[3]:
-                    best_time = neighbor[1]
+            result = determine_joint_closest_neighbor(begin_station, end_station, station_dict)
+            begin_station = result[0]
+            end_station = result[1]
+            #print(result)
+            #print(station_dict[begin_station].neighbors[0])
 
-                    # Remember index where best neighbor is
-                    best_index = index
-                    been = True
-
-                if been:
-                    next_station =  station_dict[current_station].neighbors[best_index]
-                    set_been_to_true(station_dict, station_dict[current_station].name, next_station[0], best_index)
-                    been = False
-                else:
-                    been = False
-                #    print("new route up next")
-                    break
-
+            # for neighbor in station_dict[current_station].neighbors: # twee keer doen voor begin en eind station (functie van maken?)
+            #     # Determine closest critical neighbor that has not been explored
+            #
+            #     index += 1
+            #     if neighbor[1] < best_time and neighbor[2] and not neighbor[3]:
+            #         best_time = neighbor[1]
+            #
+            #         # Remember index where best neighbor is
+            #         best_index = index
+            #         been = True
+            #
+            #     if been:
+            #         next_station =  station_dict[current_station].neighbors[best_index]
+            #         set_been_to_true(station_dict, station_dict[current_station].name, next_station[0], best_index)
+            #         been = False
+            #     else:
+            #         been = False
+            #     #    print("new route up next")
+            #         break
+            #
 
             if next_station[1] + route.time() > max_minutes:
                 break
@@ -134,10 +144,10 @@ def determine_joint_closest_neighbor(begin_station, end_station, station_dict):
         if neighbor[2] == True and neighbor[3] == False:
             if travel_time == 0 or neighbor[1] < travel_time:
                 travel_time = neighbor[1]
-                best_end_station_index = new_station_index
+                best_new_station_index = new_station_index
         new_station_index += 1
 
-    # reset index of best new station
+    # Reset index of best new station
     new_station_index = 0
 
     # Loop over neighbors of end_station
@@ -146,28 +156,26 @@ def determine_joint_closest_neighbor(begin_station, end_station, station_dict):
         if neighbor[2] == True and neighbor[3] == False:
             if travel_time == 0 or neighbor[1] < travel_time:
                 travel_time = neighbor[1]
-                best_end_station_index = new_station_index
+                best_new_station_index = new_station_index
                 neighbor_of_begin_station = False
         new_station_index += 1
 
-    if neighbor_of_begin_station:
-        # sets the 'been' properties to True
-        station_dict[begin_station].neighbors[best_new_station_index ][3] = True
-        for neighbor in station_dict[end_station].neighbors:
-            if neighbor[0] == begin_station:
-                neighbor[3] = True
-
+    if neighbor_of_begin_station == True:
+        print("neighbor of begin")
+        # Set the 'been' properties to True
+        set_been_to_true(station_dict, begin_station, end_station, best_new_station_index)
         name_new_station = station_dict[begin_station].neighbors[best_new_station_index][0]
-        return name_new_station, begin_station
+        return name_new_station, begin_station, best_new_station_index
 
-    # sets the 'been' properties to True if new station added at end of route
-    station_dict[end_station].neighbors[best_new_station_index][3] = True
-    for neighbor in station_dict[begin_station].neighbors:
-        if neighbor[0] == end_station:
-            neighbor[3] = True
+    # Set the 'been' properties to True if new station added at end of route
+    set_been_to_true(station_dict, end_station, begin_station, best_new_station_index)
+    # station_dict[end_station].neighbors[best_new_station_index][3] = True
+    # for neighbor in station_dict[begin_station].neighbors:
+    #     if neighbor[0] == end_station:
+    #         neighbor[3] = True
 
     name_new_station = station_dict[end_station].neighbors[best_new_station_index][0]
-    return name_new_station, new_station
+    return name_new_station, end_station, best_new_station_index
 
 
 
@@ -179,6 +187,12 @@ def set_been_to_true(station_dict, begin_station, end_station, best_end_station_
         end_station: Station where connection ends.
         best_end_station_index: index of best station found.
     """
+
+    print(best_end_station_index)
+    print(begin_station)
+    #print(station_dict)
+    print(station_dict[begin_station].name)
+
     station_dict[begin_station].neighbors[best_end_station_index][3] = True
     for neighbor in station_dict[end_station].neighbors:
         if neighbor[0] == begin_station:

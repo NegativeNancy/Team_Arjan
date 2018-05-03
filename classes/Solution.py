@@ -6,9 +6,9 @@ class Solution():
 
         Args:
             solution_list: A list with the routes that make up the solution.
-            station_dict: A dctionary that contains the stations with its neighbours. 
+            station_dict: A dctionary that contains the stations with its neighbours.
         """
-        self.solution_list = solution_list
+        self.solution_list = solution_list # dit moet route_list worden!
         self.station_dict = station_dict
 
     def score(self):
@@ -31,11 +31,12 @@ class Solution():
 
         # Compute time spent on rails
         min = 0
+        t = 0
         for route in self.solution_list:
-            min += route.time()
-
-        # Routes used in solution equals length of solution list
-        t = len(self.solution_list)
+            if route.connection_list[0]["begin"] != None:
+                min += route.time()
+                # Routes used in solution
+                t += 1
 
         # The actual function
         score = p*10000-(t*20+min/10)

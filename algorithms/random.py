@@ -1,7 +1,6 @@
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
-import loading_files as load
 import random as rd
 
 def random(station_dict, max_trains, max_minutes):

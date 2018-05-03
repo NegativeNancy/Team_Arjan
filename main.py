@@ -54,14 +54,27 @@ def main(argv):
     algo = args.algorithm
     load = args.load
 
+    trains_netherlands = 20
+    time_netherlands = 180
+    trains_holland = 7
+    time_holland = 120
+
     if (load == 'nederland'):
         station_dict = load_file(True, True)
+        train = trains_netherlands
+        max_time = time_netherlands
     elif (load == 'nederland-simple'):
-        lstation_dict = load_file(True, False)
+        station_dict = load_file(True, False)
+        train = trains_netherlands
+        max_time = time_netherlands
     elif (load == 'holland'):
         station_dict = load_file(False, True)
+        train = trains_holland
+        max_time = time_holland
     elif (load == 'holland-simple'):
         station_dict = load_file(False, False)
+        train = trains_holland
+        max_time = time_holland
 
     # Create filename to save scores in.
     folder_output = "./data/scores/"
@@ -77,9 +90,9 @@ def main(argv):
 
         for i in range(times):
             if (algo == 'greedy'):
-                solution,station_dict = greedy_alg(station_dict, 7, 120)
+                solution,station_dict = greedy_alg(station_dict, train, max_time)
             elif (algo == 'random'):
-                solution,station_dict = random_alg(station_dict, 7, 120)
+                solution,station_dict = random_alg(station_dict, train, max_time)
             else:
                 print("You mother forker")
                 exit()

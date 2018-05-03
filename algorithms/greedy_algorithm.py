@@ -7,7 +7,6 @@ Do not go back to the previous station
 
 Create a random solution where the starting station is different each time
 """
-import loading_files as load
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn

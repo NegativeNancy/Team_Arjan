@@ -43,6 +43,7 @@ class Solution():
 
         return score
 
-
-# greedy function die ieder stap kprste spppr kiest
-# if niet kan dan gewoon random stap.
+    def print_solution(self):
+        for route in self.solution_list:
+            for connection in route.connection_list:
+                print ("begin:", connection["begin"], "end:", connection["end"] )

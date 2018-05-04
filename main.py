@@ -91,8 +91,10 @@ def main(argv):
         for i in range(times):
             if (algo == 'greedy'):
                 solution,station_dict = greedy_alg(station_dict, train, max_time)
+                station_dict = load_file(False, False)
             elif (algo == 'random'):
                 solution,station_dict = random_alg(station_dict, train, max_time)
+                station_dict = load_file(False, False)
             else:
                 print("You mother forker")
                 exit()
@@ -172,19 +174,19 @@ def print_score(run_time, times_ran, score, outfile, visual, store):
 
 def load_file(file, critical):
     if (file == True and critical == True):
-        print("Nederland Loaded")
+        # print("Nederland Loaded")
         station_dict = load.load_stations(True, True)
         return station_dict
     elif (file == True and critical == False):
-        print("Nederland Simple Loaded")
+        # print("Nederland Simple Loaded")
         station_dict = load.load_stations(True, False)
         return station_dict
     elif (file == False and critical == True):
-        print("Holland Loaded")
+        # print("Holland Loaded")
         station_dict = load.load_stations(False, True)
         return station_dict
     elif (file == False and critical == False):
-        print("Holland Simple Loaded")
+        # print("Holland Simple Loaded")
         station_dict = load.load_stations(False, False)
         return station_dict
 

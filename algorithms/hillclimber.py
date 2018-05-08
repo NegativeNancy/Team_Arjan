@@ -12,7 +12,7 @@ from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def hillclimber_1(station_dict, max_trains, max_minutes, number_of_iterations):
+def hillclimber(station_dict, max_trains, max_minutes, number_of_iterations):
 
     route_list = []
     station_dict_key_list = []

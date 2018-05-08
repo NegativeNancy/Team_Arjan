@@ -10,7 +10,7 @@ class Solution():
         """
         self.route_list = route_list
         self.station_dict = station_dict
-        # self.score = self.score()
+        # self.score = self.score() vraag tech assistent
 
     def score(self):
         """ Computes score of solution.
@@ -33,7 +33,9 @@ class Solution():
         min = 0
         t = 0
         for route in self.route_list:
-            if route.connection_list[0]["begin"] != None:
+            if route.connection_list == []:
+                t += 0
+            elif route.connection_list[0]["begin"] != None:
                 min += route.time()
                 # Routes used in solution
                 t += 1

@@ -3,6 +3,7 @@ from classes import Route as rt
 from classes import Solution as sn
 from algorithms import random as ra
 from algorithms import greedy_algorithm as ga
+from algorithms import genetic as gena
 import plot_data as pd
 import loading_files as load
 import random, sys, getopt, csv, os, os.path, datetime, time, argparse
@@ -93,6 +94,8 @@ def main(argv):
                 solution,station_dict = greedy_alg(station_dict, train, max_time)
             elif (algo == 'random'):
                 solution,station_dict = random_alg(station_dict, train, max_time)
+            elif algo == 'genetic':
+                solution, station_dict = genetic_alg(station_dict, train, max_time)
             else:
                 print("You mother forker")
                 exit()
@@ -138,6 +141,18 @@ def greedy_alg(station_dict, max_trains, max_minutes):
         A Greedy solution.
     """
     return ga.greedy(station_dict, max_trains, max_minutes)
+
+def genetic_alg(station_dict, max_trains, max_minutes):
+    """ Genetic solution.
+
+    Args:
+        max_trains: Maximum amount of trains the solution may use.
+        max_minutes: Maximum amount of minutes the solution may take.
+
+    Returns:
+        A Genetic solution.
+    """
+    return gena.genetic(station_dict, max_trains, max_minutes)
 
 
 def create_visual(filename):

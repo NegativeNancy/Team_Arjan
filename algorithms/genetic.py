@@ -1,4 +1,4 @@
-import random as ra
+from algorithms import random as ra
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
@@ -8,6 +8,7 @@ from classes import Solution as sn
 
 def genetic(station_dict, max_trains, max_time):
 
+    solution = sn.Solution([], station_dict)
     # best_score
     # score_list = []
     # index = 0
@@ -19,7 +20,9 @@ def genetic(station_dict, max_trains, max_time):
     #score_list, best_score, index = calc_overall_fitness(list_of_solutions)
     # Make children ?
 
-    return [], station_dict
+    # Make population
+    solution_list = make_population(10, station_dict, max_trains, max_time)
+    return solution, station_dict
 
 
 
@@ -48,8 +51,8 @@ def calc_fitness(list_of_solutions):
     # Calculate score of solution
 
 
-def make_population(population_size):
-    """Generate a population consisted of random solutions.
+def make_population(population_size, station_dict, max_trains, max_time):
+    """ Generate a population consisted of random solutions.
 
     Args:
         population_size: Integers specifying how big the population should be.
@@ -65,20 +68,20 @@ def make_population(population_size):
     for i in range(population_size):
         solution, station_dict = ra.random(station_dict, max_trains, max_time)
         solution_list.append(solution)
-        score_list.append(sn.score())
+        score_list.append(solution.score())
 
     print(score_list)
     return solution_list
 
+def crossover():
+    raise NotImplementedError
+
 def selection():
-    # Raise error ipv
     raise NotImplementedError
 
     # Alleen beste houden is niet altijd beste
     # moeilijk
 
-def crossover():
-    raise NotImplementedError
 
 
 def mutation():

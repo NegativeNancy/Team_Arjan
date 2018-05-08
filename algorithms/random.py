@@ -17,6 +17,7 @@ def random(station_dict, max_trains, max_minutes):
 
     route_list = []
     station_dict_key_list = []
+    max_trains = 1
 
     for key in station_dict:
         station_dict_key_list.append(key)

@@ -12,7 +12,7 @@ from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def hillclimber(station_dict, max_trains, max_minutes, number_of_iterations = 100000):
+def hillclimber(station_dict, max_trains, max_minutes, number_of_iterations = 10000):
 
     route_list = []
     station_dict_key_list = []
@@ -27,7 +27,7 @@ def hillclimber(station_dict, max_trains, max_minutes, number_of_iterations = 10
 
 
     # make a solution of empty routes
-    for i in range(max_minutes):
+    for i in range(max_trains):
         route = rt.Route(connection_list)
         solution.route_list.append(route)
 
@@ -47,17 +47,16 @@ def iteration(station_dict, station_dict_key_list, max_trains, max_minutes, old_
 
     #  create a new route
     while True:
-        begin_station = rd.choice(station_dict_key_list)
         route_time = route.time()
 
         weight = 0.1 * route_time/ max_minutes
-        if 0.05 + weight > rd.random():
+        if 0.05 + weight >   rd.random():
             break
 
         end_station = rd.choice(station_dict[begin_station].neighbors)
 
-        if route_time + end_station[2] < max_minutes:
-            route.append_route(begin_station, end_station[0], end_station[2])
+        if route_time + end_station[1] < max_minutes:
+            route.append_route(begin_station, end_station[0], end_station[1])
             begin_station = end_station[0]
         else:
             break
@@ -67,7 +66,7 @@ def iteration(station_dict, station_dict_key_list, max_trains, max_minutes, old_
     new_score = solution.score()
 
     if old_score < new_score:
-        print (new_score, "dit is iteratie", i)
+        print (new_score, "iteratie", i)
         return new_score
     else:
         solution.route_list[route_index] = old_route

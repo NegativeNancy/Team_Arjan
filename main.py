@@ -31,7 +31,7 @@ def main(argv):
 
     required = parser.add_argument_group('Required argument')
     required.add_argument('-a', '--algorithm', action='store', dest="algorithm",
-        choices=['random', 'greedy', 'genetic', 'hillclimber'], required=True, 
+        choices=['random', 'greedy', 'genetic', 'hillclimber'], required=True,
         help="specify which algorithm to run")
 
     optional = parser.add_argument_group('Optional arguments')
@@ -114,6 +114,7 @@ def main(argv):
     run_time = time.time() - start_time
 
     print_score(run_time, times, score, outfile, visual, store)
+    solution.print_solution()
 
     if (store != True):
         os.remove(outfile)

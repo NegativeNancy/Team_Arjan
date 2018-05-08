@@ -158,15 +158,15 @@ def genetic_alg(station_dict, max_trains, max_minutes):
     return gena.genetic(station_dict, max_trains, max_minutes)
 
 def hillclimber_alg(station_dict, max_trains, max_minutes):
-    """ Genetic solution.
+    """ Hillclimber solution.
 
     Args:
         max_trains: Maximum amount of trains the solution may use.
         max_minutes: Maximum amount of minutes the solution may take.
 
     Returns:
-        A Genetic solution.
-    """,
+        A Hillclimber solution.
+    """
     return hill.hillclimber(station_dict, max_trains, max_minutes)
 
 

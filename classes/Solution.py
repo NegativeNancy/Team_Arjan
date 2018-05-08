@@ -1,14 +1,14 @@
 class Solution():
     """Class that holds possible solutions and computes their score."""
 
-    def __init__(self, solution_list, station_dict):
+    def __init__(self, route_list, station_dict):
         """Initialise class.
 
         Args:
-            solution_list: A list with the routes that make up the solution.
+            route_list: A list with the routes that make up the solution.
             station_dict: A dctionary that contains the stations with its neighbours.
         """
-        self.solution_list = solution_list # dit moet route_list worden!
+        self.route_list = route_list
         self.station_dict = station_dict
         self.score = score()
 
@@ -32,7 +32,7 @@ class Solution():
         # Compute time spent on rails
         min = 0
         t = 0
-        for route in self.solution_list:
+        for route in self.route_list:
             if route.connection_list[0]["begin"] != None:
                 min += route.time()
                 # Routes used in solution
@@ -44,7 +44,7 @@ class Solution():
         return score
 
     def print_solution(self):
-        for route in self.solution_list:
+        for route in self.route_list:
             for connection in route.connection_list:
                 print ("begin:", connection["begin"], "end:", connection["end"] )
             print("End of route")

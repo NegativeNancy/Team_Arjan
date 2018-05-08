@@ -63,8 +63,8 @@ class Solution():
             for connection in route:
                 if connection["begin"] == begin_station and connection["end"] \
                 == end_station or connection["end"] == begin_station and \
-                connection["begin"] == end_station
-                return 1
+                connection["begin"] == end_station:
+                    return 1
         return 0
 
 # loop over solution en check voor iedere connectie of hij kritiek is

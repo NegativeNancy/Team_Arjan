@@ -23,21 +23,21 @@ def hillclimber(station_dict, max_trains, max_minutes, number_of_iterations = 10
 
     # make an 'empty' connection_list
     connection_list = []
-    connection_list.append("begin": None, "end": None, "time": 0)
+    connection_list.append({"begin": None, "end": None, "time": 0})
 
 
     # make a solution of empty routes
     for i in range(max_minutes):
         route = rt.Route(connection_list)
-        solution.solution_list.append(route)
+        solution.route_list.append(route)
 
     score = solution.score()
 
-    for i in range(number_of_iterations)
+    for i in range(number_of_iterations):
         iteration(station_dict, station_dict_key_list, max_trains, max_minutes, score, solution)
 
 def iteration(station_dict, station_dict_key_list, max_trains, max_minutes, old_score,  solution):
-
+    connection_list = []
     route = rt.Route(connection_list)
     route_index = rd.randint(0, max_trains - 1)
 
@@ -60,12 +60,12 @@ def iteration(station_dict, station_dict_key_list, max_trains, max_minutes, old_
         else:
             break
 
-    old_route = solution.solution_list[route_index]
-    solution.solution_list[route_index] = route
+    old_route = solution.route_list[route_index]
+    solution.route_list[route_index] = route
     new_score = solution.score()
 
     if old_score < new_score:
         return new_score
     else:
-        solution.solution_list[route_index] = old_route
+        solution.route_list[route_index] = old_route
         return old_score

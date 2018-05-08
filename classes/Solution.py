@@ -10,7 +10,7 @@ class Solution():
         """
         self.route_list = route_list
         self.station_dict = station_dict
-        self.score = score()
+        # self.score = self.score()
 
     def score(self):
         """ Computes score of solution.
@@ -25,7 +25,7 @@ class Solution():
             for neighbor in self.station_dict[station].neighbors:
                 if neighbor[2] == True:
                     number_of_all_critical_routes += 1
-                    number_used_critical_routes += route_used(station, neighbor)
+                    number_used_critical_routes += self.route_used(station, neighbor)
 
         p = number_used_critical_routes / number_of_all_critical_routes
 
@@ -60,7 +60,7 @@ class Solution():
             1 if the connection is in the solution, 0 otherwise.
         """
         for route in self.route_list:
-            for connection in route:
+            for connection in route.connection_list:
                 if connection["begin"] == begin_station and connection["end"] \
                 == end_station or connection["end"] == begin_station and \
                 connection["begin"] == end_station:

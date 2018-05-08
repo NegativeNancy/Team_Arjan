@@ -12,7 +12,7 @@ from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def hillclimber(station_dict, max_trains, max_minutes, number_of_iterations = 100):
+def hillclimber(station_dict, max_trains, max_minutes, number_of_iterations = 1000):
 
     route_list = []
     station_dict_key_list = []
@@ -36,6 +36,8 @@ def hillclimber(station_dict, max_trains, max_minutes, number_of_iterations = 10
     for i in range(number_of_iterations):
         iteration(station_dict, station_dict_key_list, max_trains, max_minutes, score, solution)
 
+    return solution, station_dict
+
 def iteration(station_dict, station_dict_key_list, max_trains, max_minutes, old_score,  solution):
     connection_list = []
     route = rt.Route(connection_list)
@@ -55,7 +57,7 @@ def iteration(station_dict, station_dict_key_list, max_trains, max_minutes, old_
         end_station = rd.choice(station_dict[begin_station].neighbors)
 
         if route_time + end_station[2] < max_minutes:
-            rt.append_route(begin_station, end_station[0], end_station[2])
+            route.append_route(begin_station, end_station[0], end_station[2])
             begin_station = end_station[0]
         else:
             break

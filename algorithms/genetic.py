@@ -1,30 +1,30 @@
-from algorithms import random as ra
+import random as ra
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
 
+# Goede definitie van crossover
+# Swap in hillclimber is mutatie
 
-def genetic(list_of_solutions):
+def genetic(station_dict, max_trains, max_time):
     print("genetic")
 
-    best_score
-    score_list = []
-
+    # best_score
+    # score_list = []
+    # index = 0
 
     # Return best two solutions
     # Let them make a child
 
     # Caclulate score, save best in best_score and best_solution
-    score_tuple = calc_overall_fitness(list_of_solutions)
-    score_list = score_tuple[0]
-    best_score = score_tuple[1]
+    #score_list, best_score, index = calc_overall_fitness(list_of_solutions)
     # Make children ?
 
-    #
+    #return [], []
 
 
 
-def calc_overall_fitness(list_of_solutions):
+def calc_fitness(list_of_solutions):
     """Calculates fitness of all solutions in solution listself.
 
     Args:
@@ -58,21 +58,29 @@ def make_population(population_size):
     Returns:
         A list of [INTEGER] random solutions.
 
-    """"
-    print("make_population")
+    """
 
     solution_list = []
+    score_list = []
 
     for i in range(population_size):
-        ra.random(max_trains, max_time)
+        solution, station_dict = ra.random(station_dict, max_trains, max_time)
+        solution_list.append(solution)
+        score_list.append(sn.score())
 
+    print(score_list)
     return solution_list
 
 def selection():
-    print("selection")
+    # Raise error ipv
+    raise NotImplementedError
 
-def make_child():
-    print("make_child")
+    # Alleen beste houden is niet altijd beste
+    # moeilijk
+
+def crossover():
+    raise NotImplementedError
+
 
 def mutation():
-    print("mutation")
+    raise NotImplementedError

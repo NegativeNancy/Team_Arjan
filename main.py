@@ -30,7 +30,7 @@ def main(argv):
 
     required = parser.add_argument_group('Required argument')
     required.add_argument('-a', '--algorithm', action='store', dest="algorithm",
-        choices=['random', 'greedy'], required=True, help="specify which algorithm to run")
+        choices=['random', 'greedy', 'genetic'], required=True, help="specify which algorithm to run")
 
     optional = parser.add_argument_group('Optional arguments')
 

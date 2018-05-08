@@ -57,7 +57,7 @@ def greedy(station_dict, max_trains, max_minutes):
 
         if not found_another_station:
             solution = sn.Solution(route_list, station_dict)
-            # solution.print_solution()
+            solution.print_solution()
             return solution, station_dict
             break
 
@@ -111,7 +111,7 @@ def greedy(station_dict, max_trains, max_minutes):
 
     solution = sn.Solution(route_list, station_dict)
 
-    # solution.print_solution()
+    solution.print_solution()
 
     return solution, station_dict
 

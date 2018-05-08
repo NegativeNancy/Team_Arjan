@@ -12,7 +12,7 @@ from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def iterative_1(station_dict, max_trains, max_minutes):
+def hillclimber_1(station_dict, max_trains, max_minutes, number_of_iterations):
 
     route_list = []
     station_dict_key_list = []
@@ -33,7 +33,7 @@ def iterative_1(station_dict, max_trains, max_minutes):
 
     score = solution.score()
 
-    while (score < 8500):
+    for i in range(number_of_iterations)
         iteration(station_dict, station_dict_key_list, max_trains, max_minutes, score, solution)
 
 def iteration(station_dict, station_dict_key_list, max_trains, max_minutes, old_score,  solution):
@@ -61,7 +61,7 @@ def iteration(station_dict, station_dict_key_list, max_trains, max_minutes, old_
             break
 
     old_route = solution.solution_list[route_index]
-    so--lution.solution_list[route_index] = route
+    solution.solution_list[route_index] = route
     new_score = solution.score()
 
     if old_score < new_score:

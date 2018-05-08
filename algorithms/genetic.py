@@ -7,7 +7,6 @@ from classes import Solution as sn
 # Swap in hillclimber is mutatie
 
 def genetic(station_dict, max_trains, max_time):
-    print("genetic")
 
     # best_score
     # score_list = []
@@ -20,7 +19,7 @@ def genetic(station_dict, max_trains, max_time):
     #score_list, best_score, index = calc_overall_fitness(list_of_solutions)
     # Make children ?
 
-    #return [], []
+    return [], station_dict
 
 
 

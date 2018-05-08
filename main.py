@@ -4,6 +4,7 @@ from classes import Solution as sn
 from algorithms import random as ra
 from algorithms import greedy_algorithm as ga
 from algorithms import genetic as gena
+from algorithms import hillclimber as hill
 import plot_data as pd
 import loading_files as load
 import random, sys, getopt, csv, os, os.path, datetime, time, argparse
@@ -30,7 +31,7 @@ def main(argv):
 
     required = parser.add_argument_group('Required argument')
     required.add_argument('-a', '--algorithm', action='store', dest="algorithm",
-        choices=['random', 'greedy', 'genetic'], required=True, help="specify which algorithm to run")
+        choices=['random', 'greedy', 'genetic, hillclimber'], required=True, help="specify which algorithm to run")
 
     optional = parser.add_argument_group('Optional arguments')
 
@@ -96,6 +97,8 @@ def main(argv):
                 solution,station_dict = random_alg(station_dict, train, max_time)
             elif algo == 'genetic':
                 solution, station_dict = genetic_alg(station_dict, train, max_time)
+            elif algo == 'hillclimber':
+                    solution, station_dict = hillclimber_alg(station_dict, train, max_time)
             else:
                 print("You mother forker")
                 exit()
@@ -153,6 +156,18 @@ def genetic_alg(station_dict, max_trains, max_minutes):
         A Genetic solution.
     """
     return gena.genetic(station_dict, max_trains, max_minutes)
+
+def hillclimber_alg(station_dict, max_trains, max_minutes):
+    """ Genetic solution.
+
+    Args:
+        max_trains: Maximum amount of trains the solution may use.
+        max_minutes: Maximum amount of minutes the solution may take.
+
+    Returns:
+        A Genetic solution.
+    """,
+    return hill.hillclimber(station_dict, max_trains, max_minutes)
 
 
 def create_visual(filename):

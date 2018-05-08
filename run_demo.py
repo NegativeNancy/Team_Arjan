@@ -42,28 +42,28 @@ def load_stations_holland():
 
 def load_connections_nederland():
     connection_list = []
-    connection_dict = list()
+    connection_dict_nl = list()
     connections_file = open("data/ConnectionsNationaal.csv")
     for line in connections_file:
         obj = line.split(',')
 
         # Adding variabels to dictionary so it can be used in visualisation.
-        connection_dict.append({"latitude1": obj[0], "longitude1": obj[1],
+        connection_dict_nl.append({"latitude1": obj[0], "longitude1": obj[1],
                                 "latitude2": obj[2], "longitude2": obj[3]})
-    return connection_dict
+    return connection_dict_nl
 
 
 def load_stations_nederland():
     station_list = []
-    station_dict = list()
+    station_dict_nl = list()
     station_file = open("data/StationsNationaal.csv")
     for line in station_file:
         obj = line.split(',')
 
         # Adding variabels to dictionary so it can be used in visualisation.
-        station_dict.append({"name": obj[0], "latitude": obj[1],
+        station_dict_nl.append({"name": obj[0], "latitude": obj[1],
                              "longitude": obj[2], "critical": obj[3]})
-    return station_dict
+    return station_dict_nl
 
 
 # ensure responses aren't cached
@@ -107,13 +107,13 @@ def connections_holland():
 
 @app.route("/update_nationaal")
 def update_nederland():
-    station_dict = load_stations_nederland()
+    station_dict_nl = load_stations_nederland()
     """Find up to 10 places within view."""
-    return jsonify(station_dict)
+    return jsonify(station_dict_nl)
 
 
 @app.route("/connections_nationaal")
 def connections_nederland():
-    connection_dict = load_connections_nederland()
+    connection_dict_nl = load_connections_nederland()
     """Find up to 10 places within view."""
-    return jsonify(connection_dict)
+    return jsonify(connection_dict_nl)

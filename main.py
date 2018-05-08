@@ -45,9 +45,9 @@ def main(argv):
     optional.add_argument('-v', '--visual', action='store_true',
         help="create visual of the results - default: false")
     optional.add_argument('--version', action='version', version='%(prog)s 0.1')
-    optional.add_argument('-l', '--load', action='store', default='nederland',
-        choices=['nederland', 'nederland-simple', 'holland', 'holland-simple'],
-        help='specify which stationfiles needs to be loaded - default: nederland')
+    optional.add_argument('-l', '--load', action='store', default='netherlands',
+        choices=['netherlands', 'netherlands-simple', 'holland', 'holland-simple'],
+        help='specify which stationfiles needs to be loaded - default: netherlands')
 
     args = parser.parse_args()
 
@@ -62,11 +62,11 @@ def main(argv):
     trains_holland = 7
     time_holland = 120
 
-    if (load == 'nederland'):
+    if (load == 'netherlands'):
         station_dict = load_file(True, True)
         train = trains_netherlands
         max_time = time_netherlands
-    elif (load == 'nederland-simple'):
+    elif (load == 'netherlands-simple'):
         station_dict = load_file(True, False)
         train = trains_netherlands
         max_time = time_netherlands
@@ -203,11 +203,11 @@ def print_score(run_time, times_ran, score, outfile, visual, store):
 
 def load_file(file, critical):
     if (file == True and critical == True):
-        print("Nederland Loaded")
+        print("Netherlands Loaded")
         station_dict = load.load_stations(True, True)
         return station_dict
     elif (file == True and critical == False):
-        print("Nederland Simple Loaded")
+        print("Netherlands Simple Loaded")
         station_dict = load.load_stations(True, False)
         return station_dict
     elif (file == False and critical == True):

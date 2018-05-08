@@ -208,12 +208,12 @@ function update_nederland()
     };
 
     $.getJSON(Flask.url_for("update_nationaal"), parameters)
-    .done(function(station_dict, textStatus, jqXHR) {
+    .done(function(station_dict_nl, textStatus, jqXHR) {
 
        // add new markers to map
-       for (var i = 0; i < station_dict.length; i++)
+       for (var i = 0; i < station_dict_nl.length; i++)
        {
-           addMarker(station_dict[i]);
+           addMarker(station_dict_nl[i]);
        }
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
@@ -231,11 +231,11 @@ function connections_nederland()
     };
 
     $.getJSON(Flask.url_for("connections_nationaal"), parameters)
-    .done(function(connection_dict, textStatus, jqXHR) {
+    .done(function(connection_dict_nl, textStatus, jqXHR) {
        // add new line to map
-       for (var i = 0; i < connection_dict.length; i++)
+       for (var i = 0; i < connection_dict_nl.length; i++)
        {
-           addLine(connection_dict[i]);
+           addLine(connection_dict_nl[i]);
        }
     })
     .fail(function(jqXHR, textStatus, errorThrown) {

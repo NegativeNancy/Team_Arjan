@@ -62,10 +62,10 @@ $(function() {
 
         // hier een if else statement die kiest welke update+connection je runt,
         // gebaseerd op een value van eeparameter uit html
-        if (window.location.href=="/nationaal"){
-            nederland()
-        } else{
-            holland()
+        if (window.location.pathname == "/nationaal"){
+            netherlands();
+        } else {
+            holland();
         }
     });
     // configure UI once Google Map is idle (i.e., loaded)
@@ -73,10 +73,10 @@ $(function() {
 
 });
 
-function nederland()
+function netherlands()
 {
-    update_nederland();
-    // connections_nederland();
+    update_netherlands();
+    // connections_netherlands();
 }
 
 function holland()
@@ -196,9 +196,9 @@ function connections_holland()
 
 
 /**
- * Updates UI's markers for nederland
+ * Updates UI's markers for netherlands
  */
-function update_nederland()
+function update_netherlands()
 {
     // get places within bounds (asynchronously)
     var parameters = {
@@ -207,13 +207,13 @@ function update_nederland()
         sw: sw.lat() + "," + sw.lng()
     };
 
-    $.getJSON(Flask.url_for("update_nationaal"), parameters)
-    .done(function(station_dict_nl, textStatus, jqXHR) {
+    $.getJSON(Flask.url_for("update_netherlands"), parameters)
+    .done(function(station_dict, textStatus, jqXHR) {
 
        // add new markers to map
-       for (var i = 0; i < station_dict_nl.length; i++)
+       for (var i = 0; i < station_dict.length; i++)
        {
-           addMarker(station_dict_nl[i]);
+           addMarker(station_dict[i]);
        }
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
@@ -222,7 +222,8 @@ function update_nederland()
     });
 };
 
-function connections_nederland()
+
+function connections_netherlands()
 {
     var parameters = {
         ne: ne.lat() + "," + ne.lng(),
@@ -231,11 +232,11 @@ function connections_nederland()
     };
 
     $.getJSON(Flask.url_for("connections_nationaal"), parameters)
-    .done(function(connection_dict_nl, textStatus, jqXHR) {
+    .done(function(connection_dict, textStatus, jqXHR) {
        // add new line to map
-       for (var i = 0; i < connection_dict_nl.length; i++)
+       for (var i = 0; i < connection_dict.length; i++)
        {
-           addLine(connection_dict_nl[i]);
+           addLine(connection_dict[i]);
        }
     })
     .fail(function(jqXHR, textStatus, errorThrown) {

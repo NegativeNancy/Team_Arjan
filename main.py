@@ -7,6 +7,7 @@ from algorithms import genetic as gena
 from algorithms import hillclimber as hill
 from functions import plot_data as pd
 from functions import loading_files as load
+from subprocess import call
 import random, sys, getopt, csv, os, os.path, datetime, time, argparse
 
 class MyParser(argparse.ArgumentParser):
@@ -36,6 +37,8 @@ def main(argv):
 
     optional = parser.add_argument_group('Optional arguments')
 
+    optional.add_argument('--demo', action='store_true', 
+        help='run demo site with routes - default: false')
     optional.add_argument("-h", "--help", action="help",
         help="show this help message and exit")
     optional.add_argument('-s', '--store', action='store_true',
@@ -51,11 +54,12 @@ def main(argv):
 
     args = parser.parse_args()
 
-    visual = args.visual
-    times = args.times
-    store = args.store
     algo = args.algorithm
+    demo = args.demo
     load = args.load
+    store = args.store
+    times = args.times
+    visual = args.visual
 
     trains_netherlands = 20
     time_netherlands = 180
@@ -117,6 +121,8 @@ def main(argv):
 
     if (store != True):
         os.remove(outfile)
+    if (demo):
+        call(['flask', 'run'])
 
     exit(1)
 

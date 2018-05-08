@@ -1,7 +1,3 @@
-/**
- * updat niet de hele tijd laten triggeren
-*/
-
 // Google Map
 var map;
 var bounds;
@@ -80,13 +76,13 @@ $(function() {
 function nederland()
 {
     update_nederland();
-    connections_nederland();
+    // connections_nederland();
 }
 
 function holland()
 {
     update_holland();
-    connections_holland();
+    // connections_holland();
 }
 
 /**
@@ -99,20 +95,20 @@ function addMarker(station)
     var critical = station["critical"];
 
     var icon_red = {
-        url: '/static/red_dot.png',
+        url: 'static/red_dot.png',
         scaledSize: new google.maps.Size(10, 10),
         origin: new google.maps.Point(0, 0),
         anchor: new google.maps.Point(5, 5)
     }
 
     var icon_blue = {
-        url: '/static/blue_dot.png',
+        url: 'static/blue_dot.png',
         scaledSize: new google.maps.Size(10, 10),
         origin: new google.maps.Point(0, 0),
         anchor: new google.maps.Point(5, 5)
     }
 
-    if (critical == "Kritiek\r\n" || critical = "Kritiek\n") {
+    if (critical == "Kritiek\r\n" || critical == "Kritiek\n") {
         // create marker
         var marker = new google.maps.Marker({
             title: station.name,
@@ -211,7 +207,7 @@ function update_nederland()
         sw: sw.lat() + "," + sw.lng()
     };
 
-    $.getJSON(Flask.url_for("update_nederland"), parameters)
+    $.getJSON(Flask.url_for("update_nationaal"), parameters)
     .done(function(station_dict, textStatus, jqXHR) {
 
        // add new markers to map
@@ -234,7 +230,7 @@ function connections_nederland()
         sw: sw.lat() + "," + sw.lng()
     };
 
-    $.getJSON(Flask.url_for("connections_nederland"), parameters)
+    $.getJSON(Flask.url_for("connections_nationaal"), parameters)
     .done(function(connection_dict, textStatus, jqXHR) {
        // add new line to map
        for (var i = 0; i < connection_dict.length; i++)

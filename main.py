@@ -5,8 +5,8 @@ from algorithms import random as ra
 from algorithms import greedy_algorithm as ga
 from algorithms import genetic as gena
 from algorithms import hillclimber as hill
-import plot_data as pd
-import loading_files as load
+from functions import plot_data as pd
+from functions import loading_files as load
 import random, sys, getopt, csv, os, os.path, datetime, time, argparse
 
 class MyParser(argparse.ArgumentParser):
@@ -31,7 +31,8 @@ def main(argv):
 
     required = parser.add_argument_group('Required argument')
     required.add_argument('-a', '--algorithm', action='store', dest="algorithm",
-        choices=['random', 'greedy', 'genetic', 'hillclimber'], required=True, help="specify which algorithm to run")
+        choices=['random', 'greedy', 'genetic', 'hillclimber'], required=True, 
+        help="specify which algorithm to run")
 
     optional = parser.add_argument_group('Optional arguments')
 

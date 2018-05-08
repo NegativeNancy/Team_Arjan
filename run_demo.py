@@ -1,9 +1,8 @@
 import os
 import re
-import Stations as st
-import Connections as cs
 from flask import Flask, jsonify, render_template, request, url_for
 from flask_jsglue import JSGlue
+
 
 # configure application
 app = Flask(__name__)
@@ -16,9 +15,9 @@ def holland_main():
 
 
 def load_connections_holland():
-    connection_dict = list()
     connection_list = []
-    connections_file = open("csv/connectionsHolland.csv")
+    connection_dict = list()
+    connections_file = open("data/ConnectionsHolland.csv")
     for line in connections_file:
         obj = line.split(',')
 
@@ -30,8 +29,8 @@ def load_connections_holland():
 
 def load_stations_holland():
     station_list = []
-    station_file = open("csv/StationsHolland.csv")
     station_dict = list()
+    station_file = open("data/StationsHolland.csv")
     for line in station_file:
         obj = line.split(',')
 
@@ -42,10 +41,9 @@ def load_stations_holland():
 
 
 def load_connections_nederland():
-    connection_dict = list()
     connection_list = []
-    # connections_file = open("connectionsHolland.csv")
-    connections_file = open("csv/connectionsNederland.csv")
+    connection_dict = list()
+    connections_file = open("data/ConnectionsNationaal.csv")
     for line in connections_file:
         obj = line.split(',')
 
@@ -57,9 +55,8 @@ def load_connections_nederland():
 
 def load_stations_nederland():
     station_list = []
-    # station_file = open("StationsHolland.csv")
-    station_file = open("csv/StationsNationaal.csv")
     station_dict = list()
+    station_file = open("data/StationsNationaal.csv")
     for line in station_file:
         obj = line.split(',')
 
@@ -108,14 +105,14 @@ def connections_holland():
     return jsonify(connection_dict)
 
 
-@app.route("/update_nederland")
+@app.route("/update_nationaal")
 def update_nederland():
     station_dict = load_stations_nederland()
     """Find up to 10 places within view."""
     return jsonify(station_dict)
 
 
-@app.route("/connections_nederland")
+@app.route("/connections_nationaal")
 def connections_nederland():
     connection_dict = load_connections_nederland()
     """Find up to 10 places within view."""

@@ -37,7 +37,7 @@ def main(argv):
 
     optional = parser.add_argument_group('Optional arguments')
 
-    optional.add_argument('--demo', action='store_true', 
+    optional.add_argument('--demo', action='store_true',
         help='run demo site with routes - default: false')
     optional.add_argument("-h", "--help", action="help",
         help="show this help message and exit")
@@ -117,8 +117,8 @@ def main(argv):
 
     run_time = time.time() - start_time
 
-    print_score(run_time, times, score, outfile, visual, store)
     solution.print_solution()
+    print_score(run_time, times, score, outfile, visual, store)
 
     if (store != True):
         os.remove(outfile)

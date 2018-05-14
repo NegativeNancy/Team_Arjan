@@ -35,7 +35,7 @@ class Solution():
         for route in self.route_list:
             if route.connection_list == []:
                 t += 0
-            elif route.connection_list[0]["begin"] != None:
+            else:
                 min += route.time()
                 # Routes used in solution
                 t += 1

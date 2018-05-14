@@ -18,3 +18,6 @@ class Route():
 
     def append_route(self, begin_station, end_station, time):
         self.connection_list.append({"begin": begin_station, "end": end_station, "time": time})
+
+    def append_route_front(self, begin_station, end_station, time):
+        self.connection_list.insert(0, {"begin": begin_station, "end": end_station, "time": time})

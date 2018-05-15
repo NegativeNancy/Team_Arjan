@@ -20,6 +20,8 @@ The following arguments can be given:
 
 `-a` or `--algorythm` 	- Specify which algorythm to run
 
+`-l` or `--load` 		- Specify which files to load
+
 `-t` or `--times` 		- Specify how many times the algorithm runs
 
 `-v` or `--visual` 		- Create visualization

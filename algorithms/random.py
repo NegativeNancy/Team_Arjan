@@ -21,43 +21,28 @@ def random(station_dict, max_trains, max_minutes):
     for key in station_dict:
         station_dict_key_list.append(key)
 
-    for i in range(max_trains):
+    number_of_trains = 1 + rd.choice(range(int(max_trains / 2), max_trains))
+    for i in range(number_of_trains):
         connection_list = []
         route = rt.Route(connection_list)
         current_station = rd.choice(station_dict_key_list)
+        time_of_route = 0
 
         while True:
             next_station = rd.choice(station_dict[current_station].neighbors)
 
-            # Check whether route won't be longer than allowed
+            # Check whether route won't be longer than allowed.
             if next_station[1] + route.time() < max_minutes:
-                for neighbor in station_dict[current_station].neighbors :
-                    if neighbor[0] == next_station[0]:
-                        neighbor[3] = True
-                for neighbor in station_dict[next_station[0]].neighbors:
-                    if neighbor[0] == current_station:
-                        neighbor[3] = True
-
-
-                connection = {"begin": current_station, "end":next_station[0], "time":next_station[1]}
-
+                route.append_route(current_station, next_station[0], next_station[1])/
                 current_station = next_station[0]
-
-                # Add new step to route
-                connection_list.append(connection)
-                route.connection_list = connection_list
-
-            # If route is too long, break
+                
+            # Route is too long.
             else:
                 break
 
-        # Add route to our list of routes
+        # Add route to our list of routes.
+
         route_list.append(route)
 
     solution = sn.Solution(route_list, station_dict)
-
-    # for i in range(max_trains):
-    #     print(solution.solution_list[i].connection_list)
-    #     print("\n")
-
     return solution, station_dict

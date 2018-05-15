@@ -35,23 +35,22 @@ def hillclimber(station_dict, max_trains, max_minutes, number_of_iterations_a = 
     score = solution.score()
 
     for i in range(number_of_iterations_a):
-        score = iteration_routes(station_dict, station_dict_key_list, max_trains, max_minutes, score, solution, i)
+        score = iteration_routes(station_dict_key_list, max_trains, max_minutes, score, solution)
     print ("Loop 1:")
     print(score)
     for j in range(number_of_iterations_b):
-        score = iteration_connections(station_dict, station_dict_key_list, max_trains, max_minutes, score, solution, j)
+        score = iteration_connections(station_dict_key_list, max_trains, max_minutes, score, solution)
     print ("Loop 2:")
     print(score)
     return solution, station_dict
 
 
-def iteration_routes(station_dict, station_dict_key_list, max_trains, max_minutes, old_score,  solution, i):
+def iteration_routes(station_dict_key_list, max_trains, max_minutes, old_score,  solution):
     """ An iteration of the hillclimber. A random new route is created, then a
     random route is chosen, and replaced by the new route. If the score improves
     we hold on to the change.
 
     Args:
-        station_dict: The station dict, holding the graph.
         station_dict_key_list: List of keys of the station dict.
         max_trains: Integer representing the maximum number of trains allowed.
         max_minutes: Integer representing the maximum ammount of minutes traveled by a train.
@@ -76,7 +75,7 @@ def iteration_routes(station_dict, station_dict_key_list, max_trains, max_minute
         if 0.05 + weight > rd.random():
             break
 
-        end_station = rd.choice(station_dict[begin_station].neighbors)
+        end_station = rd.choice(solution.station_dict[begin_station].neighbors)
 
         if route_time + end_station[1] < max_minutes:
             route.append_route(begin_station, end_station[0], end_station[1])
@@ -86,7 +85,7 @@ def iteration_routes(station_dict, station_dict_key_list, max_trains, max_minute
 
     return check_for_improvement(old_score, solution, route_index, route)
 
-def iteration_connections(station_dict, station_dict_key_list, max_trains, max_minutes, old_score, solution, j):
+def iteration_connections(station_dict_key_list, max_trains, max_minutes, old_score, solution):
     """ An iteration of the hillclimber. A random route is chosen, then with
     certain probability we remove either the first or final connection and with
     certain probability we place a new connection on the first or final
@@ -94,7 +93,6 @@ def iteration_connections(station_dict, station_dict_key_list, max_trains, max_m
     the change.
 
     Args:
-        station_dict: The station dict, holding the graph.
         station_dict_key_list: List of keys of the station dict.
         max_trains: Integer representing the maximum number of trains allowed.
         max_minutes: Integer representing the maximum ammount of minutes traveled by a train.
@@ -127,7 +125,7 @@ def iteration_connections(station_dict, station_dict_key_list, max_trains, max_m
             end_station = new_route.connection_list[0]["begin"]
         else:
             end_station = rd.choice(station_dict_key_list)
-        begin_station = rd.choice(station_dict[end_station].neighbors)
+        begin_station = rd.choice(solution.station_dict[end_station].neighbors)
         if new_route.time() + begin_station[1] < max_minutes:
             new_route.append_route_front(begin_station[0], end_station, begin_station[1])
 
@@ -137,7 +135,7 @@ def iteration_connections(station_dict, station_dict_key_list, max_trains, max_m
             begin_station = new_route.connection_list[len(new_route.connection_list)-1]["end"]
         else:
             begin_station = rd.choice(station_dict_key_list)
-        end_station = rd.choice(station_dict[begin_station].neighbors)
+        end_station = rd.choice(solution.station_dict[begin_station].neighbors)
         if new_route.time() + end_station[1] < max_minutes:
             new_route.append_route(begin_station, end_station[0], end_station[1])
 

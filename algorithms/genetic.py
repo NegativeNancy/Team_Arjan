@@ -5,33 +5,34 @@ from classes import Solution as sn
 import random as rd
 
 def genetic(station_dict, max_trains, max_time):
+    """ Algorithm that finds a genetic solution.
 
+    Args:
+        station_dict:
+        max_trains:
+        max_time:
+
+
+    """
     solution = sn.Solution([], station_dict)
 
-    crossover_array = make_array(max_trains)
+    crossover_array = make_list(max_trains)
 
-
-    # Make population
+    # Make population.
     solution_list, score_list = make_population(50, station_dict, max_trains, max_time)
-    # solution_list[0].print_solution()
-    # print("\n\n\n\n")
-    # solution_list[1].print_solution()
-    # print("\n\n\n\n")
-    normalise_fitness(score_list)
+    select_score(score_list)
     best_score = 0
     best_solution = sn.Solution([], station_dict)
     crossover_solution = crossover(crossover_array, max_trains, solution_list[0], solution_list[1], station_dict)
+
+    # Find best crossover.
     for index in range(0 ,len(solution_list), 2):
         crossover_solutions = crossover(crossover_array, max_trains, solution_list[index], solution_list[index + 1], station_dict)
-        #print(crossover_solutions.score())
         if crossover_solutions.score() > best_score:
             best_score = crossover_solutions.score()
-            #print(best_score)
             best_solution = crossover_solutions
 
-#    print(calc_fitness(solution_list[:2]))
-
-    return crossover_solution, station_dict
+    #return crossover_solution, station_dict
     return best_solution, station_dict
 
 
@@ -57,8 +58,6 @@ def calc_fitness(list_of_solutions):
             best_score = score_list[i]
             index = i
     return score_list, best_score, index
-
-    # Calculate score of solution
 
 def select_score(score_list):
     """ Selects score to produce next population.

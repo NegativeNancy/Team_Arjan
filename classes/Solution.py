@@ -10,7 +10,6 @@ class Solution():
         """
         self.route_list = route_list
         self.station_dict = station_dict
-        # self.score = self.score() vraag tech assistent
 
     def score(self):
         """ Computes score of solution.

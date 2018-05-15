@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 from flask import Flask, jsonify, render_template, request, url_for
 from flask_jsglue import JSGlue
 
@@ -17,13 +18,13 @@ def holland_main():
 def load_connections_holland():
     connection_list = []
     connection_dict = list()
-    connections_file = open("data/ConnectionsHolland.csv")
+    connections_file = open("data/ConnectiesHolland.csv")
     for line in connections_file:
         obj = line.split(',')
 
         # Adding variabels to dictionary so it can be used in visualisation.
-        connection_dict.append({"latitude1": obj[0], "longitude1": obj[1],
-                                "latitude2": obj[2], "longitude2": obj[3]})
+        connection_dict.append({"station1": obj[0], "station2": obj[1],
+                                "length": obj[2], "critical": obj[3]})
     return connection_dict
 
 
@@ -43,13 +44,13 @@ def load_stations_holland():
 def load_connections_netherlands():
     connection_list = []
     connection_dict = list()
-    connections_file = open("data/ConnectionsNationaal.csv")
+    connections_file = open("data/ConnectiesNationaal.csv")
     for line in connections_file:
         obj = line.split(',')
 
         # Adding variabels to dictionary so it can be used in visualisation.
-        connection_dict.append({"latitude1": obj[0], "longitude1": obj[1],
-                                "latitude2": obj[2], "longitude2": obj[3]})
+        connection_dict.append({"station1": obj[0], "station2": obj[1],
+                                "length": obj[2], "critical": obj[3]})
     return connection_dict
 
 

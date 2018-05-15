@@ -105,7 +105,6 @@ def main(argv):
             elif algo == 'hillclimber':
                     solution, station_dict = hillclimber_alg(station_dict, train, max_time)
             else:
-                print("You mother forker")
                 exit()
 
             temp = solution.score()

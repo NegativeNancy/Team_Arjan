@@ -8,6 +8,9 @@ var markers = [];
 var ne;
 var sw;
 
+var connection_dict;
+var station_dict;
+
 // execute when the DOM is fully loaded
 $(function() {
 
@@ -76,13 +79,13 @@ $(function() {
 function netherlands()
 {
     update_netherlands();
-    // connections_netherlands();
+    connections_netherlands();
 }
 
 function holland()
 {
     update_holland();
-    // connections_holland();
+    connections_holland();
 }
 
 /**
@@ -245,15 +248,28 @@ function connections_netherlands()
     });
 }
 
-/**
- * Adds marker for station to map.
- */
-function addLine(station)
+
+function addLine(connection)
 {
-    var lat1 = Number(station["latitude1"]);
-    var lng1 = Number(station["longitude1"]);
-    var lat2 = Number(station["latitude2"]);
-    var lng2 = Number(station["longitude2"]);
+    var lat1, lng1, lat2, lng2;
+
+    var station1 = connection["station1"];
+    var station2 = connection["longitude1"];
+    // var length = Number(connection["length"]);
+    var critical = connection["critical"];
+
+    for (station in station_dict.items()) {
+        console.log("station1: " + station1 + "station2: " + station2 + "station_dict: " + station_dict);
+        if (station_dict == station1) {
+            lat1 = Number(station_dict.latitude);
+            lng1 = Number(station_dict.longitude);
+        } 
+        if (station_dict[i] == station2) {
+            lat2 = Number(station_dict.latitude);
+            lng2 = Number(station_dict.longitude);
+        }
+    }
+
 
     // initialize anchor for marker
     var linePart =[
@@ -268,5 +284,6 @@ function addLine(station)
         strokeOpacity: 1.0,
         strokeWeight: 2
     });
+
     linePath.setMap(map);
 }

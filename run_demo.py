@@ -15,14 +15,14 @@ def holland_main():
     load_stations()
 
 
-def load_connections(station_dict, nationaal):
+def load_connections(station_dict, netherlands):
     station1 = list() 
     station2 = list()
 
     connection_list = []
     connection_dict = list()
 
-    if nationaal:
+    if netherlands:
         connections_file = open("data/ConnectiesNationaal.csv")
     else:
         connections_file = open("data/ConnectiesHolland.csv")
@@ -33,11 +33,13 @@ def load_connections(station_dict, nationaal):
         for station in station_dict:
             if station["name"] == obj[0]:
                 station1 = station
+                print(station1)
                 break
 
         for station in station_dict:
-            if station["name"] == obj[0]:
+            if station["name"] == obj[1]:
                 station2 = station
+                print(station2)
                 break
 
         # Adding variabels to dictionary so it can be used in visualisation.
@@ -51,10 +53,10 @@ def load_connections(station_dict, nationaal):
     return connection_dict
 
 
-def load_stations(nationaal):
+def load_stations(netherlands):
     station_list = []
     station_dict = list()
-    if nationaal:
+    if netherlands:
         station_file = open("data/StationsNationaal.csv")
     else:
         station_file = open("data/StationsHolland.csv")
@@ -86,7 +88,7 @@ def index():
     return render_template("index.html", key=os.environ.get("API_KEY"))
 
 
-@app.route("/nationaal")
+@app.route("/netherlands")
 def nationaal():
     if not os.environ.get("API_KEY"):
         raise RuntimeError("API_KEY not set")
@@ -108,14 +110,14 @@ def connections_holland():
     return jsonify(connection_dict)
 
 
-@app.route("/update_nationaal")
+@app.route("/update_netherlands")
 def update_netherlands():
     station_dict = load_stations(True)
     """Find up to 10 places within view."""
     return jsonify(station_dict)
 
 
-@app.route("/connections_nationaal")
+@app.route("/connections_netherlands")
 def connections_netherlands():
     station_dict = load_stations(True)
     connection_dict = load_connections(station_dict, True)

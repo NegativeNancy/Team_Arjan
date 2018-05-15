@@ -9,32 +9,82 @@ def genetic(station_dict, max_trains, max_time):
 
     Args:
         station_dict:
-        max_trains:
-        max_time:
+        max_trains: Maximum amount of trains allowed.
+        max_minutes: Maximum amount of minutes the trains can run forself
 
+    Returns:
+
+
+
+    DOESN'T WORK YET: moet de crossover nieuwe populatie nog de huidige populatie maken
+    zodat je daar mee verder kunt
 
     """
     solution = sn.Solution([], station_dict)
 
-    crossover_array = make_list(max_trains)
-
+    crossover_list = make_list(max_trains)
+    population_size = 50
     # Make population.
-    solution_list, score_list = make_population(50, station_dict, max_trains, max_time)
+    solution_list, score_list = make_population(population_size, station_dict, max_trains, max_time)
     select_score(score_list)
     best_score = 0
     best_solution = sn.Solution([], station_dict)
-    crossover_solution = crossover(crossover_array, max_trains, solution_list[0], solution_list[1], station_dict)
+    crossover_solution = crossover(crossover_list, max_trains, solution_list[0], solution_list[1], station_dict)
+    calc_and_print_mean(score_list)
+    print("\n\n\n\n")
+    listed = []
+    index_list = []
+    # Select two solutions.
+    for i in range(2):
+        index, selected = select_score(score_list)
+        index_list.append(index)
+        listed.append(selected)
+    worsened_solution = 0
+    crossover_solution_list = []
+    crossover_score_list = []
+    worst_score = 100000
+    while worsened_solution < 10:
+        inside = 0
+        crossover_solution_list = []
+        crossover_score_list = []
+        # Create next generation.
+        for i in range(population_size):
+            crossover_solution = crossover(crossover_list, max_trains, solution_list[index_list[0]], solution_list[index_list[1]], station_dict)
+            crossover_solution_score = crossover_solution.score()
+            crossover_solution_list.append(crossover_solution)
+            crossover_score_list.append(crossover_solution_score)
+
+            # Determine best score.
+            if crossover_solution_score > best_score:
+                best_score = crossover_solution_score
+                best_solution = crossover_solution
+
+            # Only allow solution to worsen a set amount of time.
+            if crossover_solution_score < worst_score or worst_score == crossover_solution_score:
+                worsened_solution += 1
+                print("inside")
+                worst_score = crossover_solution_score
+        calc_and_print_mean(crossover_score_list)
+
+        """ Now, make sure solution list is empty again so the newly created generation can
+        actually become the next generation that you work with. """
+        solution_list = []
+        solution_list = list(crossover_solution_list)
 
     # Find best crossover.
-    for index in range(0 ,len(solution_list), 2):
-        crossover_solutions = crossover(crossover_array, max_trains, solution_list[index], solution_list[index + 1], station_dict)
-        if crossover_solutions.score() > best_score:
-            best_score = crossover_solutions.score()
-            best_solution = crossover_solutions
+    # for index in range(0 ,len(solution_list), 2):
+    #     crossover_solutions = crossover(crossover_list, max_trains, solution_list[index], solution_list[index + 1], station_dict)
+    #     if crossover_solutions.score() > best_score:
+    #         best_score = crossover_solutions.score()
+    #         best_solution = crossover_solutions
 
     #return crossover_solution, station_dict
     return best_solution, station_dict
 
+def calc_and_print_mean(score_list):
+    summer = sum(score_list)
+    print(len(score_list))
+    print(round(summer / 50, 1))
 
 
 def calc_fitness(list_of_solutions):
@@ -57,6 +107,7 @@ def calc_fitness(list_of_solutions):
         if score_list[i] > best_score:
             best_score = score_list[i]
             index = i
+
     return score_list, best_score, index
 
 def select_score(score_list):
@@ -100,7 +151,7 @@ def make_population(population_size, station_dict, max_trains, max_time):
 
     # Create set amount of new solutions.
     for i in range(population_size):
-        solution, station_dict = ra.random(station_dict, max_trains, max_time)
+        solution, station_dict = ra.random(station_dict, max_trains, max_time, False)
         solution_list.append(solution)
         score_list.append(solution.score())
 

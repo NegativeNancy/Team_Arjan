@@ -8,9 +8,6 @@ var markers = [];
 var ne;
 var sw;
 
-var connection_dict;
-var station_dict;
-
 // execute when the DOM is fully loaded
 $(function() {
 
@@ -62,12 +59,11 @@ $(function() {
         ne = bounds.getNorthEast();
         sw = bounds.getSouthWest();
 
-
-        // hier een if else statement die kiest welke update+connection je runt,
-        // gebaseerd op een value van eeparameter uit html
-        if (window.location.pathname == "/nationaal"){
+        if (window.location.pathname == "/netherlands"){
+            console.log("NEDERLAND!")
             netherlands();
         } else {
+            console.log("HOLAND!")
             holland();
         }
     });
@@ -96,41 +92,43 @@ function addMarker(station)
     // initialize anchor for marker
     var myLatLng = new google.maps.LatLng(station["latitude"], station["longitude"]);
     var critical = station["critical"];
-
-    var icon_red = {
-        url: 'static/red_dot.png',
-        scaledSize: new google.maps.Size(10, 10),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(5, 5)
-    }
-
-    var icon_blue = {
-        url: 'static/blue_dot.png',
-        scaledSize: new google.maps.Size(10, 10),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(5, 5)
-    }
+    var icon = '';
 
     if (critical == "Kritiek\r\n" || critical == "Kritiek\n") {
-        // create marker
-        var marker = new google.maps.Marker({
-            title: station.name,
-            position: myLatLng,
-            icon: icon_red
-            });
-        marker.setMap(map);
+        icon = markerColor(true);
     } else {
-        // create marker
-        var marker = new google.maps.Marker({
-            title: station.name,
-            position: myLatLng,
-            icon: icon_blue
-            });
-        marker.setMap(map);
+        icon =  markerColor(false);
     }
+
+    // create marker
+    var marker = new google.maps.Marker({
+        title: station.name,
+        position: myLatLng,
+        icon: icon
+        });
+    marker.setMap(map);
 
     // add marker to our list of markers
     markers.push(marker);
+}
+
+function markerColor(color)
+{
+    var url = '';
+    if (color) {
+            url = 'static/red_dot.png'
+    } else {
+            url = 'static/blue_dot.png'
+    }
+
+    var icon = {
+        url: url,
+        scaledSize: new google.maps.Size(10, 10),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(5, 5)
+    }
+
+    return icon;
 }
 
 /**
@@ -233,43 +231,36 @@ function connections_netherlands()
         q: $("#q").val(),
         sw: sw.lat() + "," + sw.lng()
     };
+    console.log("ConnectionsNederland");
 
-    $.getJSON(Flask.url_for("connections_nationaal"), parameters)
+    $.getJSON(Flask.url_for("connections_netherlands"), parameters)
     .done(function(connection_dict, textStatus, jqXHR) {
+        console.log("ConnectionsNederland2");
        // add new line to map
        for (var i = 0; i < connection_dict.length; i++)
        {
            addLine(connection_dict[i]);
        }
+        console.log("ConnectionsNederland3");
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
         // log error to browser's console
         console.log(errorThrown.toString());
+
     });
+    console.log("ConnectionsNederland4");
 }
 
-
+/**
+ * Adds marker for station to map.
+ */
 function addLine(connection)
 {
-    var lat1, lng1, lat2, lng2;
-
-    var station1 = connection["station1"];
-    var station2 = connection["longitude1"];
-    // var length = Number(connection["length"]);
+    var lat1 = Number(connection["latitude1"]);
+    var lng1 = Number(connection["longitude1"]);
+    var lat2 = Number(connection["latitude2"]);
+    var lng2 = Number(connection["longitude2"]);
     var critical = connection["critical"];
-
-    for (station in station_dict.items()) {
-        console.log("station1: " + station1 + "station2: " + station2 + "station_dict: " + station_dict);
-        if (station_dict == station1) {
-            lat1 = Number(station_dict.latitude);
-            lng1 = Number(station_dict.longitude);
-        } 
-        if (station_dict[i] == station2) {
-            lat2 = Number(station_dict.latitude);
-            lng2 = Number(station_dict.longitude);
-        }
-    }
-
 
     // initialize anchor for marker
     var linePart =[
@@ -277,13 +268,20 @@ function addLine(connection)
         {lat: lat2, lng: lng2 }
     ];
 
+    var color = '';
+    if (critical == "Kritiek\n") {
+        color = '#ff0000';
+    } else {
+        color = '#000000';
+    }
+
     var linePath = new google.maps.Polyline({
         path: linePart,
         geodesic: true,
-        strokeColor: '#000000',
+        strokeColor: color,
         strokeOpacity: 1.0,
         strokeWeight: 2
-    });
+    });  
 
     linePath.setMap(map);
 }

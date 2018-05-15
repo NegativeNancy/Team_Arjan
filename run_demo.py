@@ -15,49 +15,52 @@ def holland_main():
     load_stations()
 
 
-def load_connections_holland():
+def load_connections(station_dict, netherlands):
+    station1 = list() 
+    station2 = list()
+
     connection_list = []
     connection_dict = list()
-    connections_file = open("data/ConnectiesHolland.csv")
+
+    if netherlands:
+        connections_file = open("data/ConnectiesNationaal.csv")
+    else:
+        connections_file = open("data/ConnectiesHolland.csv")
+
     for line in connections_file:
         obj = line.split(',')
 
+        for station in station_dict:
+            if station["name"] == obj[0]:
+                station1 = station
+                print(station1)
+                break
+
+        for station in station_dict:
+            if station["name"] == obj[1]:
+                station2 = station
+                print(station2)
+                break
+
         # Adding variabels to dictionary so it can be used in visualisation.
-        connection_dict.append({"station1": obj[0], "station2": obj[1],
+        connection_dict.append({"name1": obj[0], "name2": obj[1],
+                                "latitude1": station1["latitude"], 
+                                "longitude1": station1["longitude"],
+                                "latitude2": station2["latitude"], 
+                                "longitude2": station2["longitude"], 
                                 "length": obj[2], "critical": obj[3]})
+
     return connection_dict
 
 
-def load_stations_holland():
+def load_stations(netherlands):
     station_list = []
     station_dict = list()
-    station_file = open("data/StationsHolland.csv")
-    for line in station_file:
-        obj = line.split(',')
+    if netherlands:
+        station_file = open("data/StationsNationaal.csv")
+    else:
+        station_file = open("data/StationsHolland.csv")
 
-        # Adding variabels to dictionary so it can be used in visualisation.
-        station_dict.append({"name": obj[0], "latitude": obj[1],
-                             "longitude": obj[2], "critical": obj[3]})
-    return station_dict
-
-
-def load_connections_netherlands():
-    connection_list = []
-    connection_dict = list()
-    connections_file = open("data/ConnectiesNationaal.csv")
-    for line in connections_file:
-        obj = line.split(',')
-
-        # Adding variabels to dictionary so it can be used in visualisation.
-        connection_dict.append({"station1": obj[0], "station2": obj[1],
-                                "length": obj[2], "critical": obj[3]})
-    return connection_dict
-
-
-def load_stations_netherlands():
-    station_list = []
-    station_dict = list()
-    station_file = open("data/StationsNationaal.csv")
     for line in station_file:
         obj = line.split(',')
 
@@ -85,7 +88,7 @@ def index():
     return render_template("index.html", key=os.environ.get("API_KEY"))
 
 
-@app.route("/nationaal")
+@app.route("/netherlands")
 def nationaal():
     if not os.environ.get("API_KEY"):
         raise RuntimeError("API_KEY not set")
@@ -94,27 +97,29 @@ def nationaal():
 
 @app.route("/update_holland")
 def update_holland():
-    station_dict = load_stations_holland()
+    station_dict = load_stations(False)
     """Find up to 10 places within view."""
     return jsonify(station_dict)
 
 
 @app.route("/connections_holland")
 def connections_holland():
-    connection_dict = load_connections_holland()
+    station_dict = load_stations(False)
+    connection_dict = load_connections(station_dict, False)
     """Find up to 10 places within view."""
     return jsonify(connection_dict)
 
 
-@app.route("/update_nationaal")
+@app.route("/update_netherlands")
 def update_netherlands():
-    station_dict = load_stations_netherlands()
+    station_dict = load_stations(True)
     """Find up to 10 places within view."""
     return jsonify(station_dict)
 
 
-@app.route("/connections_nationaal")
+@app.route("/connections_netherlands")
 def connections_netherlands():
-    connection_dict = load_connections_netherlands()
+    station_dict = load_stations(True)
+    connection_dict = load_connections(station_dict, True)
     """Find up to 10 places within view."""
     return jsonify(connection_dict)

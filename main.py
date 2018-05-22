@@ -64,6 +64,7 @@ def main(argv):
     visual = args.visual
 
     station_dict, train, max_time = helper.load_scenario(scenario)
+    solution = helper.init_solution(station_dict, train, max_time)
 
     # Create filename to save scores in.
     folder_output = "./data/scores/"
@@ -78,7 +79,7 @@ def main(argv):
             quoting=csv.QUOTE_MINIMAL)
 
         for i in range(times):
-            solution, station_dict = helper.run_algorithm(algo, station_dict, train, max_time)
+            solution, station_dict = helper.run_algorithm(algo, solution)
 
             temp = solution.score()
             spamwriter.writerow([temp])

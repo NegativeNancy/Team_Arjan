@@ -11,71 +11,77 @@ from subprocess import call
 import random, sys, getopt, csv, os, os.path, datetime, time, argparse
 
 
-def run_algorithm(algo, station_dict, train, max_time):
+def init_solution(station_dict, max_trains, max_minutes):
+    key_list = []
+    for station in station_dict:
+        key_list.append(station)
+
+    solution = sn.Solution([], station_dict, max_trains, max_minutes, key_list)
+
+    return solution
+
+
+def run_algorithm(algo, solution):
     if (algo == 'greedy'):
-        solution,station_dict = greedy_alg(station_dict, train, max_time)
+        solution,station_dict = greedy_alg(solution)
     elif (algo == 'random'):
-        solution,station_dict = random_alg(station_dict, train, max_time)
+        solution,station_dict = random_alg(solution)
     elif algo == 'genetic':
-        solution, station_dict = genetic_alg(station_dict, train, max_time)
+        solution, station_dict = genetic_alg(solution)
     elif algo == 'hillclimber':
-        solution, station_dict = hillclimber_alg(station_dict, train, max_time)
+        solution, station_dict = hillclimber_alg(solution)
     else:
         exit()
 
     return solution, station_dict
 
 
-def random_alg(station_dict, max_trains, max_minutes):
+def random_alg(solution):
     """ Random solution.
 
     Args:
-        max_trains: Maximum amount of trains the solution may use.
-        max_minutes: Maximum amount of minutes the solution may take.
+        solution: Empty instance of solution object.
 
     Returns:
         A random solution.
     """
-    return ra.random(station_dict, max_trains, max_minutes)
+    return ra.random(solution)
 
 
-def greedy_alg(station_dict, max_trains, max_minutes):
+def greedy_alg(solution):
     """ Greedy solution.
 
     Args:
-        max_trains: Maximum amount of trains the solution may use.
-        max_minutes: Maximum amount of minutes the solution may take.
+        solution: Empty instance of solution object.
 
     Returns:
         A Greedy solution.
     """
-    return ga.greedy(station_dict, max_trains, max_minutes)
+    return ga.greedy(solution)
 
 
-def genetic_alg(station_dict, max_trains, max_minutes):
+def genetic_alg(solution):
     """ Genetic solution.
 
     Args:
-        max_trains: Maximum amount of trains the solution may use.
-        max_minutes: Maximum amount of minutes the solution may take.
+        solution: Empty instance of solution object.
 
     Returns:
         A Genetic solution.
     """
-    return gena.genetic(station_dict, max_trains, max_minutes)
+    return gena.genetic(solution)
 
 
-def hillclimber_alg(station_dict, max_trains, max_minutes):
+def hillclimber_alg(solution):
     """ Hillclimber solution.
 
     Args:
-        max_trains: Maximum amount of trains the solution may use.
-        max_minutes: Maximum amount of minutes the solution may take.
+        solution: Empty instance of solution object.
 
     Returns:
         A Hillclimber solution.
     """
-    return hill.hillclimber(station_dict, max_trains, max_minutes)
+    return hill.hillclimber(solution)
 
 
 def print_score(run_time, times_ran, score, outfile, visual, store):

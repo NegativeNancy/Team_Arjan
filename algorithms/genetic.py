@@ -4,7 +4,7 @@ from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def genetic(station_dict, max_trains, max_time):
+def genetic(solution):
     """ Algorithm that finds a genetic solution.
 
     Args:
@@ -13,43 +13,27 @@ def genetic(station_dict, max_trains, max_time):
         max_minutes: Maximum amount of minutes the trains can run forself
 
     Returns:
-        A genetically generted solution
-
-    - Make initial population (make_population())
-    - Match two solutions (pick_next_population_parents())
-        - Do this for whole generation?
-    - Cross these two pratens
-    - Make sure they are part of the next generation
-
+        A genetically generated solution
     """
-    list_of_solutions = []
     score_list = []
     solution_list = []
     crossover_list = []
-    crossover_solution_list = []
-    crossover_score_list = []
-    index_list = []
-    listed = []
 
-    crossover_list = make_list(max_trains)
-    population_size = 1000
+    crossover_list = make_list(solution.max_trains)
+    population_size = 500
 
     # Make population.
-    solution_list, score_list = make_population(population_size, station_dict, max_trains, max_time)
+    solution_list, score_list = make_population(population_size, solution)
 
-#    select_score(score_list)
     best_score = 0
-    best_solution = sn.Solution([], station_dict)
+    best_solution = sn.Solution([], solution.station_dict)
 
-    print(determine_best_score(score_list))
     worsened_solution = 0
-    crossover_solution_list = []
-    crossover_score_list = []
     worst_score = 100000
     index = 0
     generation = 0
     #worsened_solution < 25 or
-    while generation < 500:
+    while generation < 100:
         crossover_solution_list = []
         crossover_score_list = []
         # Create next generation.
@@ -57,7 +41,7 @@ def genetic(station_dict, max_trains, max_time):
             # Pick two parents.
             parents_index, parents = pick_next_population_parents(score_list, population_size)
             #print(index, index + 1)
-            crossover_solution = crossover(crossover_list, max_trains, solution_list[parents_index[0]], solution_list[parents_index[1]], station_dict)
+            crossover_solution = crossover(crossover_list, solution, solution_list[parents_index[0]], solution_list[parents_index[1]])
             crossover_solution_score = crossover_solution.score()
             crossover_solution_list.append(crossover_solution)
             crossover_score_list.append(crossover_solution_score)
@@ -76,9 +60,6 @@ def genetic(station_dict, max_trains, max_time):
             parents_index = []
             parents = []
 
-        # print("mean")
-        #calc_and_print_mean(crossover_score_list)
-
         solution_list = []
         solution_list = list(crossover_solution_list)
         generation += 1
@@ -86,11 +67,11 @@ def genetic(station_dict, max_trains, max_time):
 
     # Find best crossover.
     print(best_solution.score())
-    return best_solution, station_dict
+    return best_solution
 
 def calc_and_print_mean(score_list):
     summer = sum(score_list)
-    print(round(summer / 50, 1))
+    print(round(summer / 500, 1))
 
 
 def determine_best_score(score_list):
@@ -168,7 +149,7 @@ def select_score(score_list, population_size):
 
     return index % population_size, score_list[index % population_size]
 
-def make_population(population_size, station_dict, max_trains, max_time):
+def make_population(population_size, solution):
     """ Generate a population consisted of random solutions.
 
     Args:
@@ -183,9 +164,9 @@ def make_population(population_size, station_dict, max_trains, max_time):
     score_list = []
     # Create set amount of new solutions.
     for i in range(population_size):
-        solution, station_dict = ra.random(station_dict, max_trains, max_time, False)
-        solution_list.append(solution)
-        score_list.append(solution.score())
+        genetic_solution = ra.random(solution, False)
+        solution_list.append(genetic_solution)
+        score_list.append(genetic_solution.score())
 
     return solution_list, score_list
 
@@ -201,7 +182,7 @@ def make_list(max_trains):
     total_list = list(range(max_trains * 2))
     return total_list
 
-def crossover(crossover_list, max_trains, solution1, solution2, station_dict):
+def crossover(crossover_list, solution, solution1, solution2):
     """ Randomly crosses two solutions with each other.
 
     Args:
@@ -213,24 +194,29 @@ def crossover(crossover_list, max_trains, solution1, solution2, station_dict):
 
     Returns:
         The new crossover solution.
-
-
-    NIET ZES MAAR HELFT MAX tRAINSSSSS
     """
 
-    index = 0
-    choice_list = create_crossover_list(crossover_list, max_trains)
+    choice_list = create_crossover_list(crossover_list, solution.max_trains)
     crossover_solution_list = []
-
+    time_list = []
     # Select routes from both solutions.
     for i in choice_list:
         if i > max_trains - 1:
             # Select route from solution two.
-            crossover_solution_list.append(solution2.route_list[i - max_trains])
+            crossover_solution_list.append(solution2.route_list[i - solution.max_trains])
+            time_list.append(solution2.route_list[i - solution.max_trains].time())
         else:
             # Select route from solution one
             crossover_solution_list.append(solution1.route_list[i])
-
+            time_list.append(solution1.route_list[i].time())
+    print(crossover_solution_list)
+    # too_much = 0
+    # print(sum(time_list))
+    # if sum(time_list) > 3600:
+    #     print(sum(time_list))
+    #     too_much += 1
+    # if too_much > 0:
+    #     print("too much", too_much)
 
     crossover_solution = sn.Solution(crossover_solution_list, station_dict)
 
@@ -264,30 +250,3 @@ def selection():
 
 def mutation():
     raise NotImplementedError
-
-
-""" NOTES:
-
-- How big should population be?
-- Find good definiton of crossover.
-- Swap in hillclimber is mutation
-    - Chance of swap?
-- Selection: keeping only the best solution might not always be the best idea.
-    - Make chance of lesser solution coming through
-- Pay attention to the fact that that the solutions are objects, and thus
-    reside at the same adress: making another solution means that you overwrite
-    the first one. Have yet to see tis but apparently it works ike that.
-    This means I might have to work with deep copy and copy.
-        Ddep copy copies all the objects within the object, copy only copies
-        the most outer object, but leaves all the inner objects at the same
-        location. Deep copy has a heavy load, so is a heavy operation.
-"""
-
-
-"""
-Give the solutions with the highest score the highest chance of procreating.
-
-Create whole new set of solutions based on the better solution
-Normalise them?
-
-"""

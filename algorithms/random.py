@@ -3,7 +3,7 @@ from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def random(station_dict, max_trains, max_minutes, random_number_trains = True):
+def random(solution, random_number_trains = True):
     """ Finds a set of random routes.
 
     Args:
@@ -17,29 +17,31 @@ def random(station_dict, max_trains, max_minutes, random_number_trains = True):
 
     route_list = []
     station_dict_key_list = []
-    solution = sn.Solution(route_list, station_dict)
 
     # Create list of keys to choose from.
     for key in station_dict:
         station_dict_key_list.append(key)
 
+    random_solution = sn.Solution(route_list, solution.station_dict, solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
+
+
     # fix 7 trains is we want to
     if random_number_trains:
         number_of_trains = 1 + rd.choice(range(int(max_trains / 2), max_trains))
     else:
-        number_of_trains = 7
+        number_of_trains = solution.max_trains
 
     for i in range(number_of_trains):
         # Add route to our list of routes.
-        route = create_random_route(station_dict_key_list, solution, max_minutes)
-        solution.route_list.append(route)
+        route = create_random_route(solution.station_dict_key_list, random_solution, solution.max_minutes)
+        random_solution.route_list.append(route)
 
-    return solution, station_dict
+    return random_solution, solution.station_dict
 
 
 def create_random_route(station_dict_key_list, solution, max_minutes):
     """Create a random route.
-    
+
     Args:
         station_dict_key_list: list of keys in station_dict.
         max_minutes: the maximum time a train can travel.

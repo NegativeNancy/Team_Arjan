@@ -1,34 +1,28 @@
-"""
-Algortihm that finds the shortest path to the next critical station.
-If a critcial station cannot directly be reached, route stops.
 
-Begin on a node with one critical connection.
-Do not go back to the previous station
-
-Create a random solution where the starting station is different each time
-"""
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def hillclimber(solution, number_of_iterations_a = 100000, number_of_iterations_b = 1000):
+def hillclimber(solution, route_iterations = 10000, connection_itterations = 0):
+    """
+    
 
-
+    """
+    # Fill solution with empty routes if the route_list is empty.
     # make a solution of empty routes
     for i in range(solution.max_trains):
         route = rt.Route([])
         solution.route_list.append(route)
 
-
     score = solution.score()
 
-    for i in range(number_of_iterations_a):
-        score = iteration_routes(solution, score, solution)
+    for i in range(route_iterations):
+        score = iteration_routes(score, solution)
     print ("Loop 1:")
     print(score)
-    for j in range(number_of_iterations_b):
-        score = iteration_connections(solution, score, solution)
+    for j in range(connection_itterations):
+        score = iteration_connections(score, solution)
     print ("Loop 2:")
     print(score)
     return solution

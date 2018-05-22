@@ -116,7 +116,7 @@ function markerColor(color)
     if (color) {
             url = 'static/red_dot.png'
     } else {
-            url = 'static/blue_dot.png'
+            url = 'static/black_dot.png'
     }
 
     var icon = {

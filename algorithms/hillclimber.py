@@ -12,7 +12,7 @@ from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def hillclimber(solution, number_of_iterations_a = 100000, number_of_iterations_b = 1000):
+def hillclimber(solution, number_of_iterations_a = 100000, number_of_iterations_b = 0):
 
 
     # make a solution of empty routes

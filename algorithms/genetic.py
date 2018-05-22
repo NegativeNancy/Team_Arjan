@@ -26,14 +26,14 @@ def genetic(solution):
     solution_list, score_list = make_population(population_size, solution)
 
     best_score = 0
-    best_solution = sn.Solution([], solution.station_dict)
+    best_solution = sn.Solution([], solution.station_dict, solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
 
     worsened_solution = 0
     worst_score = 100000
     index = 0
     generation = 0
     #worsened_solution < 25 or
-    while generation < 100:
+    while generation < 10:
         crossover_solution_list = []
         crossover_score_list = []
         # Create next generation.
@@ -201,7 +201,7 @@ def crossover(crossover_list, solution, solution1, solution2):
     time_list = []
     # Select routes from both solutions.
     for i in choice_list:
-        if i > max_trains - 1:
+        if i > solution.max_trains - 1:
             # Select route from solution two.
             crossover_solution_list.append(solution2.route_list[i - solution.max_trains])
             time_list.append(solution2.route_list[i - solution.max_trains].time())
@@ -209,7 +209,7 @@ def crossover(crossover_list, solution, solution1, solution2):
             # Select route from solution one
             crossover_solution_list.append(solution1.route_list[i])
             time_list.append(solution1.route_list[i].time())
-    print(crossover_solution_list)
+    #print(crossover_solution_list)
     # too_much = 0
     # print(sum(time_list))
     # if sum(time_list) > 3600:
@@ -218,7 +218,7 @@ def crossover(crossover_list, solution, solution1, solution2):
     # if too_much > 0:
     #     print("too much", too_much)
 
-    crossover_solution = sn.Solution(crossover_solution_list, station_dict)
+    crossover_solution = sn.Solution(crossover_solution_list, solution.station_dict, solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
 
     return crossover_solution
 

@@ -79,7 +79,7 @@ def main(argv):
             quoting=csv.QUOTE_MINIMAL)
 
         for i in range(times):
-            solution, station_dict = helper.run_algorithm(algo, solution)
+            solution = helper.run_algorithm(algo, solution)
 
             temp = solution.score()
             spamwriter.writerow([temp])

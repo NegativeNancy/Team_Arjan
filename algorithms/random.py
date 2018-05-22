@@ -19,7 +19,7 @@ def random(solution, random_number_trains = True):
     station_dict_key_list = []
 
     # Create list of keys to choose from.
-    for key in station_dict:
+    for key in solution.station_dict:
         station_dict_key_list.append(key)
 
     random_solution = sn.Solution(route_list, solution.station_dict, solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
@@ -36,7 +36,7 @@ def random(solution, random_number_trains = True):
         route = create_random_route(solution.station_dict_key_list, random_solution, solution.max_minutes)
         random_solution.route_list.append(route)
 
-    return random_solution, solution.station_dict
+    return random_solution
 
 
 def create_random_route(station_dict_key_list, solution, max_minutes):

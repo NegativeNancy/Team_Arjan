@@ -23,17 +23,17 @@ def init_solution(station_dict, max_trains, max_minutes):
 
 def run_algorithm(algo, solution):
     if (algo == 'greedy'):
-        solution,station_dict = greedy_alg(solution)
+        solution = greedy_alg(solution)
     elif (algo == 'random'):
-        solution,station_dict = random_alg(solution)
+        solution = random_alg(solution)
     elif algo == 'genetic':
-        solution, station_dict = genetic_alg(solution)
+        solution = genetic_alg(solution)
     elif algo == 'hillclimber':
-        solution, station_dict = hillclimber_alg(solution)
+        solution = hillclimber_alg(solution)
     else:
         exit()
 
-    return solution, station_dict
+    return solution
 
 
 def random_alg(solution):
@@ -149,9 +149,9 @@ def load_file(file, critical):
     """ Specify which files to load.
 
     Args:
-        file: Boolean detemining 
-        critical: 
-    
+        file: Boolean detemining
+        critical:
+
     """
 
     if (file == True and critical == True):

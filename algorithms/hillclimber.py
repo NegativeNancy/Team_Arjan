@@ -14,7 +14,13 @@ import random as rd
 
 def hillclimber(solution, number_of_iterations_a = 100000, number_of_iterations_b = 1000):
 
-    # initialize score
+
+    # make a solution of empty routes
+    for i in range(solution.max_trains):
+        route = rt.Route([])
+        solution.route_list.append(route)
+
+
     score = solution.score()
 
     for i in range(number_of_iterations_a):

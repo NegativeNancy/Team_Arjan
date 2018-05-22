@@ -1,15 +1,19 @@
 class Solution():
     """Class that holds possible solutions and computes their score."""
 
-    def __init__(self, route_list, station_dict):
+    def __init__(self, route_list, station_dict, max_trains, max_minutes, station_dict_key_list):
         """Initialise class.
 
         Args:
             route_list: A list with the routes that make up the solution.
             station_dict: A dctionary that contains the stations with its neighbours.
         """
+
         self.route_list = route_list
         self.station_dict = station_dict
+        self.max_trains = max_trains
+        self.max_minutes = max_minutes
+        self.station_dict_key_list = station_dict_key_list
 
     def score(self):
         """ Computes score of solution.

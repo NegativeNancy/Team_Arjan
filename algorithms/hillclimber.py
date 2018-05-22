@@ -58,8 +58,7 @@ def iteration_routes(station_dict_key_list, max_trains, max_minutes, old_score, 
         solution: input solution.
         i: integer to keep trac of the number of iteration.
     Returns:
-        old_score, new_score: the score of the old or new solution is
-        as integer.
+        old_score, new_score: the score of the old or new solution as integer.
     """
     connection_list = []
     route = rt.Route(connection_list)

@@ -1,11 +1,8 @@
 """
 Algortihm that finds the shortest path to the next critical station.
-If a critcial station cannot directly be reached, choose a random next step.
+If a critcial station cannot directly be reached, walk back.
 
 Begin on a node with one critical connection.
-Do not go back to the previous station
-
-Create a random solution where the starting station is different each time
 """
 from classes import Stations as st
 from classes import Route as rt
@@ -160,22 +157,6 @@ def determine_joint_closest_neighbor(begin_station, end_station, solution):
 
     name_new_station = station_dict[end_station].neighbors[best_new_station_index][0]
     return name_new_station, end_station, best_new_station_index, found_suitable_result
-
-
-
-def set_been_to_true(solution, begin_station, end_station, best_end_station_index):
-    """ Sets been property of station to true.
-
-    Args:
-        begin_station: Station where connection begins.
-        end_station: Station where connection ends.
-        best_end_station_index: index of best station found.
-    """
-    solution.station_dict[begin_station].neighbors[best_end_station_index][3] = True
-    for neighbor in station_dict[end_station].neighbors:
-        if neighbor[0] == begin_station:
-            neighbor[3] = True
-            break
 
 def closest_neighbor(station, solution):
     """ Find closest not used, critical neighbor for a station.

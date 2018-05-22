@@ -4,7 +4,7 @@ from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def hillclimber(solution, number_of_iterations_a = 100000, number_of_iterations_b = 0):
+def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):
     # Fill solution with empty routes if the route_list is empty.
     # make a solution of empty routes
     for i in range(solution.max_trains):
@@ -17,7 +17,7 @@ def hillclimber(solution, number_of_iterations_a = 100000, number_of_iterations_
         score = iteration_routes(score, solution)
     print ("Loop 1:")
     print(score)
-    for j in range(connection_itterations):
+    for j in range(connection_iterations):
         score = iteration_connections(score, solution)
     print ("Loop 2:")
     print(score)

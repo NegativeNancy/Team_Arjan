@@ -60,10 +60,8 @@ $(function() {
         sw = bounds.getSouthWest();
 
         if (window.location.pathname == "/netherlands"){
-            console.log("NEDERLAND!")
             netherlands();
         } else {
-            console.log("HOLAND!")
             holland();
         }
     });
@@ -231,24 +229,20 @@ function connections_netherlands()
         q: $("#q").val(),
         sw: sw.lat() + "," + sw.lng()
     };
-    console.log("ConnectionsNederland");
 
     $.getJSON(Flask.url_for("connections_netherlands"), parameters)
     .done(function(connection_dict, textStatus, jqXHR) {
-        console.log("ConnectionsNederland2");
        // add new line to map
        for (var i = 0; i < connection_dict.length; i++)
        {
            addLine(connection_dict[i]);
        }
-        console.log("ConnectionsNederland3");
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
         // log error to browser's console
         console.log(errorThrown.toString());
 
     });
-    console.log("ConnectionsNederland4");
 }
 
 /**

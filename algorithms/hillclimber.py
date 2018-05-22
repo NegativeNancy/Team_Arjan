@@ -12,46 +12,28 @@ from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def hillclimber(station_dict, max_trains, max_minutes, number_of_iterations_a = 100000, number_of_iterations_b = 1000):
+def hillclimber(solution, number_of_iterations_a = 100000, number_of_iterations_b = 1000):
 
-    route_list = []
-    station_dict_key_list = []
-    solution = sn.Solution(route_list, station_dict)
-
-    for key in station_dict:
-        station_dict_key_list.append(key)
-
-    # make an 'empty' connection_list
-    connection_list = []
-    # connection_list.append({"begin": None, "end": None, "time": 0})
-
-
-    # make a solution of empty routes
-    for i in range(max_trains):
-        route = rt.Route(connection_list)
-        solution.route_list.append(route)
-
-
+    # initialize score
     score = solution.score()
 
     for i in range(number_of_iterations_a):
-        score = iteration_routes(station_dict_key_list, max_trains, max_minutes, score, solution)
+        score = iteration_routes(solution, score, solution)
     print ("Loop 1:")
     print(score)
     for j in range(number_of_iterations_b):
-        score = iteration_connections(station_dict_key_list, max_trains, max_minutes, score, solution)
+        score = iteration_connections(solution, score, solution)
     print ("Loop 2:")
     print(score)
-    return solution, station_dict
+    return solution
 
 
-def iteration_routes(station_dict_key_list, max_trains, max_minutes, old_score,  solution):
+def iteration_routes(old_score,  solution):
     """ An iteration of the hillclimber. A random new route is created, then a
     random route is chosen, and replaced by the new route. If the score improves
     we hold on to the change.
 
     Args:
-        station_dict_key_list: List of keys of the station dict.
         max_trains: Integer representing the maximum number of trains allowed.
         max_minutes: Integer representing the maximum ammount of minutes traveled by a train.
         old_score: double representing the score of the solution.
@@ -62,21 +44,21 @@ def iteration_routes(station_dict_key_list, max_trains, max_minutes, old_score, 
     """
     connection_list = []
     route = rt.Route(connection_list)
-    route_index = rd.randint(0, max_trains - 1)
+    route_index = rd.randint(0, solution.max_trains - 1)
 
-    begin_station = rd.choice(station_dict_key_list)
+    begin_station = rd.choice(solution.station_dict_key_list)
 
     #  create a new route
     while True:
         route_time = route.time()
 
-        weight = 0.1 * route_time/ max_minutes
+        weight = 0.1 * route_time/ solution.max_minutes
         if 0.05 + weight > rd.random():
             break
 
         end_station = rd.choice(solution.station_dict[begin_station].neighbors)
 
-        if route_time + end_station[1] < max_minutes:
+        if route_time + end_station[1] < solution.max_minutes:
             route.append_route(begin_station, end_station[0], end_station[1])
             begin_station = end_station[0]
         else:
@@ -84,7 +66,7 @@ def iteration_routes(station_dict_key_list, max_trains, max_minutes, old_score, 
 
     return check_for_improvement(old_score, solution, route_index, route)
 
-def iteration_connections(station_dict_key_list, max_trains, max_minutes, old_score, solution):
+def iteration_connections(old_score, solution):
     """ An iteration of the hillclimber. A random route is chosen, then with
     certain probability we remove either the first or final connection and with
     certain probability we place a new connection on the first or final
@@ -92,7 +74,6 @@ def iteration_connections(station_dict_key_list, max_trains, max_minutes, old_sc
     the change.
 
     Args:
-        station_dict_key_list: List of keys of the station dict.
         max_trains: Integer representing the maximum number of trains allowed.
         max_minutes: Integer representing the maximum ammount of minutes traveled by a train.
         old_score: double representing the score of the solution.
@@ -103,7 +84,7 @@ def iteration_connections(station_dict_key_list, max_trains, max_minutes, old_sc
         as integer.
     """
     # choose random route
-    route_index = rd.randint(0, max_trains - 1)
+    route_index = rd.randint(0, solution.max_trains - 1)
     old_route = solution.route_list[route_index]
 
     # copy route
@@ -123,9 +104,9 @@ def iteration_connections(station_dict_key_list, max_trains, max_minutes, old_sc
         if new_route.connection_list != []:
             end_station = new_route.connection_list[0]["begin"]
         else:
-            end_station = rd.choice(station_dict_key_list)
+            end_station = rd.choice(solution.station_dict_key_list)
         begin_station = rd.choice(solution.station_dict[end_station].neighbors)
-        if new_route.time() + begin_station[1] < max_minutes:
+        if new_route.time() + begin_station[1] < solution.max_minutes:
             new_route.append_route_front(begin_station[0], end_station, begin_station[1])
 
     elif random_int2 < 2:
@@ -133,9 +114,9 @@ def iteration_connections(station_dict_key_list, max_trains, max_minutes, old_sc
         if new_route.connection_list != []:
             begin_station = new_route.connection_list[len(new_route.connection_list)-1]["end"]
         else:
-            begin_station = rd.choice(station_dict_key_list)
+            begin_station = rd.choice(solution.station_dict_key_list)
         end_station = rd.choice(solution.station_dict[begin_station].neighbors)
-        if new_route.time() + end_station[1] < max_minutes:
+        if new_route.time() + end_station[1] < solution.max_minutes:
             new_route.append_route(begin_station, end_station[0], end_station[1])
 
     # check if score will improve

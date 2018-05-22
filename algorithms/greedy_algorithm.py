@@ -12,7 +12,7 @@ from classes import Route as rt
 from classes import Solution as sn
 import random as rd
 
-def greedy(station_dict, max_trains, max_minutes):
+def greedy(solution):
     """ Greedy algorithm that hopes to fin the perfect solutioinself.
     Args:
         max_trains: Maximum amount of trains allowed in solution.
@@ -23,12 +23,8 @@ def greedy(station_dict, max_trains, max_minutes):
     """
 
     route_list = []
-    station_dict_key_list = []
 
-    for key in station_dict:
-        station_dict_key_list.append(key)
-
-    for i in range(max_trains): # might be interesting to randomize the ammount of trains, or proof this is never the case
+    for i in range(solution.max_trains): # might be interesting to randomize the ammount of trains, or proof this is never the case
         travel_time = 0
         begin_station = st.Stations("fake_begin",  False)
         end_station = st.Stations("fake_end",  False)
@@ -41,10 +37,10 @@ def greedy(station_dict, max_trains, max_minutes):
 
         # Find best begin station
         # Loop over station dict
-        for station in station_dict_key_list:
+        for station in solution.station_dict_key_list:
             end_station_index = 0
             # Loop over neighbors of station
-            for neighbor in station_dict[station].neighbors:
+            for neighbor in solution.station_dict[station].neighbors:
                 # Check that connection is critical and not used yet
                 if neighbor[2] and not neighbor[3]:
                     if travel_time == 0 or neighbor[1] < travel_time:
@@ -56,12 +52,12 @@ def greedy(station_dict, max_trains, max_minutes):
                 end_station_index += 1
 
         if not found_another_station:
-            solution = sn.Solution(route_list, station_dict)
+            solution.route_list = route_list
             solution.print_solution()
-            return solution, station_dict
+            return solution
             break
 
-        set_been_to_true(station_dict, begin_station, end_station, best_end_station_index)
+        set_been_to_true(solution, begin_station, end_station, best_end_station_index)
         connection = {"begin": begin_station, "end": end_station, "time": neighbor[1]}
 
         # Add new step to route
@@ -69,7 +65,7 @@ def greedy(station_dict, max_trains, max_minutes):
         route.connection_list = connection_list
 
         while True:
-            result = determine_joint_closest_neighbor(begin_station, end_station, station_dict)
+            result = determine_joint_closest_neighbor(begin_station, end_station, solution.station_dict)
             new_station = result[0]
             neighbor_of_new_station = result[1]
             found_new_station = result[2]
@@ -79,20 +75,20 @@ def greedy(station_dict, max_trains, max_minutes):
 
             if neighbor_of_new_station == begin_station:
 
-                time_to = station_dict[begin_station].neighbors[result[2]][1]
-                if time_to + route.time() > max_minutes:
+                time_to = solution.station_dict[begin_station].neighbors[result[2]][1]
+                if time_to + route.time() > solution.max_minutes:
                     break
-                set_been_to_true(station_dict, begin_station, new_station, result[2])
+                set_been_to_true(solution.station_dict, begin_station, new_station, result[2])
 
                 connection = {"begin": begin_station, "end": new_station, "time": time_to}
                 begin_station = new_station
 
             elif neighbor_of_new_station == end_station:
 
-                time_to = station_dict[end_station].neighbors[result[2]][1]
-                if time_to + route.time() > max_minutes:
+                time_to = solution.station_dict[end_station].neighbors[result[2]][1]
+                if time_to + route.time() > solution.max_minutes:
                     break
-                set_been_to_true(station_dict, end_station, new_station, result[2])
+                set_been_to_true(solution.station_dict, end_station, new_station, result[2])
 
                 connection = {"begin": end_station, "end": new_station, "time": time_to}
                 end_staion = new_station
@@ -109,15 +105,15 @@ def greedy(station_dict, max_trains, max_minutes):
         # Add newly created route to route_list
         route_list.append(route)
 
-    solution = sn.Solution(route_list, station_dict)
+    solution = sn.Solution(route_list, solution)
 
     solution.print_solution()
 
-    return solution, station_dict
+    return solution
 
 
 
-def determine_joint_closest_neighbor(begin_station, end_station, station_dict):
+def determine_joint_closest_neighbor(begin_station, end_station, solution):
     """ Finds the closest unused, critical neighbor of two stations.
 
     Args:
@@ -134,7 +130,7 @@ def determine_joint_closest_neighbor(begin_station, end_station, station_dict):
     found_suitable_result = False
 
     # Loop over neighbors of begin_station
-    for neighbor in station_dict[begin_station].neighbors:
+    for neighbor in solution.station_dict[begin_station].neighbors:
         # Check that connection is critical and not used yet
         if neighbor[2] == True and neighbor[3] == False:
             if travel_time == 0 or neighbor[1] < travel_time:
@@ -147,7 +143,7 @@ def determine_joint_closest_neighbor(begin_station, end_station, station_dict):
     new_station_index = 0
 
     # Loop over neighbors of end_station
-    for neighbor in station_dict[end_station].neighbors:
+    for neighbor in solution.station_dict[end_station].neighbors:
         # Check that connection is critical and not used yet
         if neighbor[2] == True and neighbor[3] == False:
             if travel_time == 0 or neighbor[1] < travel_time:
@@ -167,7 +163,7 @@ def determine_joint_closest_neighbor(begin_station, end_station, station_dict):
 
 
 
-def set_been_to_true(station_dict, begin_station, end_station, best_end_station_index):
+def set_been_to_true(solution, begin_station, end_station, best_end_station_index):
     """ Sets been property of station to true.
 
     Args:
@@ -175,13 +171,13 @@ def set_been_to_true(station_dict, begin_station, end_station, best_end_station_
         end_station: Station where connection ends.
         best_end_station_index: index of best station found.
     """
-    station_dict[begin_station].neighbors[best_end_station_index][3] = True
+    solution.station_dict[begin_station].neighbors[best_end_station_index][3] = True
     for neighbor in station_dict[end_station].neighbors:
         if neighbor[0] == begin_station:
             neighbor[3] = True
             break
 
-def closest_neighbor(station, station_dict):
+def closest_neighbor(station, solution):
     """ Find closest not used, critical neighbor for a station.
 
     Args:
@@ -198,7 +194,7 @@ def closest_neighbor(station, station_dict):
     new_station_index = 0
     best_new_station_index = 0
     # Loop over neighbors of begin_station
-    for neighbor in station_dict[station].neighbors:
+    for neighbor in solution.station_dict[station].neighbors:
         # Check that connection is critical and not used yet
         if neighbor[2] == True and neighbor[3] == False:
             if travel_time == 0 or neighbor[1] < travel_time:
@@ -206,6 +202,6 @@ def closest_neighbor(station, station_dict):
                 best_end_station_index = new_station_index
         new_station_index += 1
 
-    name_new_station = station_dict[station].neighbors[best_new_station_index][0]
-    travel_time = station_dict[station].neighbors[best_new_station_index][1]
+    name_new_station = solution.station_dict[station].neighbors[best_new_station_index][0]
+    travel_time = solution.station_dict[station].neighbors[best_new_station_index][1]
     return name_new_station, best_new_station_index, travel_time

@@ -2,7 +2,7 @@
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
-from functions import helper as helper
+from functions import helper
 import random as rd
 
 def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):

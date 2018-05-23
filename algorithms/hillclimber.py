@@ -62,50 +62,21 @@ def iteration_connections(old_score, solution):
     the change.
 
     Args:
-        max_trains: Integer representing the maximum number of trains allowed.
-        max_minutes: Integer representing the maximum ammount of minutes traveled by a train.
-        old_score: double representing the score of the solution.
-        solution: input solution.
-        i: integer to keep trac of the number of iteration.
+        solution: An instance of the solution class.
+        old_score: The score of the solution
     Returns:
-        old_score, new_score: the score of the old or new solution is
-        as integer.
+        A solution and it's score.
     """
-    # choose random route
+    # Choose random route.
     route_index = rd.randint(0, solution.max_trains - 1)
     old_route = solution.route_list[route_index]
 
-    # copy route
     new_route = rt.Route(list(old_route.connection_list))
 
-    # remove the start or end of route with certain probability, if possible
-    if new_route.connection_list != []:
-        random_int = 3 * rd.random()
-        if random_int < 1:
-            new_route.connection_list = new_route.connection_list[1:]
-        elif random_int < 2:
-            new_route.connection_list.pop()
+    # Determine which end is cut of, if any.
+    new_route = cut_route_ends(new_route)
 
-    random_int2 = 3 * rd.random()
-    if random_int2 < 1:
-        # add random new begin, if it doesn't exceed the time
-        if new_route.connection_list != []:
-            end_station = new_route.connection_list[0]["begin"]
-        else:
-            end_station = rd.choice(solution.station_dict_key_list)
-        begin_station = rd.choice(solution.station_dict[end_station].neighbors)
-        if new_route.time() + begin_station[1] < solution.max_minutes:
-            new_route.append_route_front(begin_station[0], end_station, begin_station[1])
-
-    elif random_int2 < 2:
-        # add random new end, if it doesn't exceed the time
-        if new_route.connection_list != []:
-            begin_station = new_route.connection_list[len(new_route.connection_list)-1]["end"]
-        else:
-            begin_station = rd.choice(solution.station_dict_key_list)
-        end_station = rd.choice(solution.station_dict[begin_station].neighbors)
-        if new_route.time() + end_station[1] < solution.max_minutes:
-            new_route.append_route(begin_station, end_station[0], end_station[1])
+    new_route = add_new_endpoint(new_route, solution)
 
     # check if score will improve
     return solution, check_for_improvement(old_score, solution, route_index, new_route)
@@ -135,3 +106,61 @@ def check_for_improvement(old_score, solution, route_index, new_route):
     else:
         solution.route_list[route_index] = old_route
         return old_score
+
+def cut_route_ends(route):
+    """ Cut the begin or end of a route off, with certain probability.
+
+    Args:
+        route: The route to change.
+
+    Returns:
+        route: The route with it's end's 'changed'.
+    """
+    # Check if route is not empty.
+    if route.connection_list != []:
+        # Random variable to choose what case is chosen.
+        random_choice = 3 * rd.random()
+        if random_choice < 1:
+            route.connection_list = route.connection_list[1:]
+        elif random_choice < 2:
+            route.connection_list.pop()
+    return route
+
+def add_new_endpoint(route, solution):
+    """ Randomly add a new endpoint to a route, if this does not exceed the time
+    limit. There is a 1/3 chance to not add a new endpoint.
+
+    Args:
+        route: A string, containing the name of the station.
+        soluiton: An instance of the solution classs.
+
+    Returns:
+        route: The route with it's new endpoint.
+    """
+
+    random_choice = 3 * rd.random()
+
+    # Add random new begin.
+    if random_choice < 1:
+        # Choose first connection, or a random station if there is none.
+        if route.connection_list != []:
+            end_station = route.connection_list[0]["begin"]
+        else:
+            end_station = rd.choice(solution.station_dict_key_list)
+        begin_station = rd.choice(solution.station_dict[end_station].neighbors)
+        # Add new connection to route, if this doens't exceed the time limit.
+        if route.time() + begin_station[1] < solution.max_minutes:
+            route.append_route_front(begin_station[0], end_station, begin_station[1])
+    # Add random new end.
+    elif random_choice < 2:
+        # Choose last connection, or a random station if there is none.
+        if route.connection_list != []:
+            begin_station = route.connection_list[len(route.connection_list)-1]["end"]
+        else:
+            begin_station = rd.choice(solution.station_dict_key_list)
+        end_station = rd.choice(solution.station_dict[begin_station].neighbors)
+        # Add new connection to route, if this doens't exceed the time limit.
+        if route.time() + end_station[1] < solution.max_minutes:
+            route.append_route(begin_station, end_station[0], end_station[1])
+
+    return route

@@ -27,7 +27,7 @@ def random(solution, random_number_trains = True):
 
     # fix 7 trains is we want to
     if random_number_trains:
-        number_of_trains = 1 + rd.choice(range(int(max_trains / 2), max_trains))
+        number_of_trains = 1 + rd.choice(range(int(solution.max_trains / 2), solution.max_trains))
     else:
         number_of_trains = solution.max_trains
 

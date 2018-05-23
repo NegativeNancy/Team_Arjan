@@ -1,7 +1,9 @@
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
+from functions import helper as helper
 import random as rd
+
 
 def random(solution, random_number_trains = True, times = 1000):
     """ Creates a number of random route list (1000 by default) and returns the
@@ -31,7 +33,7 @@ def random(solution, random_number_trains = True, times = 1000):
 
     return best_solution
 
-def create_random_solution(solution, random_number_trains):
+def create_random_solution(solution, random_number_trains = True):
     """ Finds a set of random routes.
 
     Args:
@@ -54,33 +56,7 @@ def create_random_solution(solution, random_number_trains):
 
     # Create routes that trains will travel.
     for i in range(number_of_trains):
-        route = create_random_route(solution)
+        route = helper.create_random_route(solution)
         solution.route_list.append(route)
 
     return solution
-
-
-def create_random_route(solution):
-    """Create a random route.
-
-    Args:
-        solution: An instance of the solution class.
-
-    Returns:
-        route: A randomly generated route.
-    """
-    connection_list = []
-    route = rt.Route(connection_list)
-    current_station = rd.choice(solution.station_dict_key_list)
-    time_of_route = 0
-
-    while True:
-        next_station = rd.choice(solution.station_dict[current_station].neighbors)
-
-        # Check whether route won't be longer than allowed.
-        if next_station[1] + route.time() < solution.max_minutes:
-            route.append_route(current_station, next_station[0], next_station[1])
-            current_station = next_station[0]
-        else:
-            break
-    return route

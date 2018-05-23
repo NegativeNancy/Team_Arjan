@@ -2,11 +2,23 @@
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
+from functions import helper as helper
 import random as rd
 
 def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):
+    """ This implementation of a hillclimber contains two different iterations,
+    one based on replacing routes and one based on replacing only the begin and
+    end of a route.
+
+    Args:
+        solution: An instance of the solution class, possibly containing routes.
+        route_iterations: The number of route iterations, default is 10000.
+        connection_iterations: the number of connection iterations, dfault is 0.
+
+    Returns:
+        solution: An instance of the solution class.
+    """
     # Fill solution with empty routes if the route_list is empty.
-    # make a solution of empty routes
     if solution.route_list == []:
         for i in range(solution.max_trains):
             route = rt.Route([])
@@ -14,52 +26,31 @@ def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):
 
     score = solution.score()
 
+    # perform te iterations
     for i in range(route_iterations):
         score = iteration_routes(score, solution)
-    print ("Loop 1:")
-    print(score)
     for j in range(connection_iterations):
         score = iteration_connections(score, solution)
-    print ("Loop 2:")
-    print(score)
+
     return solution
 
 
-def iteration_routes(old_score,  solution):
+def iteration_routes(old_score, solution):
     """ An iteration of the hillclimber. A random new route is created, then a
     random route is chosen, and replaced by the new route. If the score improves
     we hold on to the change.
 
     Args:
-        max_trains: Integer representing the maximum number of trains allowed.
-        max_minutes: Integer representing the maximum ammount of minutes traveled by a train.
-        old_score: double representing the score of the solution.
-        solution: input solution.
-        i: integer to keep trac of the number of iteration.
+        old_score: Double representing the score of the solution.
+        solution: An instnace of the solution class.
     Returns:
-        old_score, new_score: the score of the old or new solution as integer.
+        The score of the old or new solution as double.
     """
-    connection_list = []
-    route = rt.Route(connection_list)
+    # Choose route to swap out.
     route_index = rd.randint(0, solution.max_trains - 1)
 
-    begin_station = rd.choice(solution.station_dict_key_list)
-
-    #  create a new route
-    while True:
-        route_time = route.time()
-
-        weight = 0.1 * route_time/ solution.max_minutes
-        if 0.05 + weight > rd.random():
-            break
-
-        end_station = rd.choice(solution.station_dict[begin_station].neighbors)
-
-        if route_time + end_station[1] < solution.max_minutes:
-            route.append_route(begin_station, end_station[0], end_station[1])
-            begin_station = end_station[0]
-        else:
-            break
+    # create route to replace it with
+    route = helper.create_random_route(solution)
 
     return check_for_improvement(old_score, solution, route_index, route)
 
@@ -133,10 +124,12 @@ def check_for_improvement(old_score, solution, route_index, new_route):
     Returns:
         The score of the solution we end up with.
     """
+    # Store old route, then replace it with the new route.
     old_route = solution.route_list[route_index]
     solution.route_list[route_index]= new_route
     new_score = solution.score()
 
+    # Check if this improves the score, otherwise revert changes.
     if old_score < new_score:
         return new_score
     else:

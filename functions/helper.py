@@ -32,29 +32,46 @@ def init_solution(station_dict, max_trains, max_minutes):
     return solution
 
 
-def best_solution(solution, best_solution, best_score):
-    """ Save new solition as best solution if better than previous solution.
+def init_best_solution(solution, station_dict, train, max_minutes):
 
-    Args:
-        solution: New solution that has been found.
-        best_solution: Current best solution.
-        best_score: Current best score.
-
-    Return:
-        Returns the currnt best solution and the current best score.
-
-    """
-    current_score = solution.score()
-
-    # Update the best_solution if needed.
-    if current_score > best_score:
-        best_score = current_score
-        best_solution.route_list = solution.route_list
-
-    # Reset our route_list for next iteration.
-    solution.route_list = []
+    best_solution = sn.Solution([], solution.station_dict, \
+        solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
+    best_score = best_solution.score()
 
     return best_solution, best_score
+
+
+def file_location():
+    # Create filename to save scores in.
+    folder_output = "./data/scores/"
+    filename = datetime.datetime.now().strftime("scores__%Y-%m-%d__%I%M%S.csv")
+    outfile = os.path.join(folder_output, filename)
+
+    return outfile
+
+
+def run_times(times, algo, solution, best_solution, best_score):
+    score = 0
+
+    outfile = file_location()
+
+    with open(outfile, 'w', newline='') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|',
+            quoting=csv.QUOTE_MINIMAL)
+
+        for i in range(times):
+            solution = run_algorithm(algo, solution)
+
+            temp = solution.score()
+            spamwriter.writerow([temp])
+
+            if score < temp:
+                score = temp
+                print(score)
+            
+            best_solution, best_score = keep_best_solution(solution, best_solution, best_score)
+
+    return best_solution, best_score, outfile, score
 
 
 def run_algorithm(algo, solution):
@@ -77,6 +94,31 @@ def run_algorithm(algo, solution):
         exit()
 
     return solution
+
+
+def keep_best_solution(solution, best_solution, best_score):
+    """ Save new solition as best solution if better than previous solution.
+
+    Args:
+        solution: New solution that has been found.
+        best_solution: Current best solution.
+        best_score: Current best score.
+
+    Return:
+        Returns the currnt best solution and the current best score.
+
+    """
+    current_score = solution.score()
+
+    # Update the best_solution if needed.
+    if current_score > best_score:
+        best_score = current_score
+        best_solution.route_list = solution.route_list
+
+    # Reset our route_list for next iteration.
+    solution.route_list = []
+
+    return best_solution, best_score
 
 
 def random_alg(solution, random_number_trains = True):
@@ -191,33 +233,6 @@ def load_scenario(scenario):
         train = trains_holland
         max_time = time_holland
     return station_dict, train, max_time
-
-
-# def load_file(file, critical):
-#     """ Specify which files to load.
-
-#     Args:
-#         file: Boolean detemining
-#         critical:
-
-#     """
-
-#     if (file == True and critical == True):
-#         print("Netherlands Loaded")
-#         station_dict = load.load_stations(True, True)
-#         return station_dict
-#     elif (file == True and critical == False):
-#         print("Netherlands Simple Loaded")
-#         station_dict = load.load_stations(True, False)
-#         return station_dict
-#     elif (file == False and critical == True):
-#         print("Holland Loaded")
-#         station_dict = load.load_stations(False, True)
-#         return station_dict
-#     elif (file == False and critical == False):
-#         print("Holland Simple Loaded")
-#         station_dict = load.load_stations(False, False)
-#         return station_dict
 
 
 def create_random_route(solution):

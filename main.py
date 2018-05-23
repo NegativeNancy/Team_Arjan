@@ -1,16 +1,7 @@
-from classes import Stations as st
-from classes import Route as rt
-from classes import Solution as sn
-from algorithms import random as ra
-from algorithms import greedy as ga
-from algorithms import genetic as gena
-from algorithms import hillclimber as hill
-from functions import plot_data as pd
-from functions import loading_files as load
+from functions import helper
 from subprocess import call
 import random, sys, getopt, csv, os, os.path, datetime, time, argparse
 
-from functions import helper
 
 class MyParser(argparse.ArgumentParser):
     """ Class that allows us to run help message when no arguments are given"""
@@ -66,34 +57,11 @@ def main(argv):
     station_dict, train, max_time = helper.load_scenario(scenario)
 
     solution = helper.init_solution(station_dict, train, max_time)
-    best_solution = sn.Solution([], solution.station_dict, \
-        solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
-    best_score = best_solution.score()
+    best_solution, best_score = helper.init_best_solution(solution, \
+        station_dict, train, max_time)
 
-    # Create filename to save scores in.
-    folder_output = "./data/scores/"
-    filename = datetime.datetime.now().strftime("scores__%Y-%m-%d__%I%M%S.csv")
-    outfile = os.path.join(folder_output, filename)
-
-    score = 0
-
-    # Open file and create writer to enter score in to the file.
-    with open(outfile, 'w', newline='') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|',
-            quoting=csv.QUOTE_MINIMAL)
-
-        for i in range(times):
-            solution = helper.run_algorithm(algo, solution)
-
-            temp = solution.score()
-            spamwriter.writerow([temp])
-
-            if score < temp:
-                score = temp
-                print(score)
-            
-            best_solution, best_score = helper.best_solution(solution, \
-                best_solution, best_score)
+    best_solution, best_score, outfile, score = helper.run_times(times, algo, \
+        solution, best_solution, best_score)
 
     run_time = time.time() - start_time
 

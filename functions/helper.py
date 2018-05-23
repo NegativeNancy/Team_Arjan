@@ -7,9 +7,8 @@ from algorithms import genetic as gena
 from algorithms import hillclimber as hill
 from functions import plot_data as pd
 from functions import loading_files as load
-from subprocess import call
 import random as rd
-import random, sys, getopt, csv, os, os.path, datetime, time, argparse
+import csv, os, datetime
 
 
 def init_solution(station_dict, max_trains, max_minutes):

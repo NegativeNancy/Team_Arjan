@@ -1,6 +1,6 @@
 from functions import helper
 from subprocess import call
-import random, sys, getopt, csv, os, os.path, datetime, time, argparse
+import sys, os, time, argparse
 
 
 class MyParser(argparse.ArgumentParser):

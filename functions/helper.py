@@ -8,6 +8,7 @@ from algorithms import hillclimber as hill
 from functions import plot_data as pd
 from functions import loading_files as load
 from subprocess import call
+import random as rd
 import random, sys, getopt, csv, os, os.path, datetime, time, argparse
 
 
@@ -29,7 +30,7 @@ def run_algorithm(algo, solution):
     elif algo == 'genetic':
         solution = genetic_alg(solution)
     elif algo == 'hillclimber':
-        solution = hillclimber_alg(random_alg(solution))
+        solution = hillclimber_alg(ra.create_random_solution(solution))
     else:
         exit()
 
@@ -170,3 +171,34 @@ def load_file(file, critical):
         print("Holland Simple Loaded")
         station_dict = load.load_stations(False, False)
         return station_dict
+
+def create_random_route(solution):
+    """ Create a random route.
+
+    Args:
+        solution: An instance of the solution class.
+
+    Returns:
+        The route that we created.
+    """
+    connection_list = []
+    route = rt.Route(connection_list)
+    begin_station = rd.choice(solution.station_dict_key_list)
+
+    #  create a new route
+    while True:
+        route_time = route.time()
+
+        weight = 0.1 * route_time/ solution.max_minutes
+        if 0.05 + weight > rd.random():
+            break
+
+        end_station = rd.choice(solution.station_dict[begin_station].neighbors)
+
+        if route_time + end_station[1] < solution.max_minutes:
+            route.append_route(begin_station, end_station[0], end_station[1])
+            begin_station = end_station[0]
+        else:
+            break
+
+    return route

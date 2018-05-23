@@ -124,10 +124,12 @@ def check_for_improvement(old_score, solution, route_index, new_route):
     Returns:
         The score of the solution we end up with.
     """
+    # Store old route, then replace it with the new route.
     old_route = solution.route_list[route_index]
     solution.route_list[route_index]= new_route
     new_score = solution.score()
 
+    # Check if this improves the score, otherwise revert changes.
     if old_score < new_score:
         return new_score
     else:

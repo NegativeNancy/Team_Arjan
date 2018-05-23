@@ -183,9 +183,11 @@ def create_random_route(solution):
     """
     connection_list = []
     route = rt.Route(connection_list)
+
+    # Choose begin station.
     begin_station = rd.choice(solution.station_dict_key_list)
 
-    #  create a new route
+    #  Create a new route.
     while True:
         route_time = route.time()
 

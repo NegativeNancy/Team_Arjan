@@ -100,7 +100,7 @@ def main(argv):
     best_solution.print_solution()
     helper.print_score(run_time, times, score, outfile, visual, store)
 
-    if (store != True):
+    if store != True: 
         os.remove(outfile)
     if (demo):
         call(['flask', 'run'])

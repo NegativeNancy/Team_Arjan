@@ -171,49 +171,54 @@ def load_scenario(scenario):
     time_holland = 120
 
     if (scenario == 'netherlands'):
-        station_dict = load_file(True, True)
+        station_dict = load.load_stations(True, True)
+        print("Netherlands Loaded")
         train = trains_netherlands
         max_time = time_netherlands
     elif (scenario == 'netherlands-simple'):
-        station_dict = load_file(True, False)
+        station_dict = load.load_stations(True, False)
+        print("Netherlands Simple Loaded")
         train = trains_netherlands
         max_time = time_netherlands
     elif (scenario == 'holland'):
-        station_dict = load_file(False, True)
+        station_dict = load.load_stations(False, True)
+        print("Holland Loaded")
         train = trains_holland
         max_time = time_holland
     elif (scenario == 'holland-simple'):
-        station_dict = load_file(False, False)
+        station_dict = load.load_stations(False, False)
+        print("Holland Simple Loaded")
         train = trains_holland
         max_time = time_holland
     return station_dict, train, max_time
 
 
-def load_file(file, critical):
-    """ Specify which files to load.
+# def load_file(file, critical):
+#     """ Specify which files to load.
 
-    Args:
-        file: Boolean detemining
-        critical:
+#     Args:
+#         file: Boolean detemining
+#         critical:
 
-    """
+#     """
 
-    if (file == True and critical == True):
-        print("Netherlands Loaded")
-        station_dict = load.load_stations(True, True)
-        return station_dict
-    elif (file == True and critical == False):
-        print("Netherlands Simple Loaded")
-        station_dict = load.load_stations(True, False)
-        return station_dict
-    elif (file == False and critical == True):
-        print("Holland Loaded")
-        station_dict = load.load_stations(False, True)
-        return station_dict
-    elif (file == False and critical == False):
-        print("Holland Simple Loaded")
-        station_dict = load.load_stations(False, False)
-        return station_dict
+#     if (file == True and critical == True):
+#         print("Netherlands Loaded")
+#         station_dict = load.load_stations(True, True)
+#         return station_dict
+#     elif (file == True and critical == False):
+#         print("Netherlands Simple Loaded")
+#         station_dict = load.load_stations(True, False)
+#         return station_dict
+#     elif (file == False and critical == True):
+#         print("Holland Loaded")
+#         station_dict = load.load_stations(False, True)
+#         return station_dict
+#     elif (file == False and critical == False):
+#         print("Holland Simple Loaded")
+#         station_dict = load.load_stations(False, False)
+#         return station_dict
+
 
 def create_random_route(solution):
     """ Create a random route.

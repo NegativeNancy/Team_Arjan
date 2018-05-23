@@ -16,7 +16,7 @@ def random(solution, random_number_trains = True, times = 1000):
     solution.route_list = []
     # Initialse our best solution thus far.
     best_solution = sn.Solution([], solution.station_dict, \
-    solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
+        solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
     best_score = best_solution.score()
 
     # Create random solutions and update our best_solution if needed.

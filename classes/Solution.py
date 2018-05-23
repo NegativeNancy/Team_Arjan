@@ -71,7 +71,3 @@ class Solution():
                 connection["begin"] == end_station):
                     return 1
         return 0
-
-# loop over solution en check voor iedere connectie of hij kritiek is
-# kleinere stappen in hillclimber
-# solution meer modulair maken, even als alle andere code

@@ -43,28 +43,32 @@ def main(argv):
         help='run demo site with routes - default: false')
     optional.add_argument("-h", "--help", action="help",
         help="show this help message and exit")
-    optional.add_argument('-s', '--store', action='store_true',
+    optional.add_argument('-s', '--scenario', action='store', default='netherlands',
+        choices=['netherlands', 'netherlands-simple', 'holland', 'holland-simple'],
+        help='specify which scenario needs to be loaded - default: netherlands')
+    optional.add_argument('--store', action='store_true',
         help="store the results in a .scv file - default: false")
     optional.add_argument('-t', '--times', action='store', type=int, nargs='?',
         const=0, default=1, help="specify how many times to run - default: 1", )
     optional.add_argument('-v', '--visual', action='store_true',
         help="create visual of the results - default: false")
     optional.add_argument('--version', action='version', version='%(prog)s 0.1')
-    optional.add_argument('-l', '--load', action='store', default='netherlands',
-        choices=['netherlands', 'netherlands-simple', 'holland', 'holland-simple'],
-        help='specify which scenario needs to be loaded - default: netherlands')
 
     args = parser.parse_args()
 
     algo = args.algorithm
     demo = args.demo
-    scenario = args.load
+    scenario = args.scenario
     store = args.store
     times = args.times
     visual = args.visual
 
     station_dict, train, max_time = helper.load_scenario(scenario)
+
     solution = helper.init_solution(station_dict, train, max_time)
+    best_solution = sn.Solution([], solution.station_dict, \
+        solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
+    best_score = best_solution.score()
 
     # Create filename to save scores in.
     folder_output = "./data/scores/"
@@ -87,10 +91,13 @@ def main(argv):
             if score < temp:
                 score = temp
                 print(score)
+            
+            best_solution, best_score = helper.best_solution(solution, \
+                best_solution, best_score)
 
     run_time = time.time() - start_time
 
-    solution.print_solution()
+    best_solution.print_solution()
     helper.print_score(run_time, times, score, outfile, visual, store)
 
     if (store != True):

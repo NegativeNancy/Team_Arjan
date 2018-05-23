@@ -12,6 +12,16 @@ import random, sys, getopt, csv, os, os.path, datetime, time, argparse
 
 
 def init_solution(station_dict, max_trains, max_minutes):
+    """ Initialize a new solluiton.
+
+    Args:
+        station_dict: Station dict of the stations that can be used.
+        max_trains: Number of trains that can be used.
+        max_minutes: Maximum ammount of time a route can take.
+
+    Return:
+        Start solution with empty route list.
+    """
     key_list = []
     for station in station_dict:
         key_list.append(station)
@@ -21,7 +31,39 @@ def init_solution(station_dict, max_trains, max_minutes):
     return solution
 
 
+def best_solution(solution, best_solution, best_score):
+    """ Save new solition as best solution if better than previous solution.
+
+    Args:
+        solution: New solution that has been found.
+        best_solution: Current best solution.
+        best_score: Current best score.
+
+    Return:
+        Returns the currnt best solution and the current best score.
+
+    """
+    current_score = solution.score()
+
+    # Update the best_solution if needed.
+    if current_score > best_score:
+        best_score = current_score
+        best_solution.route_list = solution.route_list
+
+    # Reset our route_list for next iteration.
+    solution.route_list = []
+
+    return best_solution, best_score
+
+
 def run_algorithm(algo, solution):
+    """ Determine which algorithm to run.
+
+    Args: 
+        algo: Name of the algorithm to run.
+        solution: Empty instance of solution object.
+
+    """
     if (algo == 'greedy'):
         solution = greedy_alg(solution)
     elif (algo == 'random'):
@@ -41,6 +83,7 @@ def random_alg(solution, random_number_trains = True):
 
     Args:
         solution: Empty instance of solution object.
+        random_number_trains: Boolean to determine if random trains is enabled.
 
     Returns:
         A random solution.

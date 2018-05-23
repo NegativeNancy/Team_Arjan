@@ -7,9 +7,10 @@ import random as rd
 def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):
     # Fill solution with empty routes if the route_list is empty.
     # make a solution of empty routes
-    for i in range(solution.max_trains):
-        route = rt.Route([])
-        solution.route_list.append(route)
+    if solution.route_list == []:
+        for i in range(solution.max_trains):
+            route = rt.Route([])
+            solution.route_list.append(route)
 
     score = solution.score()
 

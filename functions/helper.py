@@ -29,14 +29,14 @@ def run_algorithm(algo, solution):
     elif algo == 'genetic':
         solution = genetic_alg(solution)
     elif algo == 'hillclimber':
-        solution = hillclimber_alg(solution)
+        solution = hillclimber_alg(random_alg(solution))
     else:
         exit()
 
     return solution
 
 
-def random_alg(solution):
+def random_alg(solution, random_number_trains = True):
     """ Random solution.
 
     Args:
@@ -45,7 +45,7 @@ def random_alg(solution):
     Returns:
         A random solution.
     """
-    return ra.random(solution)
+    return ra.random(solution, random_number_trains)
 
 
 def greedy_alg(solution):

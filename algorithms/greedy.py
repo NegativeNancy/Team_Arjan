@@ -18,10 +18,8 @@ def greedy(solution):
     Returns;
         The solution: a combination of routes.
     """
-
-    route_list = []
-
-    for i in range(solution.max_trains): # might be interesting to randomize the ammount of trains, or proof this is never the case
+    
+    for i in range(solution.max_trains):
         travel_time = 0
         begin_station = st.Stations("fake_begin",  False)
         end_station = st.Stations("fake_end",  False)
@@ -100,11 +98,7 @@ def greedy(solution):
             route.connection_list = connection_list
 
         # Add newly created route to route_list
-        route_list.append(route)
-
-    solution = sn.Solution(route_list, solution)
-
-    solution.print_solution()
+        solution.route_list.append(route)
 
     return solution
 

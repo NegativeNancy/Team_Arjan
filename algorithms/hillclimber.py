@@ -28,9 +28,9 @@ def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):
 
     # perform te iterations
     for i in range(route_iterations):
-        score = iteration_routes(score, solution)
+        _, score = iteration_routes(score, solution)
     for j in range(connection_iterations):
-        score = iteration_connections(score, solution)
+        _, score = iteration_connections(score, solution)
 
     return solution
 
@@ -52,7 +52,7 @@ def iteration_routes(old_score, solution):
     # create route to replace it with
     route = helper.create_random_route(solution)
 
-    return check_for_improvement(old_score, solution, route_index, route)
+    return solution, check_for_improvement(old_score, solution, route_index, route)
 
 def iteration_connections(old_score, solution):
     """ An iteration of the hillclimber. A random route is chosen, then with
@@ -108,7 +108,7 @@ def iteration_connections(old_score, solution):
             new_route.append_route(begin_station, end_station[0], end_station[1])
 
     # check if score will improve
-    return check_for_improvement(old_score, solution, route_index, new_route)
+    return solution, check_for_improvement(old_score, solution, route_index, new_route)
 
 
 def check_for_improvement(old_score, solution, route_index, new_route):

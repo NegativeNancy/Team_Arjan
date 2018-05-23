@@ -60,7 +60,7 @@ def best_solution(solution, best_solution, best_score):
 def run_algorithm(algo, solution):
     """ Determine which algorithm to run.
 
-    Args: 
+    Args:
         algo: Name of the algorithm to run.
         solution: Empty instance of solution object.
 
@@ -234,7 +234,7 @@ def create_random_route(solution):
     while True:
         route_time = route.time()
 
-        weight = 0.1 * route_time/ solution.max_minutes
+        weight = 0.1 * route_time / solution.max_minutes
         if 0.05 + weight > rd.random():
             break
 

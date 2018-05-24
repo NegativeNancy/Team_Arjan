@@ -28,18 +28,39 @@ def simulated_annealing(solution, steps, max_temp, cool_function):
 
     for step in range(steps):
         route_index, new_route = iteration_routes(solution)
-
-
+        old_route, new_score, solution = propose_change(solution, route_index, new_route)
+        if determine_accpetance(steps, step, max_temp, cool_function, score, new_score):
+            score = new_score
+        else:
+            # Revert the change.
+             solution.route_list[route_index] = old_route
     return solution
 
 
-def check_for_improvement(old_score, solution, route_index, route):
+def propose_change(solution, route_index, new_route):
+    """
+
+    """
     old_route = solution.route_list[route_index]
     solution.route_list[route_index]= new_route
     new_score = solution.score()
 
-    
-    acceptance_probability()
+    return old_route, new_score, solution
+
+
+def determine_accpetance(max_steps, step, max_temp, cool_function, old_score, new_score):
+    """ Determine if a change is accepted, based on some cooling function.
+
+    """
+    if cool_function = 0:
+        temperature = lineair_cooling(max_temp, step, max_steps)
+
+    elif cool_function = 1:
+        temperature = sigmoid_cooling(max_temp, step, max_steps)
+    else:
+        temperature = logistic_cooling(max_temp, step, max_steps)
+
+    return determine_accpetance(temperature, old_score, new_score)
 
 
 
@@ -54,11 +75,10 @@ def lineair_cooling(max_temp, iteration_step, max_steps):
     Returns:
         The temperature as boolean.
     """
-
+    # Linear scaling temperature, scaling down from max_temp to 0.
     temperature = max_temp - (step / max_steps) * max_temp
 
-
-    return temperature
+    return temperatur
 
 def sigmoid_cooling(max_temp, iteration_step, max_steps):
     """ A cooling function based on a Sigmoid function.
@@ -91,16 +111,16 @@ def logistic_cooling(max_temp, step, max_steps):
     Returns:
         The temperature as boolean.
     """
-
+    # A logistic function.
     logistic_result = max_temp / (1 + math.exp(-6 * step / max_steps))
-
+    # The temperature corresponding to the result of the logistic function.
     temperature = 2 * (max_temp -logistic_result)
 
     return temperature
 
 
 def acceptance_probability(temperature, old_score, new_score):
-    """ Computes the probability to accept a change.
+    """ Determines wheter a change is accepted or not.
 
     Args:
         temperature: The temperature of the algorithm, as double.
@@ -108,9 +128,21 @@ def acceptance_probability(temperature, old_score, new_score):
         new_score: The new score, as double.
 
     Results:
-        The probability to accept the change.
+        Boolean representing if the change is accepted.
     """
+    # Prevent malfunctions when temperature can reach 0.
+    if temperature != 0:
+        # compute the probability with which a change should be accepted.
+        probability = math.exp((new_score - old_score) / temperature)
+    else:
+        if new_score < old_score:
+            probability = 0
+        else:
+            probability = 1
 
-    probability = math.exp((new_score - old_score) / temperature)
-
-    return probability
+    # Accept change.
+    if rd.random < probability:
+        return True
+    # Deny change.
+    else:
+        return False

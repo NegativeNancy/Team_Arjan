@@ -6,7 +6,7 @@ from algorithms import hillclimber as hc
 import random as rd
 import math
 
-def simulated_annealing(solution, steps, max_temp, cool_function):
+def simulated_annealing(solution, cool_function, steps = 10000, max_temp = 1000):
     """
 
     Args:

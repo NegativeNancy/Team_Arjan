@@ -74,13 +74,16 @@ function netherlands()
 {
     update_netherlands();
     connections_netherlands();
+    load_route();
 }
 
 function holland()
 {
     update_holland();
     connections_holland();
+    load_route();
 }
+
 
 /**
  * Adds marker for place to map.
@@ -244,6 +247,12 @@ function connections_netherlands()
 
     });
 }
+
+
+function load_route() {
+    $.getJSON(Flask.url_for("load_route"))
+}
+
 
 /**
  * Adds marker for station to map.

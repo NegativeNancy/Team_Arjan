@@ -1,6 +1,6 @@
 from functions import helper
 from subprocess import call
-import sys, os, time, argparse
+import sys, os, time, argparse, pickle
 
 
 class MyParser(argparse.ArgumentParser):
@@ -43,7 +43,7 @@ def main(argv):
         const=0, default=1, help="specify how many times to run - default: 1")
     optional.add_argument('-v', '--visual', action='store_true',
         help="create visual of the results - default: false")
-    optional.add_argument('--version', action='version', version='%(prog)s 0.1')
+    optional.add_argument('--version', action='version', version='%(prog)s 1.0')
     optional.add_argument('--steps', action='store', type=int, nargs='?', 
         default='0', help="the ammount of stepss for the proces to do")
     optional.add_argument('--temp', action='store', type=int, nargs='?',
@@ -77,13 +77,26 @@ def main(argv):
     best_solution.print_solution()
     helper.print_score(run_time, times, score, outfile, visual, store)
 
-    if store != True: 
-        os.remove(outfile)
     if (demo):
         os.environ["FLASK_APP"] = "run_demo.py"
         os.environ["API_KEY"] = "AIzaSyBp387L8lSCBXL_sQlrJHs1hdTiShlD29Y"
-        os.environ["RAILNL_SCECNARIO"] = scenario
+        os.environ["RAILNL_SCENARIO"] = scenario
         call(['flask', 'run'])
+
+
+    if store != True: 
+        os.remove(outfile)
+
+    # infile = "./data/temp/temp_solution.pkl"
+    # print(infile)
+
+    # with open(infile, 'rb') as infile:
+    #     new_solution = pickle.load(infile)
+    #     new_solution.print_solution()
+
+
+    os.remove("./data/temp/temp_solution.pkl")
+
 
     exit(1)
 

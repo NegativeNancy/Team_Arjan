@@ -79,3 +79,26 @@ html, body, #map-canvas, .container-fluid
     margin: 0;
     padding: 6px 12px;
 }
+
+
+.main-font {
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  line-height: 1;
+  color: #767777;
+  font-weight: 500;
+}
+
+.main-line {
+  font-size: 60px;
+  padding-top: 160px;
+}
+
+.sub-line {
+  font-size: 21px;
+  padding-top: 24px;
+}
+
+.main-screen {
+    height: 350px;
+
+}

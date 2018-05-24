@@ -9,7 +9,7 @@ from algorithms import simulated_annealing as an
 from functions import plot_data as pd
 from functions import loading_files as load
 import random as rd
-import csv, os, datetime
+import csv, os, datetime, pickle
 
 
 def init_solution(station_dict, max_trains, max_minutes):
@@ -41,7 +41,7 @@ def init_best_solution(solution, station_dict, train, max_minutes):
     return best_solution, best_score
 
 
-def file_location():
+def file_location_score():
     # Create filename to save scores in.
     folder_output = "./data/scores/"
     filename = datetime.datetime.now().strftime("scores__%Y-%m-%d__%I%M%S.csv")
@@ -50,10 +50,25 @@ def file_location():
     return outfile
 
 
+def file_location_solution():
+    folder_output = "./data/temp/"
+    filename = datetime.datetime.now().strftime("temp_solution.pkl")
+    outfile = os.path.join(folder_output, filename)
+
+    return outfile
+
+
+def store_solution(solution):
+    outfile = file_location_solution()
+
+    with open(outfile, 'wb') as outfile:
+        pickle.dump(solution, outfile, pickle.HIGHEST_PROTOCOL)
+
+
 def run_times(times, algo, solution, best_solution, best_score, steps, temp, cooling):
     score = 0
 
-    outfile = file_location()
+    outfile = file_location_score()
 
     with open(outfile, 'w', newline='') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|',
@@ -70,6 +85,7 @@ def run_times(times, algo, solution, best_solution, best_score, steps, temp, coo
                 print(score)
             
             best_solution, best_score = keep_best_solution(solution, best_solution, best_score)
+            store_solution(best_solution)
 
     return best_solution, best_score, outfile, score
 

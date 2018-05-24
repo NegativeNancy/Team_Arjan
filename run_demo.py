@@ -3,6 +3,7 @@ import re
 import sys
 from flask import Flask, jsonify, render_template, request, url_for
 from flask_jsglue import JSGlue
+import pickle
 
 
 # configure application
@@ -23,9 +24,12 @@ if app.config["DEBUG"]:
 def holland_main():
     load_connections()
     load_stations()
+    load_route()
 
 
-def load_connections(station_list, netherland):
+def load_connections(station_list, netherlands):
+    print("load_connections runned")
+
     station1 = list() 
     station2 = list()
 
@@ -57,25 +61,31 @@ def load_connections(station_list, netherland):
                                 "longitude2": station2["longitude"], 
                                 "length": obj[2], "critical": obj[3]})
 
-    scenario = os.environ.get("RAILNL_SCENARIO")
-    print(scenario)
-
-    # if os.environ.get("RAILNL_SCENARIO") == "netherlands":
-    #     connection_list = all_critical(connection_list)
-    # elif os.environ.get("RAILNL_SCENARIO") == "holland":
-    #     connection_list = all_critical(connection_list)
+    if os.environ.get("RAILNL_SCENARIO") == "netherlands":
+        connection_list = all_critical_connections(connection_list)
+    elif os.environ.get("RAILNL_SCENARIO") == "holland":
+        connection_list = all_critical_connections(connection_list)
 
     return connection_list
 
 
-def all_critical(connection_list):
+def all_critical_connections(connection_list):
     for connection in connection_list:
-        connection_list.critical = "Kritiek\n"
+        connection["critical"] = "Kritiek\n"
 
     return connection_list
+
+
+def all_critical_stations(station_list):
+    for station in station_list:
+        station["critical"] = "Kritiek\n"
+
+    return station_list
 
 
 def load_stations(netherlands):
+    print("load_stations runned")
+
     station_list = list()
     if netherlands:
         station_file = open("data/StationsNationaal.csv")
@@ -88,7 +98,43 @@ def load_stations(netherlands):
         # Adding variabels to dictionary so it can be used in visualisation.
         station_list.append({"name": obj[0], "latitude": obj[1],
                              "longitude": obj[2], "critical": obj[3]})
+
+    if os.environ.get("RAILNL_SCENARIO") == "netherlands":
+        station_list = all_critical_stations(station_list)
+    elif os.environ.get("RAILNL_SCENARIO") == "holland":
+        station_list = all_critical_stations(station_list)
+
     return station_list
+
+
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+
+
+def file_location_solution():
+    folder_input = "./data/temp/"
+    filename = datetime.datetime.now().strftime("temp_solution.pkl")
+    infile = os.path.join(folder_input, filename)
+
+    return infile
+
+
+@app.route("/load_route")
+def load_route():
+
+    print("load_route runned")
+
+    infile = file_location_solution()
+    print(infile)
+
+    with open(infile, 'rb') as infile:
+        solution = pickle.load(infile)
+        solution.print_solution() 
+
+    return jsonify("help")
 
 
 @app.route("/")
@@ -134,3 +180,9 @@ def connections_netherlands():
     connection_list = load_connections(station_list, True)
     """Find up to 10 places within view."""
     return jsonify(connection_list)
+
+
+@app.route('/shutdown')
+def shutdown():
+    shutdown_server()
+    return render_template("shutdown.html")

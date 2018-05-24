@@ -28,13 +28,15 @@ def simulated_annealing(solution, cool_function, steps, max_temp):
     score = solution.score()
 
     for step in range(steps):
-        route_index, new_route = hc.iteration_routes(solution)
+        # route_index, new_route = hc.iteration_routes(solution)
+        route_index, new_route = hc.iteration_connections(solution)
         old_route, new_score, solution = propose_change(solution, route_index, new_route)
         if determine_accpetance(steps, step, max_temp, cool_function, score, new_score):
             score = new_score
         else:
             # Revert the change.
             solution.route_list[route_index] = old_route
+
     return solution
 
 

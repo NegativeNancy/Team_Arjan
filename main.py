@@ -44,12 +44,14 @@ def main(argv):
     optional.add_argument('-v', '--visual', action='store_true',
         help="create visual of the results - default: false")
     optional.add_argument('--version', action='version', version='%(prog)s 0.1')
-    optional.add_argument('--steps', action='store', type=int, nargs='?', 
+    optional.add_argument('--steps', action='store', type=int, nargs='?',
         default='0', help="the ammount of stepss for the proces to do")
     optional.add_argument('--temp', action='store', type=int, nargs='?',
         default='0', help="the maximum temp of the cooling function as integer")
     optional.add_argument('--cooling', action='store', type=int, nargs='?',
         default='0', help="an integer representing the choice of cool function")
+    optional.add_argument('-i', '--ignore', action='store',
+        help='ignore station - default: none')
 
     args = parser.parse_args()
 
@@ -62,8 +64,9 @@ def main(argv):
     steps = args.steps
     temp = args.temp
     cooling = args.cooling
+    ignore = args.ignore
 
-    station_dict, train, max_time = helper.load_scenario(scenario)
+    station_dict, train, max_time = helper.load_scenario(scenario, ignore)
 
     solution = helper.init_solution(station_dict, train, max_time)
     best_solution, best_score = helper.init_best_solution(solution, \
@@ -77,7 +80,7 @@ def main(argv):
     best_solution.print_solution()
     helper.print_score(run_time, times, score, outfile, visual, store)
 
-    if store != True: 
+    if store != True:
         os.remove(outfile)
     if (demo):
         os.environ["FLASK_APP"] = "run_demo.py"

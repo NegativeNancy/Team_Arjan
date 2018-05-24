@@ -4,12 +4,13 @@ from classes import Solution as sn
 from functions import helper
 from algorithms import hillclimber as hc
 import random as rd
+import math
 
-def simulated_annealing(solution, steps, max_temp, cool_function):
+def simulated_annealing(solution, cool_function, steps, max_temp):
     """
 
     Args:
-        solution: An instance of the soution class.
+        solution: An instance of the solution class.
         steps: The ammount of steps for the proces to do.
         max_temp: The maximum temp of the cooling function, as integer.
         cool_function: An integer representing the choice of cool function.
@@ -57,10 +58,12 @@ def determine_accpetance(max_steps, step, max_temp, cool_function, old_score, ne
 
     elif cool_function == 1:
         temperature = sigmoid_cooling(max_temp, step, max_steps)
+    elif cool_function == 2:
+        temperature = sawteeth_cooling(max_temp, step, max_steps)
     else:
         temperature = logistic_cooling(max_temp, step, max_steps)
 
-    return determine_accpetance(temperature, old_score, new_score)
+    return acceptance_probability(temperature, old_score, new_score)
 
 
 
@@ -68,7 +71,7 @@ def lineair_cooling(max_temp, step, max_steps):
     """ A cooling function based on a lineair function.
 
     Args:
-        max_temp: The maximum temp of the cooling function, as integer.
+        max_temp: The maximum temp of the cooling function  , as integer.
         step: An integer, representing how many iterations are done.
         max_steps: An integer, representing how many iteration steps wil be done.
 
@@ -80,7 +83,7 @@ def lineair_cooling(max_temp, step, max_steps):
 
     return temperature
 
-def sigmoid_cooling(max_temp, iteration_step, max_steps):
+def sigmoid_cooling(max_temp, step, max_steps):
     """ A cooling function based on a Sigmoid function.
 
     Args:
@@ -118,6 +121,23 @@ def logistic_cooling(max_temp, step, max_steps):
 
     return temperature
 
+def sawteeth_cooling(max_temp, step, max_steps):
+    """ A cooling function based on a saw.
+
+    Args:
+        max_temp: The maximum temp of the cooling function, as integer.
+        step: An integer, representing how many iterations are done.
+        max_steps: An integer, representing how many iteration steps wil be done.
+
+    Returns:
+        The temperature as boolean.
+    """
+
+    # Taking the moculo of two lineair functions, gives a sawtooth.
+    temperature = (max_temp - 3 * max_temp * step / max_steps) % (max_temp - max_temp * step / max_steps)
+
+    return temperature
+
 
 def acceptance_probability(temperature, old_score, new_score):
     """ Determines wheter a change is accepted or not.
@@ -131,7 +151,7 @@ def acceptance_probability(temperature, old_score, new_score):
         Boolean representing if the change is accepted.
     """
     # Prevent malfunctions when temperature can reach 0.
-    if temperature != 0:
+    if temperature != 0 and new_score < old_score:
         # compute the probability with which a change should be accepted.
         probability = math.exp((new_score - old_score) / temperature)
     else:
@@ -141,7 +161,7 @@ def acceptance_probability(temperature, old_score, new_score):
             probability = 1
 
     # Accept change.
-    if rd.random < probability:
+    if rd.random() < probability:
         return True
     # Deny change.
     else:

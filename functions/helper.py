@@ -70,8 +70,8 @@ def run_times(times, algo, solution, best_solution, best_score, steps, temp, coo
 
     outfile = file_location_score()
 
-    with open(outfile, 'w', newline='') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|',
+    with open(outfile, "w", newline="") as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=" ", quotechar="|",
             quoting=csv.QUOTE_MINIMAL)
 
         for i in range(times):
@@ -83,7 +83,7 @@ def run_times(times, algo, solution, best_solution, best_score, steps, temp, coo
             if score < temp:
                 score = temp
                 print(score)
-            
+
             best_solution, best_score = keep_best_solution(solution, best_solution, best_score)
             store_solution(best_solution)
 
@@ -98,16 +98,16 @@ def run_algorithm(algo, solution, steps, temp, cooling):
         solution: Empty instance of solution object.
 
     """
-    if (algo == 'greedy'):
+    if (algo == "greedy"):
         solution = greedy_alg(solution)
-    elif (algo == 'random'):
+    elif (algo == "random"):
         solution = random_alg(solution)
-    elif algo == 'genetic':
+    elif algo == "genetic":
         solution = genetic_alg(solution)
-    elif algo == 'hillclimber':
+    elif algo == "hillclimber":
         solution = hillclimber_alg(ra.create_random_solution(solution))
-    elif algo == 'annealing':
-        solution == annealing_alg(solution, steps, temp, cooling)
+    elif algo == "annealing":
+        solution == annealing_alg(solution, cooling, steps, temp)
     else:
         exit()
 
@@ -230,7 +230,7 @@ def create_visual(filename):
     pd.plot_data(filename)
 
 
-def load_scenario(scenario):
+def load_scenario(scenario, ignore = ""):
     """ Specify which scenario to load.
 
     Args:
@@ -242,23 +242,23 @@ def load_scenario(scenario):
     trains_holland = 7
     time_holland = 120
 
-    if (scenario == 'netherlands'):
-        station_dict = load.load_stations(True, True)
+    if (scenario == "netherlands"):
+        station_dict = load.load_stations(True, True, ignore)
         print("Netherlands Loaded")
         train = trains_netherlands
         max_time = time_netherlands
-    elif (scenario == 'netherlands-simple'):
-        station_dict = load.load_stations(True, False)
+    elif (scenario == "netherlands-simple"):
+        station_dict = load.load_stations(True, False, ignore)
         print("Netherlands Simple Loaded")
         train = trains_netherlands
         max_time = time_netherlands
-    elif (scenario == 'holland'):
-        station_dict = load.load_stations(False, True)
+    elif (scenario == "holland"):
+        station_dict = load.load_stations(False, True, ignore)
         print("Holland Loaded")
         train = trains_holland
         max_time = time_holland
-    elif (scenario == 'holland-simple'):
-        station_dict = load.load_stations(False, False)
+    elif (scenario == "holland-simple"):
+        station_dict = load.load_stations(False, False, ignore)
         print("Holland Simple Loaded")
         train = trains_holland
         max_time = time_holland

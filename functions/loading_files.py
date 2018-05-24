@@ -1,7 +1,7 @@
 from classes import Stations as st
 
 
-def load_stations(netherland, all_critical):
+def load_stations(netherland, all_critical, station_to_delete = ""):
     """ Loads data from files and makes objects out of the data.
 
     Args:
@@ -23,6 +23,9 @@ def load_stations(netherland, all_critical):
     for line in station_file:
         obj = line.split(',')
 
+        if obj[0] == station_to_delete or obj[1] == station_to_delete:
+            continue
+
         # Make list of stations and specify if station is critical
         if all_critical or obj[3] == "Kritiek\n" or obj[3] == "Kritiek\r\n":
             station = st.Stations(obj[0], True)
@@ -37,9 +40,13 @@ def load_stations(netherland, all_critical):
         connections_file = open("data/ConnectiesNationaal.csv")
     else:
         connections_file = open("data/ConnectiesHolland.csv")
-        
+
     for line in connections_file:
         obj = line.split(',')
+
+        if obj[0] == station_to_delete or obj[1] == station_to_delete:
+            continue
+
         obj[2] = int(obj[2])
 
         # Distinguish between critical neighbours and non-critical neighbours

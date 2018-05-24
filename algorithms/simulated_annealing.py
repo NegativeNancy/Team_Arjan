@@ -1,0 +1,107 @@
+from classes import Stations as st
+from classes import Route as rt
+from classes import Solution as sn
+from functions import helper
+from algorithms import hillclimber as hc
+import random as rd
+
+def simulated_annealing(solution, steps, max_temp, cool_function):
+    """
+
+    Args:
+        solution: An instance of the soution class.
+        steps: The ammount of steps for the proces to do.
+        max_temp: The maximum temp of the cooling function, as integer.
+        cool_function: An integer representing the choice of cool function.
+
+    Returns:
+        The solution.
+    """
+
+    # Fill solution with empty routes if the route_list is empty.
+    if solution.route_list == []:
+        for i in range(solution.max_trains):
+            route = rt.Route([])
+            solution.route_list.append(route)
+
+    score = solution.score()
+
+    for step in range(steps):
+        # do a step with hillclimber
+        # check for acceptance.
+
+
+
+    return solution
+
+def lineair_cooling(max_temp, iteration_step, max_steps):
+    """ A cooling function based on a lineair function.
+
+    Args:
+        max_temp: The maximum temp of the cooling function, as integer.
+        step: An integer, representing how many iterations are done.
+        max_steps: An integer, representing how many iteration steps wil be done.
+
+    Returns:
+        The temperature as boolean.
+    """
+
+    temperature = max_temp - (step / max_steps) * max_temp
+
+
+    return temperature
+
+def sigmoid_cooling(max_temp, iteration_step, max_steps):
+    """ A cooling function based on a Sigmoid function.
+
+    Args:
+        max_temp: The maximum temp of the cooling function, as integer.
+        step: An integer, representing how many iterations are done.
+        max_steps: An integer, representing how many iteration steps wil be done.
+
+    Returns:
+        The temperature as boolean.
+    """
+    # A Sigmoid function.
+    sigmoid_result = max_temp / (1 + math.exp((-12 / max_steps) * \
+        (step - max_steps / 2)))
+
+    # The temperature corresponding to the result of the Sigmoid function.
+    temperature = max_temp - sigmoid_result
+
+    return temperature
+
+def logistic_cooling(max_temp, step, max_steps):
+    """ A cooling function based on a logistic function.
+
+    Args:
+        max_temp: The maximum temp of the cooling function, as integer.
+        step: An integer, representing how many iterations are done.
+        max_steps: An integer, representing how many iteration steps wil be done.
+
+    Returns:
+        The temperature as boolean.
+    """
+
+    logistic_result = max_temp / (1 + math.exp(-6 * step / max_steps))
+
+    temperature = 2 * (max_temp -logistic_result)
+
+    return temperature
+
+
+def acceptance_probability(temperature, old_score, new_score):
+    """ Computes the probability to accept a change.
+
+    Args:
+        temperature: The temperature of the algorithm, as double.
+        old_score: The old score, as double.
+        new_score: The new score, as double.
+
+    Results:
+        The probability to accept the change.
+    """
+
+    probability = math.exp((new_score - old_score) / temperature)
+
+    return probability

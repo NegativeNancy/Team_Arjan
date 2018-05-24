@@ -1,4 +1,3 @@
-
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
@@ -27,9 +26,9 @@ def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):
     score = solution.score()
 
     # perform te iterations
-    for i in range(route_iterations):
+    for _ in range(route_iterations):
         _, score = iteration_routes(score, solution)
-    for j in range(connection_iterations):
+    for _ in range(connection_iterations):
         _, score = iteration_connections(score, solution)
 
     return solution

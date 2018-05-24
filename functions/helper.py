@@ -80,7 +80,7 @@ def run_times(times, algo, solution, best_solution, best_score, steps, temp, coo
             temp = solution.score()
             spamwriter.writerow([temp])
 
-            if score < temp:
+            if score <= temp:
                 score = temp
                 print(score)
 

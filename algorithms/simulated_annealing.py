@@ -4,12 +4,13 @@ from classes import Solution as sn
 from functions import helper
 from algorithms import hillclimber as hc
 import random as rd
+import math
 
 def simulated_annealing(solution, steps, max_temp, cool_function):
     """
 
     Args:
-        solution: An instance of the soution class.
+        solution: An instance of the solution class.
         steps: The ammount of steps for the proces to do.
         max_temp: The maximum temp of the cooling function, as integer.
         cool_function: An integer representing the choice of cool function.
@@ -60,7 +61,7 @@ def determine_accpetance(max_steps, step, max_temp, cool_function, old_score, ne
     else:
         temperature = logistic_cooling(max_temp, step, max_steps)
 
-    return determine_accpetance(temperature, old_score, new_score)
+    return acceptance_probability(temperature, old_score, new_score)
 
 
 
@@ -80,7 +81,7 @@ def lineair_cooling(max_temp, step, max_steps):
 
     return temperature
 
-def sigmoid_cooling(max_temp, iteration_step, max_steps):
+def sigmoid_cooling(max_temp, step, max_steps):
     """ A cooling function based on a Sigmoid function.
 
     Args:
@@ -141,7 +142,7 @@ def acceptance_probability(temperature, old_score, new_score):
             probability = 1
 
     # Accept change.
-    if rd.random < probability:
+    if rd.random() < probability:
         return True
     # Deny change.
     else:

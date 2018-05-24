@@ -5,6 +5,7 @@ from algorithms import random as ra
 from algorithms import greedy as ga
 from algorithms import genetic as gena
 from algorithms import hillclimber as hill
+from algorithms import simulated_annealing as an
 from functions import plot_data as pd
 from functions import loading_files as load
 import random as rd
@@ -49,7 +50,7 @@ def file_location():
     return outfile
 
 
-def run_times(times, algo, solution, best_solution, best_score):
+def run_times(times, algo, solution, best_solution, best_score, steps, temp, cooling):
     score = 0
 
     outfile = file_location()
@@ -59,7 +60,7 @@ def run_times(times, algo, solution, best_solution, best_score):
             quoting=csv.QUOTE_MINIMAL)
 
         for i in range(times):
-            solution = run_algorithm(algo, solution)
+            solution = run_algorithm(algo, solution, steps, temp, cooling)
 
             temp = solution.score()
             spamwriter.writerow([temp])
@@ -73,7 +74,7 @@ def run_times(times, algo, solution, best_solution, best_score):
     return best_solution, best_score, outfile, score
 
 
-def run_algorithm(algo, solution):
+def run_algorithm(algo, solution, steps, temp, cooling):
     """ Determine which algorithm to run.
 
     Args:
@@ -89,6 +90,8 @@ def run_algorithm(algo, solution):
         solution = genetic_alg(solution)
     elif algo == 'hillclimber':
         solution = hillclimber_alg(ra.create_random_solution(solution))
+    elif algo == 'annealing':
+        solution == annealing_alg(solution, steps, temp, cooling)
     else:
         exit()
 
@@ -118,6 +121,18 @@ def keep_best_solution(solution, best_solution, best_score):
     solution.route_list = []
 
     return best_solution, best_score
+
+
+def annealing_alg(solution, steps, temp, cooling):
+    """ Simulated Annealing solution.
+
+    Args:
+        solution: Empty instance of solution object.
+
+    Returns:
+        A Greedy solution.
+    """
+    return an.simulated_annealing(solution, steps, temp, cooling)
 
 
 def random_alg(solution, random_number_trains = True):

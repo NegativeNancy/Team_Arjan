@@ -10,12 +10,22 @@ app = Flask(__name__)
 JSGlue(app)
 
 
+# ensure responses aren't cached
+if app.config["DEBUG"]:
+    @app.after_request
+    def after_request(response):
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Expires"] = 0
+        response.headers["Pragma"] = "no-cache"
+        return response
+
+
 def holland_main():
     load_connections()
     load_stations()
 
 
-def load_connections(station_list, netherlands):
+def load_connections(station_list, netherland):
     station1 = list() 
     station2 = list()
 
@@ -47,6 +57,21 @@ def load_connections(station_list, netherlands):
                                 "longitude2": station2["longitude"], 
                                 "length": obj[2], "critical": obj[3]})
 
+    scenario = os.environ.get("RAILNL_SCENARIO")
+    print(scenario)
+
+    # if os.environ.get("RAILNL_SCENARIO") == "netherlands":
+    #     connection_list = all_critical(connection_list)
+    # elif os.environ.get("RAILNL_SCENARIO") == "holland":
+    #     connection_list = all_critical(connection_list)
+
+    return connection_list
+
+
+def all_critical(connection_list):
+    for connection in connection_list:
+        connection_list.critical = "Kritiek\n"
+
     return connection_list
 
 
@@ -64,16 +89,6 @@ def load_stations(netherlands):
         station_list.append({"name": obj[0], "latitude": obj[1],
                              "longitude": obj[2], "critical": obj[3]})
     return station_list
-
-
-# ensure responses aren't cached
-if app.config["DEBUG"]:
-    @app.after_request
-    def after_request(response):
-        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-        response.headers["Expires"] = 0
-        response.headers["Pragma"] = "no-cache"
-        return response
 
 
 @app.route("/")

@@ -25,7 +25,7 @@ def main(argv):
 
     required = parser.add_argument_group('Required argument')
     required.add_argument('-a', '--algorithm', action='store', dest="algorithm",
-        choices=['random', 'greedy', 'genetic', 'hillclimber'], required=True,
+        choices=['random', 'greedy', 'genetic', 'hillclimber', 'annealing'], required=True,
         help="specify which algorithm to run")
 
     optional = parser.add_argument_group('Optional arguments')
@@ -40,10 +40,16 @@ def main(argv):
     optional.add_argument('--store', action='store_true',
         help="store the results in a .scv file - default: false")
     optional.add_argument('-t', '--times', action='store', type=int, nargs='?',
-        const=0, default=1, help="specify how many times to run - default: 1", )
+        const=0, default=1, help="specify how many times to run - default: 1")
     optional.add_argument('-v', '--visual', action='store_true',
         help="create visual of the results - default: false")
     optional.add_argument('--version', action='version', version='%(prog)s 0.1')
+    optional.add_argument('--steps', action='store', type=int, nargs='?', 
+        default='0', help="the ammount of stepss for the proces to do")
+    optional.add_argument('--temp', action='store', type=int, nargs='?',
+        default='0', help="the maximum temp of the cooling function as integer")
+    optional.add_argument('--cooling', action='store', type=int, nargs='?',
+        default='0', help="an integer representing the choice of cool function")
 
     args = parser.parse_args()
 
@@ -53,6 +59,9 @@ def main(argv):
     store = args.store
     times = args.times
     visual = args.visual
+    steps = args.steps
+    temp = args.temp
+    cooling = args.cooling
 
     station_dict, train, max_time = helper.load_scenario(scenario)
 
@@ -61,7 +70,7 @@ def main(argv):
         station_dict, train, max_time)
 
     best_solution, best_score, outfile, score = helper.run_times(times, algo, \
-        solution, best_solution, best_score)
+        solution, best_solution, best_score, steps, temp, cooling)
 
     run_time = time.time() - start_time
 
@@ -71,6 +80,9 @@ def main(argv):
     if store != True: 
         os.remove(outfile)
     if (demo):
+        os.environ["FLASK_APP"] = "run_demo.py"
+        os.environ["API_KEY"] = "AIzaSyBp387L8lSCBXL_sQlrJHs1hdTiShlD29Y"
+        os.environ["RAILNL_SCECNARIO"] = scenario
         call(['flask', 'run'])
 
     exit(1)

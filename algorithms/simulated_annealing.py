@@ -27,13 +27,13 @@ def simulated_annealing(solution, steps, max_temp, cool_function):
     score = solution.score()
 
     for step in range(steps):
-        route_index, new_route = iteration_routes(solution)
+        route_index, new_route = hc.iteration_routes(solution)
         old_route, new_score, solution = propose_change(solution, route_index, new_route)
         if determine_accpetance(steps, step, max_temp, cool_function, score, new_score):
             score = new_score
         else:
             # Revert the change.
-             solution.route_list[route_index] = old_route
+            solution.route_list[route_index] = old_route
     return solution
 
 
@@ -52,10 +52,10 @@ def determine_accpetance(max_steps, step, max_temp, cool_function, old_score, ne
     """ Determine if a change is accepted, based on some cooling function.
 
     """
-    if cool_function = 0:
+    if cool_function == 0:
         temperature = lineair_cooling(max_temp, step, max_steps)
 
-    elif cool_function = 1:
+    elif cool_function == 1:
         temperature = sigmoid_cooling(max_temp, step, max_steps)
     else:
         temperature = logistic_cooling(max_temp, step, max_steps)
@@ -64,7 +64,7 @@ def determine_accpetance(max_steps, step, max_temp, cool_function, old_score, ne
 
 
 
-def lineair_cooling(max_temp, iteration_step, max_steps):
+def lineair_cooling(max_temp, step, max_steps):
     """ A cooling function based on a lineair function.
 
     Args:
@@ -78,7 +78,7 @@ def lineair_cooling(max_temp, iteration_step, max_steps):
     # Linear scaling temperature, scaling down from max_temp to 0.
     temperature = max_temp - (step / max_steps) * max_temp
 
-    return temperatur
+    return temperature
 
 def sigmoid_cooling(max_temp, iteration_step, max_steps):
     """ A cooling function based on a Sigmoid function.

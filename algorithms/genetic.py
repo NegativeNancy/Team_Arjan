@@ -1,4 +1,5 @@
 from algorithms import random as ra
+from algorithms import hillclimber as hc
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
@@ -14,62 +15,47 @@ def genetic(solution):
 
     Returns:
         A genetically generated solution
-
-    don't use whole population to make new generation, only use best one. so out of 100 use only 50 and make 100 children wit them..
-    to keep track of time: check if time was too much and them remove one routeself.
-
-    Use . use parents to make two children?
-
-    OR RANDOM AMOUNT OF CHILDREN? BETWEEN 1 AND 3?
     """
     score_list = []
     solution_list = []
     crossover_list = []
 
     crossover_list = make_list(solution.max_trains)
-    population_size = 500
+    population_size = 10
 
     # Make population.
     solution_list = make_population(population_size, solution)
 
     best_score = 0
     best_solution = sn.Solution([], solution.station_dict, solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
-
     generation = 0
     while generation < 10:
-
-        """ DOEL: Zorg ervoor dat elke generatie verder gaat met de score lijst van de
-        vorige generatie """
         pop_size = 0
 
         crossover_solution_list = []
         crossover_score_list = []
-
         score_list, best, nextone = calc_fitness(solution_list)
-        print(score_list[:3])
-        print(crossover_score_list[:3])
-
         # Create next generation.
         #while pop_size < population_size:
         for _ in range(round(population_size / 2)):
             # Pick two parents.
-            parents_index, parents = pick_next_population_parents(score_list, population_size)
-            # for j in range(rd.randint(1, 4)):
-            for _ in range(2):
-                crossover_solution = crossover(crossover_list, solution, solution_list[parents_index[0]], solution_list[parents_index[1]])
+            parents_index, parents = pick_next_population_parents(score_list, \
+                population_size)
+            for _ in range(rd.randint(1, 4)):
+            #for j in range(2):
+                crossover_solution = crossover(crossover_list, solution, \
+                    solution_list[parents_index[0]], solution_list[parents_index[1]])
                 crossover_solution_score = crossover_solution.score()
+                crossover_solution_score, crossover_solution = \
+                    mutation(crossover_solution_score, crossover_solution)
+
                 crossover_solution_list.append(crossover_solution)
                 crossover_score_list.append(crossover_solution_score)
-
                 # Determine best score.
                 if crossover_solution_score > best_score:
                     best_score = crossover_solution_score
                     best_solution = crossover_solution
                     print("best score", best_score, "generation", generation)
-
-                # pop_size += 1
-                # if pop_size > population_size:
-                #     break
 
             parents_index = []
             parents = []
@@ -78,8 +64,6 @@ def genetic(solution):
         score_list = list(crossover_score_list)
         generation += 1
         print(generation)
-        # print(score_list[:3], crossover_score_list[:3])
-        # print(len(solution_list), len(crossover_solution_list))
 
     # Find best crossover.
     print(best_solution.score())
@@ -88,7 +72,6 @@ def genetic(solution):
 def calc_and_print_mean(score_list):
     summer = sum(score_list)
     print(round(summer / 500, 1))
-
 
 def determine_best_score(score_list):
     best_score = 0
@@ -104,18 +87,18 @@ def pick_next_population_parents(score_list, population_size):
         population_size: Size of the population.
 
     Reutrns:
-        List of indices that the selected parents are at and the actual selected solutionsself.
+        List of indices that the selected parents are at and the actual selected
+        solutions themselves.
     """
-    index_list = []
-    listed = []
-
+    parent_indices = []
+    parent_solutions = []
     # Select two solutions.
     for i in range(2):
         index, selected = select_score(score_list, population_size)
-        index_list.append(index)
-        listed.append(selected)
+        parent_indices.append(index)
+        parent_solutions.append(selected)
 
-    return index_list, listed
+    return parent_indices, parent_solutions
 
 
 def calc_fitness(list_of_solutions):
@@ -137,7 +120,6 @@ def calc_fitness(list_of_solutions):
         if score_list[i] > best_score:
             best_score = score_list[i]
             index = i
-
     return score_list, best_score, index
 
 def select_score(score_list, population_size):
@@ -158,12 +140,14 @@ def select_score(score_list, population_size):
     index = 0
 
     # Loop through score list until new sum of scores is lower than the chance.
-    for i in score_list:
-        while new_sum_of_scores < chance:
-            new_sum_of_scores += i
+    for score in score_list:
+        new_sum_of_scores += score
+        if new_sum_of_scores < chance:
             index += 1
+        else:
+            break
 
-    return index % population_size, score_list[index % population_size]
+    return index, score_list[index]
 
 def make_population(population_size, solution):
     """ Generate a population consisted of random solutions.
@@ -172,16 +156,16 @@ def make_population(population_size, solution):
         population_size: Integers specifying how big the population should be.
 
     Returns:
-        A list of random solutions, size of the list is the previously specified population size.
+        A list of random solutions, size of the list is the previously specified
+        population size.
 
     """
-
     solution_list = []
+
     # Create set amount of new solutions.
     for i in range(population_size):
         genetic_solution = ra.random(solution, False)
         solution_list.append(genetic_solution)
-
     return solution_list
 
 def make_list(max_trains):
@@ -193,14 +177,14 @@ def make_list(max_trains):
     Returns:
         List filled with numbers 0 to max_trains times 2.
     """
-    total_list = list(range(max_trains * 2))
-    return total_list
+    return list(range(max_trains * 2))
 
 def crossover(crossover_list, solution, solution1, solution2):
     """ Randomly crosses two solutions with each other.
 
     Args:
-        crossover_array: Array filled with integers zero through maximum amount of trains.
+        crossover_array: Array filled with integers zero through maximum amount
+        of trains.
         max_trains: Maximum amount of trains allowed in solution.
         solution1: Part one of the next generation.
         soluiton2: Part two of the next generation.
@@ -232,7 +216,9 @@ def crossover(crossover_list, solution, solution1, solution2):
     # if too_much > 0:
     #     print("too much", too_much)
 
-    crossover_solution = sn.Solution(crossover_solution_list, solution.station_dict, solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
+    crossover_solution = sn.Solution(crossover_solution_list, \
+    solution.station_dict, solution.max_trains, solution.max_minutes,
+    solution.station_dict_key_list)
 
     return crossover_solution
 
@@ -262,5 +248,9 @@ def create_crossover_list(crossover_list, max_trains):
 def selection():
     raise NotImplementedError
 
-def mutation():
-    raise NotImplementedError
+def mutation(old_score, solution):
+    # for _ in range(50):
+    #     old_score = hc.iteration_routes(old_score, solution)
+    # return old_score, solution
+    print("one")
+    return hc.iteration_routes(old_score, solution), solution

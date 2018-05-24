@@ -22,15 +22,7 @@ class Solution():
             An integer repereseting the score of the solution.
         """
 
-        number_used_critical_routes = 0
-        number_of_all_critical_routes = 0
-        for station in self.station_dict:
-            for neighbor in self.station_dict[station].neighbors:
-                if neighbor[2] == True:
-                    number_of_all_critical_routes += 1
-                    number_used_critical_routes += self.route_used(station, neighbor[0])
-
-        p = number_used_critical_routes / number_of_all_critical_routes
+        p = self.compute_p()
 
         # Compute time spent on rails
         min = 0
@@ -71,3 +63,16 @@ class Solution():
                 connection["begin"] == end_station):
                     return 1
         return 0
+
+    def compute_p(self):
+        number_used_critical_routes = 0
+        number_of_all_critical_routes = 0
+        for station in self.station_dict:
+            for neighbor in self.station_dict[station].neighbors:
+                if neighbor[2] == True:
+                    number_of_all_critical_routes += 1
+                    number_used_critical_routes += self.route_used(station, neighbor[0])
+
+        p = number_used_critical_routes / number_of_all_critical_routes
+
+        return p 

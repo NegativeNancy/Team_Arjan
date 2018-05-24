@@ -91,7 +91,7 @@ def run_algorithm(algo, solution, steps, temp, cooling):
     elif algo == "hillclimber":
         solution = hillclimber_alg(ra.create_random_solution(solution))
     elif algo == "annealing":
-        solution == annealing_alg(solution, steps, temp, cooling)
+        solution == annealing_alg(solution, cooling, steps, temp)
     else:
         exit()
 

@@ -27,14 +27,17 @@ def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):
 
     # perform te iterations
     for _ in range(route_iterations):
-        _, score = iteration_routes(score, solution)
+        route_index, new_route = iteration_routes(solution)
+        score, solution = check_for_improvement(score, solution, route_index, new_route)
+
     for _ in range(connection_iterations):
-        _, score = iteration_connections(score, solution)
+        route_index, new_route = iteration_connections(solution)
+        score, solution = check_for_improvement(score, solution, route_index, new_route)
 
     return solution
 
 
-def iteration_routes(old_score, solution):
+def iteration_routes(solution):
     """ An iteration of the hillclimber. A random new route is created, then a
     random route is chosen, and replaced by the new route. If the score improves
     we hold on to the change.
@@ -51,9 +54,9 @@ def iteration_routes(old_score, solution):
     # create route to replace it with
     route = helper.create_random_route(solution)
 
-    return solution, check_for_improvement(old_score, solution, route_index, route)
+    return route_index, route
 
-def iteration_connections(old_score, solution):
+def iteration_connections(solution):
     """ An iteration of the hillclimber. A random route is chosen, then with
     certain probability we remove either the first or final connection and with
     certain probability we place a new connection on the first or final
@@ -77,8 +80,8 @@ def iteration_connections(old_score, solution):
 
     new_route = add_new_endpoint(new_route, solution)
 
-    # check if score will improve
-    return solution, check_for_improvement(old_score, solution, route_index, new_route)
+    # Return proposed changes.
+    return route_index, new_route
 
 
 def check_for_improvement(old_score, solution, route_index, new_route):
@@ -101,10 +104,10 @@ def check_for_improvement(old_score, solution, route_index, new_route):
 
     # Check if this improves the score, otherwise revert changes.
     if old_score < new_score:
-        return new_score
+        return new_score, solution
     else:
         solution.route_list[route_index] = old_route
-        return old_score
+        return old_score, solution
 
 def cut_route_ends(route):
     """ Cut the begin or end of a route off, with certain probability.

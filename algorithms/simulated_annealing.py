@@ -27,12 +27,21 @@ def simulated_annealing(solution, steps, max_temp, cool_function):
     score = solution.score()
 
     for step in range(steps):
-        # do a step with hillclimber
-        # check for acceptance.
-
+        route_index, new_route = iteration_routes(solution)
 
 
     return solution
+
+
+def check_for_improvement(old_score, solution, route_index, route):
+    old_route = solution.route_list[route_index]
+    solution.route_list[route_index]= new_route
+    new_score = solution.score()
+
+    
+    acceptance_probability()
+
+
 
 def lineair_cooling(max_temp, iteration_step, max_steps):
     """ A cooling function based on a lineair function.

@@ -1,5 +1,5 @@
 class Solution():
-    """Class that holds possible solutions and computes their score."""
+    """Class that holds possible solutions and computes their score. """
 
     def __init__(self, route_list, station_dict, max_trains, max_minutes, station_dict_key_list):
         """Initialise class.
@@ -54,7 +54,7 @@ class Solution():
             stations.
 
         Returns:
-            1 if the connection is in the solution, 0 otherwise.
+            An integer, 1 if the connection is in the solution, 0 otherwise.
         """
         for route in self.route_list:
             for connection in route.connection_list:
@@ -65,6 +65,11 @@ class Solution():
         return 0
 
     def compute_p(self):
+        """ Computes the p value of the score function.
+
+        Returns:
+            The percentage of criical connections what were used.
+        """
         number_used_critical_routes = 0
         number_of_all_critical_routes = 0
         for station in self.station_dict:
@@ -75,4 +80,4 @@ class Solution():
 
         p = number_used_critical_routes / number_of_all_critical_routes
 
-        return p 
+        return p

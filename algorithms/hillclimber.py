@@ -9,8 +9,8 @@ def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):
     A.K.A. an optimal solution.
 
     This implementation of a hillclimber contains two different iterations,
-    one based on replacing routes and one based on replacing only the begin and
-    end of a route.
+    one based on replacing routes and one based on replacing only the beginning and
+    ending of a route.
 
     Args:
         solution: An instance of the solution class, possibly containing routes.
@@ -60,6 +60,7 @@ def iteration_routes(solution):
     route = helper.create_random_route(solution)
 
     return route_index, route
+
 
 def iteration_connections(solution):
     """ Iteration of the hillclimber that swithces out connections within routes.
@@ -116,6 +117,7 @@ def check_for_improvement(old_score, solution, route_index, new_route):
         solution.route_list[route_index] = old_route
         return old_score, solution
 
+
 def cut_route_ends(route):
     """ Cut the begin or end off of a route, with a certain probability.
 
@@ -134,6 +136,7 @@ def cut_route_ends(route):
         elif random_choice < 2:
             route.connection_list.pop()
     return route
+
 
 def add_new_endpoint(route, solution):
     """ Randomly add a new endpoint to a route, if this does not exceed the time

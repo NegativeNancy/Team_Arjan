@@ -1,8 +1,8 @@
 class Route():
-    """Class that holds single route objects."""
+    """ Class that holds single route objects. """
 
     def __init__(self, connection_list):
-        """Initialise class."""
+        """ Initialise class. """
         self.connection_list = connection_list
 
     def time(self):

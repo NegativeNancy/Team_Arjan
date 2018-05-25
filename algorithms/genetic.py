@@ -19,7 +19,7 @@ def genetic(solution):
     crossover_list = []
 
     crossover_list = make_list(solution.max_trains)
-    population_size = 40
+    population_size = 50
 
     # Make population.
     solution_list = make_population(population_size, solution)
@@ -66,6 +66,7 @@ def genetic(solution):
 
     return best_solution
 
+
 def pick_next_population_parents(score_list, population_size):
     """ Picks parents for the next generation.
 
@@ -109,6 +110,7 @@ def calc_fitness(list_of_solutions):
             index = i
     return score_list, best_score, index
 
+
 def select_score(score_list, population_size):
     """ Selects score to produce next population.
 
@@ -137,6 +139,7 @@ def select_score(score_list, population_size):
 
     return index, score_list[index]
 
+
 def make_population(population_size, solution):
     """ Generate a population consisted of random solutions.
 
@@ -157,6 +160,7 @@ def make_population(population_size, solution):
         solution_list.append(genetic_solution)
     return solution_list
 
+
 def make_list(max_trains):
     """ Creates a list with number zero through maximum specified trains.
 
@@ -167,6 +171,7 @@ def make_list(max_trains):
         List filled with numbers 0 to max_trains times 2.
     """
     return list(range(max_trains * 2))
+
 
 def crossover(crossover_list, solution, solution1, solution2):
     """ Randomly crosses two solutions with each other.
@@ -222,6 +227,7 @@ def create_crossover_list(crossover_list, max_trains):
         choice_list.append(choice)
 
     return choice_list
+
 
 def mutation(old_score, solution):
     """ Apply one iteration of hillclimber on the solutions, where the change is

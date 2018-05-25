@@ -115,6 +115,7 @@ def lineair_cooling(max_temp, step, max_steps):
 
     return temperature
 
+
 def sigmoid_cooling(max_temp, step, max_steps):
     """ A cooling function based on a Sigmoid function.
 
@@ -136,6 +137,7 @@ def sigmoid_cooling(max_temp, step, max_steps):
 
     return temperature
 
+
 def logistic_cooling(max_temp, step, max_steps):
     """ A cooling function based on a logistic function.
 
@@ -154,6 +156,7 @@ def logistic_cooling(max_temp, step, max_steps):
     temperature = 2 * (max_temp -logistic_result)
 
     return temperature
+
 
 def sawteeth_cooling(max_temp, step, max_steps):
     """ A cooling function based on a saw.

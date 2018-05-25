@@ -75,7 +75,8 @@ def run_demo(scenario):
     call(['flask', 'run'])
 
 
-def run_times(times, algo, solution, best_solution, best_score, temperature, cooling, start_algorithm, route_iterations, connection_iterations):
+def run_times(times, algo, solution, best_solution, best_score, temperature, \
+    cooling, start_algorithm, route_iterations, connection_iterations):
     score = 0
 
     outfile = file_location_score()
@@ -97,13 +98,15 @@ def run_times(times, algo, solution, best_solution, best_score, temperature, coo
                 score = temp
                 print(score)
 
-            best_solution, best_score = keep_best_solution(solution, best_solution, best_score)
+            best_solution, best_score = keep_best_solution(solution, \
+                best_solution, best_score)
             store_solution(best_solution)
 
     return best_solution, best_score, outfile, score
 
 
-def run_algorithm(algo, solution, temperature, cooling, start_algorithm, route_iterations, connection_iterations):
+def run_algorithm(algo, solution, temperature, cooling, start_algorithm, \
+    route_iterations, connection_iterations):
     """ Determine which algorithm to run.
 
     Args:
@@ -117,7 +120,6 @@ def run_algorithm(algo, solution, temperature, cooling, start_algorithm, route_i
     elif start_algorithm == 2:
         solution = ra.random(solution)
 
-
     if (algo == "greedy"):
         solution = greedy_alg(solution)
     elif (algo == "random"):
@@ -125,9 +127,16 @@ def run_algorithm(algo, solution, temperature, cooling, start_algorithm, route_i
     elif algo == "genetic":
         solution = genetic_alg(solution)
     elif algo == "hillclimber":
+        # Set default if none specified.
+        if route_iterations == 0 and connection_iterations == 0:
+            route_iterations = 10000
         solution = hillclimber_alg(solution, route_iterations, connection_iterations)
     elif algo == "annealing":
-        solution == annealing_alg(solution, cooling, temperature, route_iterations, connection_iterations)
+        # Set default if none specified.
+        if route_iterations == 0 and connection_iterations == 0:
+            connection_iterations = 10000
+        solution == annealing_alg(solution, cooling, temperature, \
+            route_iterations, connection_iterations)
     else:
         exit()
 

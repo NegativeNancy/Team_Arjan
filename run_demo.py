@@ -105,7 +105,9 @@ def create_routes(netherlands):
                 if connections_list:
                     for connection in connections_list:
                         if (connection["station1"] == route["station1"] and \
-                            connection["station2"] == route["station2"]):
+                            connection["station2"] == route["station2"]) or \
+                            (connection["station1"] == route["station2"] and \
+                            connection["station2"] == route["station1"]):
                             count = connection["count"] + 1
                             connection["count"] = count
                             break
@@ -114,13 +116,11 @@ def create_routes(netherlands):
                             "station2": route["station2"],
                             "critical": line["critical"],
                             "count": 1})
-                        break
                 else: 
                     connections_list.append({"station1": route["station1"],
                             "station2": route["station2"],
                             "critical": line["critical"],
                             "count": 1})
-                    break
         else:
             connections_list.append({"station1": line["station1"],
                     "station2": line["station2"],

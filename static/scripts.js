@@ -4,6 +4,7 @@ var bounds;
 
 // markers for map
 var markers = [];
+var linePath;
 
 var ne;
 var sw;
@@ -65,6 +66,7 @@ $(function() {
             holland();
         }
     });
+
     // configure UI once Google Map is idle (i.e., loaded)
     google.maps.event.addListenerOnce(map, "idle", configure);
 
@@ -261,6 +263,7 @@ function load_solution()
     $.getJSON(solution, parameters)
     .done(function(solution_dict, textStatus, jqXHR) {
        // add new line to map
+       remove_lines();
        for (var i = 0; i < solution_dict.length; i++)
        {
             // if (connection_dict[i].critical == "End of line") {
@@ -274,6 +277,13 @@ function load_solution()
         // log error to browser's console
         console.log(errorThrown.toString());
     });
+}
+
+
+function remove_lines() 
+{
+    linePath.setMap(null);
+    console.log("remove_lines ran")
 }
 
 
@@ -299,7 +309,10 @@ function addLine(connection)
         color = '#ff0000';
     } else if (critical == "\r\n") {
         color = '#ffff00';
+    } else if (critical == "End of line\r\n") {
+        return;
     } else {
+
         color = '#000000';
     }
 
@@ -307,12 +320,12 @@ function addLine(connection)
     if (critical == "Kritiek\n") {
         weight = 2;
     } else if (critical == "\r\n") {
-        weight = 4;
+        weight = 10;
     } else {
         weight = 2;
     }
 
-    var linePath = new google.maps.Polyline({
+    linePath = new google.maps.Polyline({
         path: linePart,
         geodesic: true,
         strokeColor: color,

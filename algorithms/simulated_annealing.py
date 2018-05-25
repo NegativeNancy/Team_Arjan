@@ -175,14 +175,14 @@ def sawteeth_cooling(max_temp, step, max_steps):
 
 
 def probability_function(temperature, old_score, new_score):
-    """ Determines wheter a change is accepted or not.
+    """ Determines whether a change is accepted or not.
 
     Args:
         temperature: The temperature of the algorithm, as double.
         old_score: The old score, as double.
         new_score: The new score, as double.
 
-    Results:
+    Returns:
         Boolean representing whether the change is accepted or not.
     """
     # Prevent malfunctions when temperature can reach 0.

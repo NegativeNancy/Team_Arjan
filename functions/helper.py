@@ -75,7 +75,7 @@ def run_demo(scenario):
     call(['flask', 'run'])
 
 
-def run_times(times, algo, solution, best_solution, best_score, steps, temperature, cooling):
+def run_times(times, algo, solution, best_solution, best_score, temperature, cooling, start_algorithm, route_iterations, connection_iterations):
     score = 0
 
     outfile = file_location_score()
@@ -84,8 +84,11 @@ def run_times(times, algo, solution, best_solution, best_score, steps, temperatu
         scorewriter = csv.writer(csvfile, delimiter=" ", quotechar="|",
             quoting=csv.QUOTE_MINIMAL)
 
-        for i in range(times):
-            solution = run_algorithm(algo, solution, steps, temperature, cooling)
+        for _ in range(times):
+            solution.route_list = []
+
+            solution = run_algorithm(algo, solution, temperature, cooling, \
+                start_algorithm, route_iterations, connection_iterations)
 
             temp = solution.score()
             scorewriter.writerow([temp])
@@ -100,7 +103,7 @@ def run_times(times, algo, solution, best_solution, best_score, steps, temperatu
     return best_solution, best_score, outfile, score
 
 
-def run_algorithm(algo, solution, steps, temperature, cooling):
+def run_algorithm(algo, solution, temperature, cooling, start_algorithm, route_iterations, connection_iterations):
     """ Determine which algorithm to run.
 
     Args:
@@ -108,6 +111,13 @@ def run_algorithm(algo, solution, steps, temperature, cooling):
         solution: Empty instance of solution object.
 
     """
+    # Make correct start solution.
+    if start_algorithm == 1:
+        solution = ga.greedy(solution)
+    elif start_algorithm == 2:
+        solution = ra.random(solution)
+
+
     if (algo == "greedy"):
         solution = greedy_alg(solution)
     elif (algo == "random"):
@@ -115,9 +125,9 @@ def run_algorithm(algo, solution, steps, temperature, cooling):
     elif algo == "genetic":
         solution = genetic_alg(solution)
     elif algo == "hillclimber":
-        solution = hillclimber_alg(ra.create_random_solution(solution))
+        solution = hillclimber_alg(solution, route_iterations, connection_iterations)
     elif algo == "annealing":
-        solution == annealing_alg(solution, cooling, steps, temperature)
+        solution == annealing_alg(solution, cooling, temperature, route_iterations, connection_iterations)
     else:
         exit()
 
@@ -143,22 +153,24 @@ def keep_best_solution(solution, best_solution, best_score):
         best_score = current_score
         best_solution.route_list = solution.route_list
 
-    # Reset our route_list for next iteration.
-    solution.route_list = []
-
     return best_solution, best_score
 
 
-def annealing_alg(solution, steps, temp, cooling):
+def annealing_alg(solution, cooling, temperature, route_iterations, connection_iterations):
     """ Simulated Annealing solution.
 
     Args:
         solution: Empty instance of solution object.
+        cooling: Integer representing the cooling scheme chosen.
+        temperature: Integer representing the start temperature of the algorithm.
+        route_iterations: The number of route iterations to do.
+        connection_iterations: The number of connection iterations to do.
 
     Returns:
         A Greedy solution.
     """
-    return an.simulated_annealing(solution, steps, temp, cooling)
+    return an.simulated_annealing(solution, cooling, temperature, \
+        route_iterations, connection_iterations)
 
 
 def random_alg(solution, random_number_trains = True):
@@ -198,16 +210,18 @@ def genetic_alg(solution):
     return gena.genetic(solution)
 
 
-def hillclimber_alg(solution):
+def hillclimber_alg(solution, route_iterations, connection_iterations):
     """ Hillclimber solution.
 
     Args:
         solution: Empty instance of solution object.
+        route_iterations: Number of route iterations to do.
+        connection_iterations: Number of connection iterations to do.
 
     Returns:
         A Hillclimber solution.
     """
-    return hill.hillclimber(solution)
+    return hill.hillclimber(solution, route_iterations, connection_iterations)
 
 
 def print_score(run_time, times_ran, score, outfile, visual, store):

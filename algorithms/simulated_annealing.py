@@ -6,8 +6,9 @@ from algorithms import hillclimber as hc
 import random as rd
 import math
 
-def simulated_annealing(solution, cool_function, steps, max_temp):
-    """
+def simulated_annealing(solution, cool_function, max_temp, steps_routes = 0, steps_connections = 10000):
+    """ Simulated annealing algorthm that tries to find the optimal set of routes,
+    A.K.A. an optimal solution.
 
     Args:
         solution: An instance of the solution class.
@@ -27,11 +28,22 @@ def simulated_annealing(solution, cool_function, steps, max_temp):
 
     score = solution.score()
 
-    for step in range(steps):
+    for step in range(steps_routes):
+        route_index, new_route = hc.iteration_routes(solution)
+        old_route, new_score, solution = propose_change(solution, route_index, new_route)
+        if determine_accpetance(steps_routes, step, max_temp, \
+            cool_function, score, new_score):
+            score = new_score
+        else:
+            # Revert the change.
+            solution.route_list[route_index] = old_route
+
+    for step in range(steps_connections):
         # route_index, new_route = hc.iteration_routes(solution)
         route_index, new_route = hc.iteration_connections(solution)
         old_route, new_score, solution = propose_change(solution, route_index, new_route)
-        if determine_accpetance(steps, step, max_temp, cool_function, score, new_score):
+        if determine_accpetance(steps_connections, step, max_temp, \
+            cool_function, score, new_score):
             score = new_score
         else:
             # Revert the change.
@@ -41,15 +53,15 @@ def simulated_annealing(solution, cool_function, steps, max_temp):
 
 
 def propose_change(solution, route_index, new_route):
-    """ Changes a route in the solution which a new route. The old route is
-    returned aswell.
+    """ Changes a route in the solution with a new route.
 
     Args:
         solution: An instance of the solution class.
         route_index: An integer, this determines which route to swap out.
         new_route: The route that will replace the old route.
+
     Returns:
-        The old route, the new score and new solution.
+        The old route, the new score, and new solution.
     """
     old_route = solution.route_list[route_index]
     solution.route_list[route_index]= new_route
@@ -59,18 +71,18 @@ def propose_change(solution, route_index, new_route):
 
 
 def determine_accpetance(max_steps, step, max_temp, cool_function, old_score, new_score):
-    """ Determine if a change is accepted, based on some cooling function.
+    """ Determines if a change is accepted, based on a cooling function.
 
     Args:
         max_steps: Integer expressing the maximum number of iterations.
         step: Integer which iteration the proces is in.
-        max_temp: The maximum temperature of the algortihm.
-        cool_function: Integer representing the choise of cool function.
+        max_temp: The maximum temperature of the algorithm.
+        cool_function: Integer representing the choice of cool function.
         old_score: The score of the solution before the proposed change.
         new_score: The score of the solution after the proposed change.
-    Returns:
-        A boolean, wheter we accept the  change or not.
 
+    Returns:
+        A boolean describing whether the change is accepted or not.
     """
     # Determine which cooling function to use.
     if cool_function == 0:
@@ -90,12 +102,13 @@ def lineair_cooling(max_temp, step, max_steps):
     """ A cooling function based on a lineair function.
 
     Args:
-        max_temp: The maximum temp of the cooling function  , as integer.
-        step: An integer, representing how many iterations are done.
-        max_steps: An integer, representing how many iteration steps wil be done.
+        max_temp: An integer describing the maximum temperature of the cooling
+            function.
+        step: An integer representing how many iterations are done.
+        max_steps: An integer representing how many iteration steps will be done.
 
     Returns:
-        The temperature as boolean.
+        The temperature as a boolean.
     """
     # Linear scaling temperature, scaling down from max_temp to 0.
     temperature = max_temp - (step / max_steps) * max_temp
@@ -106,9 +119,10 @@ def sigmoid_cooling(max_temp, step, max_steps):
     """ A cooling function based on a Sigmoid function.
 
     Args:
-        max_temp: The maximum temp of the cooling function, as integer.
-        step: An integer, representing how many iterations are done.
-        max_steps: An integer, representing how many iteration steps wil be done.
+        max_temp: An integer describing the maximum temperature of the cooling
+            function.
+        step: An integer describing how many iterations are done.
+        max_steps: An integer describing how many iteration steps will be done.
 
     Returns:
         The temperature as boolean.
@@ -126,9 +140,10 @@ def logistic_cooling(max_temp, step, max_steps):
     """ A cooling function based on a logistic function.
 
     Args:
-        max_temp: The maximum temp of the cooling function, as integer.
-        step: An integer, representing how many iterations are done.
-        max_steps: An integer, representing how many iteration steps wil be done.
+        max_temp: An integer describing the maximum temperature of the cooling
+            function.
+        step: An integer describing how many iterations are done.
+        max_steps: An integer describing how many iteration steps will be done.
 
     Returns:
         The temperature as boolean.
@@ -144,30 +159,31 @@ def sawteeth_cooling(max_temp, step, max_steps):
     """ A cooling function based on a saw.
 
     Args:
-        max_temp: The maximum temp of the cooling function, as integer.
-        step: An integer, representing how many iterations are done.
-        max_steps: An integer, representing how many iteration steps wil be done.
+        max_temp: An integer describing the maximum temperature of the cooling
+            function.
+        step: An integer describing how many iterations are done.
+        max_steps: An integer describing how many iteration steps will be done.
 
     Returns:
         The temperature as boolean.
     """
-
     # Taking the moculo of two lineair functions, gives a sawtooth.
-    temperature = (max_temp - 3 * max_temp * step / max_steps) % (max_temp - max_temp * step / max_steps)
+    temperature = (max_temp - 3 * max_temp * step / max_steps) \
+        % (max_temp - max_temp * step / max_steps)
 
     return temperature
 
 
 def probability_function(temperature, old_score, new_score):
-    """ Determines wheter a change is accepted or not.
+    """ Determines whether a change is accepted or not.
 
     Args:
         temperature: The temperature of the algorithm, as double.
         old_score: The old score, as double.
         new_score: The new score, as double.
 
-    Results:
-        Boolean representing if the change is accepted.
+    Returns:
+        Boolean representing whether the change is accepted or not.
     """
     # Prevent malfunctions when temperature can reach 0.
     if temperature != 0 and new_score < old_score:

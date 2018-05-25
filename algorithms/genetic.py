@@ -9,9 +9,7 @@ def genetic(solution):
     """ Algorithm that finds a genetic solution.
 
     Args:
-        station_dict:
-        max_trains: Maximum amount of trains allowed.
-        max_minutes: Maximum amount of minutes the trains can run forself
+        solution: An instance of the solution class.
 
     Returns:
         A genetically generated solution
@@ -21,70 +19,59 @@ def genetic(solution):
     crossover_list = []
 
     crossover_list = make_list(solution.max_trains)
-    population_size = 10
+    population_size = 40
 
     # Make population.
     solution_list = make_population(population_size, solution)
 
     best_score = 0
-    best_solution = sn.Solution([], solution.station_dict, solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
+    best_solution = sn.Solution([], solution.station_dict, solution.max_trains, \
+        solution.max_minutes, solution.station_dict_key_list)
     generation = 0
-    while generation < 10:
-        pop_size = 0
 
+    # Ten generations are created.
+    while generation < 10:
         crossover_solution_list = []
         crossover_score_list = []
         score_list, best, nextone = calc_fitness(solution_list)
+
         # Create next generation.
-        #while pop_size < population_size:
         for _ in range(round(population_size / 2)):
+
             # Pick two parents.
             parents_index, parents = pick_next_population_parents(score_list, \
                 population_size)
-            for _ in range(rd.randint(1, 4)):
-            #for j in range(2):
+
+            # Make two children with these parents.
+            for _ in range(2):
                 crossover_solution = crossover(crossover_list, solution, \
                     solution_list[parents_index[0]], solution_list[parents_index[1]])
                 crossover_solution_score = crossover_solution.score()
+
+                # Create mutation in child.
                 crossover_solution_score, crossover_solution = \
                     mutation(crossover_solution_score, crossover_solution)
 
                 crossover_solution_list.append(crossover_solution)
                 crossover_score_list.append(crossover_solution_score)
+
                 # Determine best score.
                 if crossover_solution_score > best_score:
                     best_score = crossover_solution_score
                     best_solution = crossover_solution
-                    print("best score", best_score, "generation", generation)
-
-            parents_index = []
-            parents = []
 
         solution_list = list(crossover_solution_list)
         score_list = list(crossover_score_list)
         generation += 1
-        print(generation)
 
-    # Find best crossover.
-    print(best_solution.score())
     return best_solution
 
-def calc_and_print_mean(score_list):
-    summer = sum(score_list)
-    print(round(summer / 500, 1))
-
-def determine_best_score(score_list):
-    best_score = 0
-    for i in score_list:
-        if i > best_score:
-            best_score = i
-    return best_score
-
 def pick_next_population_parents(score_list, population_size):
-    """ Picks parents of the next generation.
+    """ Picks parents for the next generation.
 
     Args:
         population_size: Size of the population.
+        score_list: List with the scores of all solutions in population.
 
     Reutrns:
         List of indices that the selected parents are at and the actual selected
@@ -93,7 +80,7 @@ def pick_next_population_parents(score_list, population_size):
     parent_indices = []
     parent_solutions = []
     # Select two solutions.
-    for i in range(2):
+    for _ in range(2):
         index, selected = select_score(score_list, population_size)
         parent_indices.append(index)
         parent_solutions.append(selected)
@@ -127,19 +114,20 @@ def select_score(score_list, population_size):
 
     Args:
         score_list: List of all the scores in the population.
+        population_size: Size of the population.
 
     Returns:
         The index of the chosen score, and the score itself.
     """
-    sum_of_scores = round(sum(score_list), 1)
 
-    # Calculate chance of which score to pick.
+    # Calculate 'chance' of which score to pick, not normalized for performance.
+    sum_of_scores = round(sum(score_list), 1)
     r = rd.random()
     chance = sum_of_scores * r
+
     new_sum_of_scores = 0
     index = 0
-
-    # Loop through score list until new sum of scores is lower than the chance.
+    # Loop through score list until new sum of scores is lower than the 'chance'.
     for score in score_list:
         new_sum_of_scores += score
         if new_sum_of_scores < chance:
@@ -154,6 +142,7 @@ def make_population(population_size, solution):
 
     Args:
         population_size: Integers specifying how big the population should be.
+        solution: An instance of the solution class.
 
     Returns:
         A list of random solutions, size of the list is the previously specified
@@ -164,7 +153,7 @@ def make_population(population_size, solution):
 
     # Create set amount of new solutions.
     for i in range(population_size):
-        genetic_solution = ra.random(solution, False)
+        genetic_solution = ra.random(solution, 500)
         solution_list.append(genetic_solution)
     return solution_list
 
@@ -183,7 +172,7 @@ def crossover(crossover_list, solution, solution1, solution2):
     """ Randomly crosses two solutions with each other.
 
     Args:
-        crossover_array: Array filled with integers zero through maximum amount
+        crossover_array: Array filled with integers zero to maximum amount
         of trains.
         max_trains: Maximum amount of trains allowed in solution.
         solution1: Part one of the next generation.
@@ -196,26 +185,16 @@ def crossover(crossover_list, solution, solution1, solution2):
 
     choice_list = create_crossover_list(crossover_list, solution.max_trains)
     crossover_solution_list = []
-    time_list = []
     # Select routes from both solutions.
     for i in choice_list:
-        if i > solution.max_trains - 1:
-            # Select route from solution two.
-            crossover_solution_list.append(solution2.route_list[i - solution.max_trains])
-            time_list.append(solution2.route_list[i - solution.max_trains].time())
-        else:
+        if i < solution.max_trains:
             # Select route from solution one
             crossover_solution_list.append(solution1.route_list[i])
-            time_list.append(solution1.route_list[i].time())
-    #print(crossover_solution_list)
-    # too_much = 0
-    # print(sum(time_list))
-    # if sum(time_list) > 3600:
-    #     print(sum(time_list))
-    #     too_much += 1
-    # if too_much > 0:
-    #     print("too much", too_much)
+        else:
+            # Select route from solution two.
+            crossover_solution_list.append(solution2.route_list[i - solution.max_trains])
 
+    # Make new solution.
     crossover_solution = sn.Solution(crossover_solution_list, \
     solution.station_dict, solution.max_trains, solution.max_minutes,
     solution.station_dict_key_list)
@@ -231,13 +210,12 @@ def create_crossover_list(crossover_list, max_trains):
         max_trains: Maximum amount of trains allowed in solution.
 
     Returns:
-        A list filled with the chosen routes.
-
+        A list filled with integers, representing the chosen routes.
     """
     choice_list = []
 
     # Fill list with unique numbers.
-    for i in range(max_trains):
+    for _ in range(max_trains):
         choice = rd.choice(crossover_list)
         while choice in choice_list:
             choice = rd.choice(crossover_list)
@@ -245,12 +223,16 @@ def create_crossover_list(crossover_list, max_trains):
 
     return choice_list
 
-def selection():
-    raise NotImplementedError
-
 def mutation(old_score, solution):
-    # for _ in range(50):
-    #     old_score = hc.iteration_routes(old_score, solution)
-    # return old_score, solution
-    print("one")
-    return hc.iteration_routes(old_score, solution), solution
+    """ Apply one iteration of hillclimber on the solutions, where the change is
+    always accepted.
+
+    Args:
+        old_score: Score of the current solution.
+        solution: An instance of the solution class.
+
+    Returns:
+        The score of the new soluiton, and the solution.
+    """
+    route_index, new_route = hc.iteration_routes(solution)
+    return hc.check_for_improvement(old_score, solution, route_index, new_route)

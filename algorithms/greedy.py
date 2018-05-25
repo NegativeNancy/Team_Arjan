@@ -14,10 +14,9 @@ def greedy(solution):
         The solution: a combination of routes.
     """
 
-    route_dict = set()
+    connection_archive = set()
 
     for i in range(solution.max_trains):
-        travel_time = 0
         begin_station = st.Stations("fake_begin",  False)
         end_station = st.Stations("fake_end",  False)
         end_station_index = 0
@@ -25,25 +24,15 @@ def greedy(solution):
         found_another_station = False
         connection_list = []
         route = rt.Route(connection_list)
+
         # Find best begin station.
-        for station in solution.station_dict_key_list:
-            end_station_index = 0
-            # Look at neighbors of station.
-            for neighbor in solution.station_dict[station].neighbors:
-                # Check that connection is critical and not used yet.
-                if neighbor[2] and station not in route_dict and neighbor[0] not in route_dict:
-                    if travel_time == 0 or neighbor[1] < travel_time:
-                        begin_station = station
-                        end_station = neighbor[0]
-                        travel_time = neighbor[1]
-                        best_end_station_index = end_station_index
-                        found_another_station = True
-                end_station_index += 1
+
+        begin_station, end_station, travel_time, best_end_station_index, found_another_station = find_best_begin_station(solution, connection_archive)
         if not found_another_station:
             return solution
 
 
-        append_to_route_dict(route_dict, begin_station, end_station)
+        append_to_connection_archive(connection_archive, begin_station, end_station)
         connection = {"begin": begin_station, "end": end_station, "time": travel_time}
 
         # Add new step to route.
@@ -51,7 +40,7 @@ def greedy(solution):
         route.connection_list = connection_list
 
         while True:
-            result = determine_joint_closest_neighbor(begin_station, end_station, solution.station_dict, route_dict)
+            result = determine_joint_closest_neighbor(begin_station, end_station, solution.station_dict, connection_archive)
             new_station = result[0]
             neighbor_of_new_station = result[1]
             found_new_station = result[2]
@@ -64,7 +53,7 @@ def greedy(solution):
                 time_to = solution.station_dict[begin_station].neighbors[result[2]][1]
                 if time_to + route.time() > solution.max_minutes:
                     break
-                append_to_route_dict(route_dict, begin_station, new_station)
+                append_to_connection_archive(connection_archive, begin_station, new_station)
 
                 connection = {"begin": begin_station, "end": new_station, "time": time_to}
                 begin_station = new_station
@@ -74,7 +63,7 @@ def greedy(solution):
                 time_to = solution.station_dict[end_station].neighbors[result[2]][1]
                 if time_to + route.time() > solution.max_minutes:
                     break
-                append_to_route_dict(route_dict, end_station, new_station)
+                append_to_connection_archive(connection_archive, end_station, new_station)
 
                 connection = {"begin": end_station, "end": new_station, "time": time_to}
                 end_staion = new_station
@@ -93,7 +82,26 @@ def greedy(solution):
 
     return solution
 
-def determine_joint_closest_neighbor(begin_station, end_station, station_dict, route_dict):
+def find_best_begin_station(solution, connection_archive):
+    travel_time = 0
+
+    for station in solution.station_dict_key_list:
+        end_station_index = 0
+        # Look at neighbors of station.
+        for neighbor in solution.station_dict[station].neighbors:
+            # Check that connection is critical and not used yet.
+            if neighbor[2] and (neighbor[0], station) not in connection_archive and (station, neighbor[0]) not in connection_archive:
+                if travel_time == 0 or neighbor[1] < travel_time:
+                    begin_station = station
+                    end_station = neighbor[0]
+                    travel_time = neighbor[1]
+                    best_end_station_index = end_station_index
+                    found_another_station = True
+            end_station_index += 1
+
+    return begin_station, end_station, travel_time, best_end_station_index, found_another_station
+
+def determine_joint_closest_neighbor(begin_station, end_station, station_dict, connection_archive):
     """ Finds the closest unused, critical neighbor of two stations.
 
     Args:
@@ -112,7 +120,7 @@ def determine_joint_closest_neighbor(begin_station, end_station, station_dict, r
     # Loop over neighbors of begin_station.
     for neighbor in station_dict[begin_station].neighbors:
         # Check that connection is critical and not used yet.
-        if neighbor[2] == True and neighbor[0] not in route_dict:
+        if neighbor[2] == True and (neighbor[0], begin_station) not in connection_archive and (begin_station, neighbor[0]) not in connection_archive:
             if travel_time == 0 or neighbor[1] < travel_time:
                 travel_time = neighbor[1]
                 best_new_station_index = new_station_index
@@ -125,7 +133,7 @@ def determine_joint_closest_neighbor(begin_station, end_station, station_dict, r
     # Loop over neighbors of end_station.
     for neighbor in station_dict[end_station].neighbors:
         # Check that connection is critical and not used yet.
-        if neighbor[2] == True and neighbor[0] not in route_dict:
+        if neighbor[2] == True and (neighbor[0], end_station) not in connection_archive and (end_station, neighbor[0]) not in connection_archive:
             if travel_time == 0 or neighbor[1] < travel_time:
                 travel_time = neighbor[1]
                 best_new_station_index = new_station_index
@@ -141,7 +149,7 @@ def determine_joint_closest_neighbor(begin_station, end_station, station_dict, r
     name_new_station = station_dict[end_station].neighbors[best_new_station_index][0]
     return name_new_station, end_station, best_new_station_index, found_suitable_result
 
-def closest_neighbor(station, solution):
+def closest_neighbor(station, solution, connection_archive):
     """ Find closest not used, critical neighbor for a station.
 
     Args:
@@ -160,7 +168,7 @@ def closest_neighbor(station, solution):
     # Loop over neighbors of begin_station
     for neighbor in solution.station_dict[station].neighbors:
         # Check that connection is critical and not used yet
-        if neighbor[2] == True and neighbor[3] == False:
+        if neighbor[2] == True and (neighbor[0], station) not in connection_archive and (station, neighbor[0]) not in connection_archive:
             if travel_time == 0 or neighbor[1] < travel_time:
                 travel_time = neighbor[1]
                 best_end_station_index = new_station_index
@@ -168,21 +176,10 @@ def closest_neighbor(station, solution):
 
     name_new_station = solution.station_dict[station].neighbors[best_new_station_index][0]
     travel_time = solution.station_dict[station].neighbors[best_new_station_index][1]
+
     return name_new_station, best_new_station_index, travel_time
 
-def set_been_to_true(station_dict, begin_station, end_station, best_end_station_index):
-    """ Sets been property of station to true.
-    Args:
-        begin_station: Station where connection begins.
-        end_station: Station where connection ends.
-        best_end_station_index: index of best station found.
-    """
-    station_dict[begin_station].neighbors[best_end_station_index][3] = True
-    for neighbor in station_dict[end_station].neighbors:
-        if neighbor[0] == begin_station:
-            neighbor[3] = True
-            break
-
-def append_to_route_dict(route_dict, begin_station, end_staion):
-    route_dict.add(begin_station)
-    route_dict.add(end_staion)
+def append_to_connection_archive(connection_archive, begin_station, end_station):
+    """ """
+    connection_archive.add((begin_station, end_station))
+    connection_archive.add((end_station, begin_station))

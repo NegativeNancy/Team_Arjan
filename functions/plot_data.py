@@ -1,5 +1,3 @@
-import numpy as np
-import matplotlib as mlp
 import matplotlib.pyplot as plt
 
 def plot_data(file_name):

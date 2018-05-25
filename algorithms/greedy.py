@@ -24,6 +24,9 @@ def greedy(solution):
 
         # Quit if no solution was found.
         if not found_another_station:
+            # Ensure our solution will contain maximum ammount of trains.
+            for _ in range(solution.max_trains - i):
+                solution.route_list.append(rt.Route([]))
             return solution
 
         append_to_connection_archive(connection_archive, begin_station, end_station)

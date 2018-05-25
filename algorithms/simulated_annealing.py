@@ -6,7 +6,7 @@ from algorithms import hillclimber as hc
 import random as rd
 import math
 
-def simulated_annealing(solution, cool_function, steps, max_temp):
+def simulated_annealing(solution, cool_function, steps_routes, steps_connections, max_temp):
     """
 
     Args:
@@ -27,11 +27,22 @@ def simulated_annealing(solution, cool_function, steps, max_temp):
 
     score = solution.score()
 
-    for step in range(steps):
+    for step in range(steps_routes):
+        route_index, new_route = hc.iteration_routes(solution)
+        old_route, new_score, solution = propose_change(solution, route_index, new_route)
+        if determine_accpetance(steps_routes, step, max_temp, \
+            cool_function, score, new_score):
+            score = new_score
+        else:
+            # Revert the change.
+            solution.route_list[route_index] = old_route
+
+    for step in range(steps_connections):
         # route_index, new_route = hc.iteration_routes(solution)
         route_index, new_route = hc.iteration_connections(solution)
         old_route, new_score, solution = propose_change(solution, route_index, new_route)
-        if determine_accpetance(steps, step, max_temp, cool_function, score, new_score):
+        if determine_accpetance(steps_connections, step, max_temp, \
+            cool_function, score, new_score):
             score = new_score
         else:
             # Revert the change.
@@ -153,7 +164,8 @@ def sawteeth_cooling(max_temp, step, max_steps):
     """
 
     # Taking the moculo of two lineair functions, gives a sawtooth.
-    temperature = (max_temp - 3 * max_temp * step / max_steps) % (max_temp - max_temp * step / max_steps)
+    temperature = (max_temp - 3 * max_temp * step / max_steps) \
+        % (max_temp - max_temp * step / max_steps)
 
     return temperature
 

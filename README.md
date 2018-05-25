@@ -51,7 +51,7 @@ The following arguments can be given:
 | `--store` | Specifies whether to save the results in a .csv file. Default is false. |
 | `-s` or `--scenario` [SCENARIO] 	|	Specify which scenario to load. Default is Netherlands, all stations critical.|
 |`-t` or `--times` [INTEGER]		| Specify how many times the algorithm runs. Default is 1.|
-|`-v` or `--visual` 		| Create plot of score. Default is False. |
+|`-v` or `--visual` 		| Creates two plot of score(s), one sorted, one not sorted. Most suitable for the random algorithm. Default is False. |
 |`-s` or `--save` 		| Save the output in an .csv file.|
 |`-i` or `--ignore` [STATION]		| Ignore a station. The solution will not include/travel along this station. Input should be a string between quotation marks. |
 | `-route` [INTEGER] | Specify the amount of route iterations to run. Only suitable for hillclimber and simulated annealing algorithms. Default for hillclimber is 10.000, default for simulated annealing is 0.|
@@ -65,7 +65,9 @@ Specifying an algorithm is required, the rest of the command-line arguments are 
 
 To run the visualisation you will need to run the following command first:
 
-`pip install -r requirements.txt`
+`pip3 install -r requirements.txt`
+
+Python version 3.6.1.
  
 ## Authors:
 Ivo den Hertog, Emma Hokken, and Barry de Vries.

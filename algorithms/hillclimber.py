@@ -6,7 +6,7 @@ import random as rd
 
 def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):
     """ Hillclimber algortihm that tries to find the optimal set of routes,
-    A.K.A. a solution.
+    A.K.A. an optimal solution.
 
     This implementation of a hillclimber contains two different iterations,
     one based on replacing routes and one based on replacing only the begin and

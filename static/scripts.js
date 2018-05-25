@@ -6,6 +6,7 @@ var bounds;
 var markers = [];
 var linePath;
 
+// coordinates
 var ne;
 var sw;
 
@@ -15,7 +16,6 @@ $(function() {
     // styles for map
     // https://developers.google.com/maps/documentation/javascript/styling
     var styles = [
-
         // hide Google's labels
         {
             featureType: "all",
@@ -33,19 +33,29 @@ $(function() {
                 {visibility: "off"}
             ]
         }
-
     ];
+
+    // specify zoom level based on map size
+    var zoom;
+    var center;
+    if (window.location.pathname == "/netherlands") {
+        zoom = 8;
+        center = {lat: 52.100833, lng: 5.646111};
+    } else {
+        zoom = 9;
+        center = {lat: 52.279189, lng: 4.899431};
+    }
 
     // options for map 42.331429, -83.045753
     // https://developers.google.com/maps/documentation/javascript/reference#MapOptions
     var options = {
-        center: {lat: 52.279189, lng: 4.899431},
+        center: center,
         disableDefaultUI: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         maxZoom: 14,
         panControl: true,
         styles: styles,
-        zoom: 9,
+        zoom: zoom,
         zoomControl: true
     };
 
@@ -69,23 +79,39 @@ $(function() {
 
     // configure UI once Google Map is idle (i.e., loaded)
     google.maps.event.addListenerOnce(map, "idle", configure);
-
 });
 
+/**
+* Calls the functions it needs for scenario Netherlands
+*/
 function netherlands()
 {
     update_netherlands();
     connections_netherlands();
-    load_solution();
 }
 
+/**
+* Calls the functions it needs for scenario Holland
+*/
 function holland()
 {
     update_holland();
     connections_holland();
-    load_solution();
 }
 
+/**
+ * Configures application.
+ */
+function configure()
+{
+    // re-enable ctrl- and right-clicking (and thus Inspect Element) on Google Map
+    // https://chrome.google.com/webstore/detail/allow-right-click/hompjdfbfmmmgflfjdlnkohcplmboaeo?hl=en
+    document.addEventListener("contextmenu", function(event) {
+        event.returnValue = true;
+        event.stopPropagation && event.stopPropagation();
+        event.cancelBubble && event.cancelBubble();
+    }, true);
+}
 
 /**
  * Adds marker for place to map.
@@ -115,6 +141,9 @@ function addMarker(station)
     markers.push(marker);
 }
 
+/**
+* Creates the color of the marker that is going to be set on the map.
+*/
 function markerColor(color)
 {
     var url = '';
@@ -132,21 +161,6 @@ function markerColor(color)
     }
 
     return icon;
-}
-
-/**
- * Configures application.
- */
-function configure()
-{
-    // re-enable ctrl- and right-clicking (and thus Inspect Element) on Google Map
-    // https://chrome.google.com/webstore/detail/allow-right-click/hompjdfbfmmmgflfjdlnkohcplmboaeo?hl=en
-    document.addEventListener("contextmenu", function(event) {
-        event.returnValue = true;
-        event.stopPropagation && event.stopPropagation();
-        event.cancelBubble && event.cancelBubble();
-    }, true);
-
 }
 
 /**
@@ -176,6 +190,9 @@ function update_holland()
     });
 };
 
+/**
+* Requests the connections list for holland and draws line between stations.
+*/
 function connections_holland()
 {
     var parameters = {
@@ -197,7 +214,6 @@ function connections_holland()
         console.log(errorThrown.toString());
     });
 }
-
 
 /**
  * Updates UI's markers for netherlands
@@ -226,7 +242,9 @@ function update_netherlands()
     });
 };
 
-
+/**
+* Requests the connections list for holland and draws line between stations.
+*/
 function connections_netherlands()
 {
     var parameters = {
@@ -249,44 +267,6 @@ function connections_netherlands()
     });
 }
 
-
-function load_solution()
-{
-    var parameters = {
-        ne: ne.lat() + "," + ne.lng(),
-        q: $("#q").val(),
-        sw: sw.lat() + "," + sw.lng()
-    };
-
-    var solution = "http://127.0.0.1:5000/load_solution";
-
-    $.getJSON(solution, parameters)
-    .done(function(solution_dict, textStatus, jqXHR) {
-       // add new line to map
-       remove_lines();
-       for (var i = 0; i < solution_dict.length; i++)
-       {
-            // if (connection_dict[i].critical == "End of line") {
-            //     console.log("End of line...")
-            // }
-
-            addLine(solution_dict[i]);
-       }
-    })
-    .fail(function(jqXHR, textStatus, errorThrown) {
-        // log error to browser's console
-        console.log(errorThrown.toString());
-    });
-}
-
-
-function remove_lines() 
-{
-    linePath.setMap(null);
-    console.log("remove_lines ran")
-}
-
-
 /**
  * Adds lines for connections to map.
  */
@@ -297,6 +277,7 @@ function addLine(connection)
     var lat2 = Number(connection["latitude2"]);
     var lng2 = Number(connection["longitude2"]);
     var critical = connection["critical"];
+    var count = connection["count"];
 
     // initialize anchor for marker
     var linePart =[
@@ -304,22 +285,12 @@ function addLine(connection)
         {lat: lat2, lng: lng2 }
     ];
 
-    var color = '';
-    if (critical == "Kritiek\n") {
-        color = '#ff0000';
-    } else if (critical == "\r\n") {
-        color = '#ffff00';
-    } else if (critical == "End of line\r\n") {
-        return;
-    } else {
-
-        color = '#000000';
-    }
+    color = getColor(critical, count);
 
     var weight = '';
-    if (critical == "Kritiek\n") {
+    if (critical == "Kritiek\n" && count == 0) {
         weight = 2;
-    } else if (critical == "\r\n") {
+    } else if (count > 0) {
         weight = 10;
     } else {
         weight = 2;
@@ -334,4 +305,31 @@ function addLine(connection)
     });  
 
     linePath.setMap(map);
+}
+
+/**
+* Determines the color of the line based on route intensity.
+*/
+function getColor(critical, count) 
+{
+    var color = '';
+    if (critical == "Kritiek\n" && count == 0) {
+        color = '#ff0000';
+    } else if (count == 1) {
+        color = '#adff00';
+    } else if (count == 2) {
+        color = '#9be500';
+    } else if (count == 3) {
+        color = '#8acc00';
+    } else if (count == 4) {
+        color = '#79b200';
+    } else if (count == 5) {
+        color = '#679900';
+    } else if (count == 6) {
+        color = '#567f00';
+    } else {
+        color = '#000000';
+    }
+
+    return color;
 }

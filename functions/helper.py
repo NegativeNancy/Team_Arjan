@@ -34,7 +34,17 @@ def init_solution(station_dict, max_trains, max_minutes):
 
 
 def init_best_solution(solution, station_dict, train, max_minutes):
+    """ Initialize the best solution
 
+    Args:
+        solution: The current solution to be stored as the best solution.
+        station_dict: Station dict of the stations that can be used.
+        train: Number of trains that can be used.
+        max_minutes: Maximum ammount of time a route can take.
+    
+    Return:
+        Current best solution with the current best score.
+    """
     best_solution = sn.Solution([], solution.station_dict, \
         solution.max_trains, solution.max_minutes, solution.station_dict_key_list)
     best_score = best_solution.score()
@@ -43,7 +53,11 @@ def init_best_solution(solution, station_dict, train, max_minutes):
 
 
 def file_location_score():
-    # Create filename to save scores in.
+    """ Create filename to save scores in.
+    
+    Return:
+        Filelocation to save the score in.
+    """
     folder_output = "./data/scores/"
     filename = datetime.datetime.now().strftime("scores__%Y-%m-%d__%I%M%S.csv")
     outfile = os.path.join(folder_output, filename)
@@ -52,6 +66,11 @@ def file_location_score():
 
 
 def store_solution(solution):
+    """ Create filename to save the route in.
+    
+    Return:
+        Filelocation to save the route in.
+    """
     outfile = "./data/temp/displayroute.csv"
 
     with open(outfile, 'w', newline="") as csvfile:
@@ -62,13 +81,16 @@ def store_solution(solution):
             for connection in route.connection_list:
                 routewriter.writerow({'begin_station': connection["begin"],
                     'end_station': connection["end"], 'critical': ''})
-            routewriter.writerow({'begin_station': '', 'end_station': '',
-                                  'critical': 'End of line'})
 
     return outfile
 
 
 def run_demo(scenario):
+    """ Start a Flask instance with local variables to be display the visualization.
+
+    Args:
+        scenario: The scenario that was used to run the algorithm.
+    """
     os.environ["FLASK_APP"] = "run_demo.py"
     os.environ["API_KEY"] = "AIzaSyBp387L8lSCBXL_sQlrJHs1hdTiShlD29Y"
     os.environ["RAILNL_SCENARIO"] = scenario
@@ -76,6 +98,21 @@ def run_demo(scenario):
 
 
 def run_times(times, algo, solution, best_solution, best_score, steps, temperature, cooling):
+    """ Runs the specified algorithm <times>
+
+    Args:
+        times:
+        alo:
+        solution:
+        best_solution:
+        best_score:
+        steps:
+        temperature:
+        cooling:
+
+    Return:
+        Returns the best solution, best score, location of score file and the score.
+    """
     score = 0
 
     outfile = file_location_score()

@@ -11,6 +11,7 @@ def random(solution, random_number_trains = True, times = 1000):
 
     Args:
         solution: An instance of the solution class, with empty route list.
+        times: The number of times random is ran internally.
 
     Returns:
         best_solution: An instance of the solution class, with filled route list.

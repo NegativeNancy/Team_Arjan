@@ -6,7 +6,7 @@ from algorithms import hillclimber as hc
 import random as rd
 import math
 
-def simulated_annealing(solution, cool_function, steps = 10000, max_temp = 1000):
+def simulated_annealing(solution, cool_function, steps, max_temp):
     """
 
     Args:
@@ -28,19 +28,28 @@ def simulated_annealing(solution, cool_function, steps = 10000, max_temp = 1000)
     score = solution.score()
 
     for step in range(steps):
-        route_index, new_route = hc.iteration_routes(solution)
+        # route_index, new_route = hc.iteration_routes(solution)
+        route_index, new_route = hc.iteration_connections(solution)
         old_route, new_score, solution = propose_change(solution, route_index, new_route)
         if determine_accpetance(steps, step, max_temp, cool_function, score, new_score):
             score = new_score
         else:
             # Revert the change.
             solution.route_list[route_index] = old_route
+
     return solution
 
 
 def propose_change(solution, route_index, new_route):
-    """
+    """ Changes a route in the solution which a new route. The old route is
+    returned aswell.
 
+    Args:
+        solution: An instance of the solution class.
+        route_index: An integer, this determines which route to swap out.
+        new_route: The route that will replace the old route.
+    Returns:
+        The old route, the new score and new solution.
     """
     old_route = solution.route_list[route_index]
     solution.route_list[route_index]= new_route
@@ -52,24 +61,36 @@ def propose_change(solution, route_index, new_route):
 def determine_accpetance(max_steps, step, max_temp, cool_function, old_score, new_score):
     """ Determine if a change is accepted, based on some cooling function.
 
+    Args:
+        max_steps: Integer expressing the maximum number of iterations.
+        step: Integer which iteration the proces is in.
+        max_temp: The maximum temperature of the algortihm.
+        cool_function: Integer representing the choise of cool function.
+        old_score: The score of the solution before the proposed change.
+        new_score: The score of the solution after the proposed change.
+    Returns:
+        A boolean, wheter we accept the  change or not.
+
     """
+    # Determine which cooling function to use.
     if cool_function == 0:
         temperature = lineair_cooling(max_temp, step, max_steps)
-
     elif cool_function == 1:
         temperature = sigmoid_cooling(max_temp, step, max_steps)
+    elif cool_function == 2:
+        temperature = sawteeth_cooling(max_temp, step, max_steps)
     else:
         temperature = logistic_cooling(max_temp, step, max_steps)
 
-    return acceptance_probability(temperature, old_score, new_score)
-
+    # Return wheter the change is accepted or not.
+    return probability_function(temperature, old_score, new_score)
 
 
 def lineair_cooling(max_temp, step, max_steps):
     """ A cooling function based on a lineair function.
 
     Args:
-        max_temp: The maximum temp of the cooling function, as integer.
+        max_temp: The maximum temp of the cooling function  , as integer.
         step: An integer, representing how many iterations are done.
         max_steps: An integer, representing how many iteration steps wil be done.
 
@@ -119,8 +140,25 @@ def logistic_cooling(max_temp, step, max_steps):
 
     return temperature
 
+def sawteeth_cooling(max_temp, step, max_steps):
+    """ A cooling function based on a saw.
 
-def acceptance_probability(temperature, old_score, new_score):
+    Args:
+        max_temp: The maximum temp of the cooling function, as integer.
+        step: An integer, representing how many iterations are done.
+        max_steps: An integer, representing how many iteration steps wil be done.
+
+    Returns:
+        The temperature as boolean.
+    """
+
+    # Taking the moculo of two lineair functions, gives a sawtooth.
+    temperature = (max_temp - 3 * max_temp * step / max_steps) % (max_temp - max_temp * step / max_steps)
+
+    return temperature
+
+
+def probability_function(temperature, old_score, new_score):
     """ Determines wheter a change is accepted or not.
 
     Args:
@@ -132,7 +170,7 @@ def acceptance_probability(temperature, old_score, new_score):
         Boolean representing if the change is accepted.
     """
     # Prevent malfunctions when temperature can reach 0.
-    if temperature != 0:
+    if temperature != 0 and new_score < old_score:
         # compute the probability with which a change should be accepted.
         probability = math.exp((new_score - old_score) / temperature)
     else:

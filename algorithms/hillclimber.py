@@ -25,11 +25,12 @@ def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):
 
     score = solution.score()
 
-    # perform te iterations
+    # Perform the route iterations.
     for _ in range(route_iterations):
         route_index, new_route = iteration_routes(solution)
         score, solution = check_for_improvement(score, solution, route_index, new_route)
 
+    # Perform the connection iterations.
     for _ in range(connection_iterations):
         route_index, new_route = iteration_connections(solution)
         score, solution = check_for_improvement(score, solution, route_index, new_route)
@@ -43,15 +44,14 @@ def iteration_routes(solution):
     we hold on to the change.
 
     Args:
-        old_score: Double representing the score of the solution.
         solution: An instnace of the solution class.
     Returns:
-        The score of the old or new solution as double.
+
     """
     # Choose route to swap out.
     route_index = rd.randint(0, solution.max_trains - 1)
 
-    # create route to replace it with
+    # Create route to replace it with.
     route = helper.create_random_route(solution)
 
     return route_index, route

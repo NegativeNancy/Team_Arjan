@@ -1,6 +1,6 @@
 from functions import helper
-from subprocess import call
-import sys, os, time, argparse
+from classes import Solution
+import sys, os, time, argparse, pickle
 
 
 class MyParser(argparse.ArgumentParser):
@@ -43,13 +43,14 @@ def main(argv):
         const=0, default=1, help="specify how many times to run - default: 1")
     optional.add_argument('-v', '--visual', action='store_true',
         help="create visual of the results - default: false")
-    optional.add_argument('--version', action='version', version='%(prog)s 0.1')
+
+    optional.add_argument('--version', action='version', version='%(prog)s 1.0')
     optional.add_argument('--steps', action='store', type=int, nargs='?',
-        default='0', help="the ammount of stepss for the proces to do")
+        default='10000', help="the ammount of steps for the proces to do")
     optional.add_argument('--temp', action='store', type=int, nargs='?',
-        default='0', help="the maximum temp of the cooling function as integer")
+        default='1000', help="the maximum temp of the cooling function as integer")
     optional.add_argument('--cooling', action='store', type=int, nargs='?',
-        default='0', help="an integer representing the choice of cool function")
+        default='0', choices=[0, 1, 2, 3], help="an integer representing the choice of cool function")
     optional.add_argument('-i', '--ignore', action='store',
         help='ignore station - default: none')
 
@@ -80,13 +81,13 @@ def main(argv):
     best_solution.print_solution()
     helper.print_score(run_time, times, score, outfile, visual, store)
 
-    if store != True:
+    if store != True: 
         os.remove(outfile)
+
     if (demo):
-        os.environ["FLASK_APP"] = "run_demo.py"
-        os.environ["API_KEY"] = "AIzaSyBp387L8lSCBXL_sQlrJHs1hdTiShlD29Y"
-        os.environ["RAILNL_SCECNARIO"] = scenario
-        call(['flask', 'run'])
+        helper.run_demo(scenario)
+
+    os.remove("./data/temp/displayroute.csv")
 
     exit(1)
 

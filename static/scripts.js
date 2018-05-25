@@ -74,13 +74,16 @@ function netherlands()
 {
     update_netherlands();
     connections_netherlands();
+    load_solution();
 }
 
 function holland()
 {
     update_holland();
     connections_holland();
+    load_solution();
 }
+
 
 /**
  * Adds marker for place to map.
@@ -235,18 +238,47 @@ function connections_netherlands()
        // add new line to map
        for (var i = 0; i < connection_dict.length; i++)
        {
-           addLine(connection_dict[i]);
+            addLine(connection_dict[i],);
        }
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
         // log error to browser's console
         console.log(errorThrown.toString());
-
     });
 }
 
+
+function load_solution()
+{
+    var parameters = {
+        ne: ne.lat() + "," + ne.lng(),
+        q: $("#q").val(),
+        sw: sw.lat() + "," + sw.lng()
+    };
+
+    var solution = "http://127.0.0.1:5000/load_solution";
+
+    $.getJSON(solution, parameters)
+    .done(function(solution_dict, textStatus, jqXHR) {
+       // add new line to map
+       for (var i = 0; i < solution_dict.length; i++)
+       {
+            // if (connection_dict[i].critical == "End of line") {
+            //     console.log("End of line...")
+            // }
+
+            addLine(solution_dict[i]);
+       }
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+        // log error to browser's console
+        console.log(errorThrown.toString());
+    });
+}
+
+
 /**
- * Adds marker for station to map.
+ * Adds lines for connections to map.
  */
 function addLine(connection)
 {
@@ -265,8 +297,19 @@ function addLine(connection)
     var color = '';
     if (critical == "Kritiek\n") {
         color = '#ff0000';
+    } else if (critical == "\r\n") {
+        color = '#ffff00';
     } else {
         color = '#000000';
+    }
+
+    var weight = '';
+    if (critical == "Kritiek\n") {
+        weight = 2;
+    } else if (critical == "\r\n") {
+        weight = 4;
+    } else {
+        weight = 2;
     }
 
     var linePath = new google.maps.Polyline({
@@ -274,7 +317,7 @@ function addLine(connection)
         geodesic: true,
         strokeColor: color,
         strokeOpacity: 1.0,
-        strokeWeight: 2
+        strokeWeight: weight
     });  
 
     linePath.setMap(map);

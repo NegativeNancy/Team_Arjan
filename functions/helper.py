@@ -41,7 +41,7 @@ def init_best_solution(solution, station_dict, train, max_minutes):
         station_dict: Station dict of the stations that can be used.
         train: Number of trains that can be used.
         max_minutes: Maximum ammount of time a route can take.
-    
+
     Return:
         Current best solution with the current best score.
     """
@@ -54,7 +54,7 @@ def init_best_solution(solution, station_dict, train, max_minutes):
 
 def file_location_score():
     """ Create filename to save scores in.
-    
+
     Return:
         Filelocation to save the score in.
     """
@@ -67,7 +67,7 @@ def file_location_score():
 
 def store_solution(solution):
     """ Create filename to save the route in.
-    
+
     Return:
         Filelocation to save the route in.
     """
@@ -97,12 +97,8 @@ def run_demo(scenario):
     call(['flask', 'run'])
 
 
-<<<<<<< HEAD
 def run_times(times, algo, solution, best_solution, best_score, temperature, \
     cooling, start_algorithm, route_iterations, connection_iterations):
-=======
-
-def run_times(times, algo, solution, best_solution, best_score, temperature, cooling, start_algorithm, route_iterations, connection_iterations):
     """ Runs the specified algorithm <times>
 
     Args:
@@ -121,7 +117,6 @@ def run_times(times, algo, solution, best_solution, best_score, temperature, coo
     Return:
         Returns the best solution, best score, location of score file and the score.
     """
->>>>>>> 81e8fc7e194338e537a12ced47cb2fcc6e0bda92
     score = 0
 
     outfile = file_location_score()

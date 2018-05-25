@@ -1,5 +1,5 @@
 from functions import helper
-from subprocess import call
+from classes import Solution
 import sys, os, time, argparse, pickle
 
 
@@ -81,26 +81,13 @@ def main(argv):
     best_solution.print_solution()
     helper.print_score(run_time, times, score, outfile, visual, store)
 
-    if (demo):
-        os.environ["FLASK_APP"] = "run_demo.py"
-        os.environ["API_KEY"] = "AIzaSyBp387L8lSCBXL_sQlrJHs1hdTiShlD29Y"
-        os.environ["RAILNL_SCENARIO"] = scenario
-        call(['flask', 'run'])
-
-
     if store != True: 
         os.remove(outfile)
 
-    # infile = "./data/temp/temp_solution.pkl"
-    # print(infile)
+    if (demo):
+        helper.run_demo(scenario)
 
-    # with open(infile, 'rb') as infile:
-    #     new_solution = pickle.load(infile)
-    #     new_solution.print_solution()
-
-
-    os.remove("./data/temp/temp_solution.pkl")
-
+    os.remove("./data/temp/displayroute.csv")
 
     exit(1)
 

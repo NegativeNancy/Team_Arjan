@@ -8,8 +8,9 @@ from algorithms import hillclimber as hill
 from algorithms import simulated_annealing as an
 from functions import plot_data as pd
 from functions import loading_files as load
+from subprocess import call
 import random as rd
-import csv, os, datetime, pickle
+import csv, datetime, os, sys
 
 
 def init_solution(station_dict, max_trains, max_minutes):
@@ -50,19 +51,28 @@ def file_location_score():
     return outfile
 
 
-def file_location_solution():
-    folder_output = "./data/temp/"
-    filename = datetime.datetime.now().strftime("temp_solution.pkl")
-    outfile = os.path.join(folder_output, filename)
+def store_solution(solution):
+    outfile = "./data/temp/displayroute.csv"
+
+    with open(outfile, 'w', newline="") as csvfile:
+        fieldnames = [ 'begin_station', 'end_station', 'critical']
+        routewriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        for route in solution.route_list:
+            for connection in route.connection_list:
+                routewriter.writerow({'begin_station': connection["begin"],
+                    'end_station': connection["end"], 'critical': ''})
+            routewriter.writerow({'begin_station': '', 'end_station': '',
+                                  'critical': 'End of line'})
 
     return outfile
 
 
-def store_solution(solution):
-    outfile = file_location_solution()
-
-    with open(outfile, 'wb') as outfile:
-        pickle.dump(solution, outfile, pickle.HIGHEST_PROTOCOL)
+def run_demo(scenario):
+    os.environ["FLASK_APP"] = "run_demo.py"
+    os.environ["API_KEY"] = "AIzaSyBp387L8lSCBXL_sQlrJHs1hdTiShlD29Y"
+    os.environ["RAILNL_SCENARIO"] = scenario
+    call(['flask', 'run'])
 
 
 def run_times(times, algo, solution, best_solution, best_score, steps, temp, cooling):
@@ -71,14 +81,14 @@ def run_times(times, algo, solution, best_solution, best_score, steps, temp, coo
     outfile = file_location_score()
 
     with open(outfile, "w", newline="") as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=" ", quotechar="|",
+        scorewriter = csv.writer(csvfile, delimiter=" ", quotechar="|",
             quoting=csv.QUOTE_MINIMAL)
 
         for i in range(times):
             solution = run_algorithm(algo, solution, steps, temp, cooling)
 
             temp = solution.score()
-            spamwriter.writerow([temp])
+            scorewriter.writerow([temp])
 
             if score <= temp:
                 score = temp

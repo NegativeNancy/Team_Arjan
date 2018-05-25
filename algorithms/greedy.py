@@ -40,42 +40,29 @@ def greedy(solution):
         route.connection_list = connection_list
 
         while True:
-            result = determine_joint_closest_neighbor(begin_station, end_station, solution.station_dict, connection_archive)
-            new_station = result[0]
-            neighbor_of_new_station = result[1]
-            found_new_station = result[2]
+            new_station, neighbor_of_new_station, best_new_station_index, found_new_station = determine_joint_closest_neighbor(begin_station, end_station, solution.station_dict, connection_archive)
 
             if not found_new_station:
                 break
 
             if neighbor_of_new_station == begin_station:
-
-                time_to = solution.station_dict[begin_station].neighbors[result[2]][1]
+                time_to = solution.station_dict[begin_station].neighbors[best_new_station_index][1]
                 if time_to + route.time() > solution.max_minutes:
                     break
                 append_to_connection_archive(connection_archive, begin_station, new_station)
-
-                connection = {"begin": begin_station, "end": new_station, "time": time_to}
+                route.append_route_front(new_station, begin_station, time_to)
                 begin_station = new_station
 
-            elif neighbor_of_new_station == end_station:
 
-                time_to = solution.station_dict[end_station].neighbors[result[2]][1]
+            else:
+                time_to = solution.station_dict[end_station].neighbors[best_new_station_index][1]
                 if time_to + route.time() > solution.max_minutes:
                     break
                 append_to_connection_archive(connection_archive, end_station, new_station)
 
-                connection = {"begin": end_station, "end": new_station, "time": time_to}
-                end_staion = new_station
+                route.append_route(end_station, new_station, time_to)
+                end_station = new_station
 
-            else:
-                print("Something went wrong!")
-                break
-
-            # Add new step to route.
-
-            connection_list.append(connection)
-            route.connection_list = connection_list
 
         # Add newly created route to route_list.
         solution.route_list.append(route)
@@ -84,6 +71,10 @@ def greedy(solution):
 
 def find_best_begin_station(solution, connection_archive):
     travel_time = 0
+    begin_station = st.Stations("fake_begin",  False)
+    end_station = st.Stations("fake_end",  False)
+    best_end_station_index = 0
+    found_another_station = False
 
     for station in solution.station_dict_key_list:
         end_station_index = 0

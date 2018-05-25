@@ -1,9 +1,3 @@
-"""
-Algortihm that finds the shortest path to the next critical station.
-If a critcial station cannot directly be reached, walk back.
-
-Begin on a node with one critical connection.
-"""
 from classes import Stations as st
 from classes import Route as rt
 from classes import Solution as sn
@@ -11,62 +5,46 @@ import random as rd
 
 def greedy(solution):
     """ Greedy algorithm that hopes to fin the perfect solutioinself.
+
     Args:
         max_trains: Maximum amount of trains allowed in solution.
         max_minutes: Maximum amount of minutes the solution may take.
 
     Returns;
         The solution: a combination of routes.
-
-
-    Fix set been to true.
     """
 
     route_dict = set()
 
     for i in range(solution.max_trains):
-        print("i", i)
         travel_time = 0
         begin_station = st.Stations("fake_begin",  False)
         end_station = st.Stations("fake_end",  False)
         end_station_index = 0
         best_end_station_index = 0
         found_another_station = False
-        # Variables for greedy algorithm
         connection_list = []
         route = rt.Route(connection_list)
-        #print(len(route_dict))
         # Find best begin station.
         for station in solution.station_dict_key_list:
             end_station_index = 0
             # Look at neighbors of station.
             for neighbor in solution.station_dict[station].neighbors:
-                #print(station, neighbor)
                 # Check that connection is critical and not used yet.
-                if neighbor[2]:
-                    if station not in route_dict:
-                        # print(neighbor[0])
-                        # print(route_dict)
-                        if neighbor[0] not in route_dict:
-                            # print(station)
-                            if travel_time == 0 or neighbor[1] < travel_time:
-                                begin_station = station
-                                end_station = neighbor[0]
-                                travel_time = neighbor[1]
-                                best_end_station_index = end_station_index
-                                found_another_station = True
+                if neighbor[2] and station not in route_dict and neighbor[0] not in route_dict:
+                    if travel_time == 0 or neighbor[1] < travel_time:
+                        begin_station = station
+                        end_station = neighbor[0]
+                        travel_time = neighbor[1]
+                        best_end_station_index = end_station_index
+                        found_another_station = True
                 end_station_index += 1
         if not found_another_station:
-            print("not found")
-            solution.route_list = connection_list
-            #solution.print_solution()
-            #print("len", len(solution.route_list))
             return solution
-            break
+
 
         append_to_route_dict(route_dict, begin_station, end_station)
         connection = {"begin": begin_station, "end": end_station, "time": travel_time}
-        #print(connection)
 
         # Add new step to route.
         connection_list.append(connection)
@@ -109,19 +87,11 @@ def greedy(solution):
 
             connection_list.append(connection)
             route.connection_list = connection_list
-        #print(route.connection_list)
-        # Add newly created route to route_list.
-        print(len(solution.route_list))
 
+        # Add newly created route to route_list.
         solution.route_list.append(route)
-        #print(solution.score())
-        #solution.print_solution()
-        #print(len(route_dict))
-        #print(route_dict)
 
     return solution
-
-
 
 def determine_joint_closest_neighbor(begin_station, end_station, station_dict, route_dict):
     """ Finds the closest unused, critical neighbor of two stations.

@@ -7,8 +7,7 @@ def greedy(solution):
     """ Greedy algorithm that hopes to fin the perfect solutioinself.
 
     Args:
-        max_trains: Maximum amount of trains allowed in solution.
-        max_minutes: Maximum amount of minutes the solution may take.
+        solution: An instance of the solution class, possibly containing routes.
 
     Returns;
         The solution: a combination of routes.
@@ -43,12 +42,12 @@ def greedy(solution):
     return solution
 
 def find_new_connection(begin_station, end_station, solution, connection_archive, route):
-    """Finds the closest, critical, nonnection.
+    """ Finds the closest, critical, nonnection.
 
     Args:
         begin_station: One end of the current connection.
         end_station: The other end of the current connection.
-        solution: The current solution.
+        solution: An instance of the solution class.
         connection_archive: A set containing all visited connections.
         route: An empty instance of a route object.
     """
@@ -84,7 +83,7 @@ def find_best_begin_station(solution, connection_archive):
     """ Finds the best station to begin the route.
 
     Args:
-        solution: The current solution.
+        solution: An instance of the solution class.
         connection_archive: A set containing all visited connections.
 
     Returns:
@@ -199,7 +198,7 @@ def closest_neighbor(station, solution, connection_archive):
     return name_new_station, best_new_station_index, travel_time
 
 def append_to_connection_archive(connection_archive, begin_station, end_station):
-    """Adds a connection the the connection archive set.
+    """ Adds a connection the the connection archive set.
 
     Args:
         connection_archive: A set containing all vistied connections.

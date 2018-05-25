@@ -99,7 +99,7 @@ def run_demo(scenario):
 
 def run_times(times, algo, solution, best_solution, best_score, temperature, \
     cooling, start_algorithm, route_iterations, connection_iterations):
-    """ Runs the specified algorithm <times>
+    """ Runs the specified algorithm <times>, with specified input solution.
 
     Args:
         times:

@@ -19,7 +19,7 @@ def genetic(solution):
     crossover_list = []
 
     crossover_list = make_list(solution.max_trains)
-    population_size = 10
+    population_size = 40
 
     # Make population.
     solution_list = make_population(population_size, solution)
@@ -31,21 +31,24 @@ def genetic(solution):
 
     # Ten generations are created.
     while generation < 10:
-        pop_size = 0
-
         crossover_solution_list = []
         crossover_score_list = []
         score_list, best, nextone = calc_fitness(solution_list)
 
         # Create next generation.
         for _ in range(round(population_size / 2)):
+
             # Pick two parents.
             parents_index, parents = pick_next_population_parents(score_list, \
                 population_size)
-            for _ in range(rd.randint(1, 4)):
+
+            # Make two children with these parents.
+            for _ in range(2):
                 crossover_solution = crossover(crossover_list, solution, \
                     solution_list[parents_index[0]], solution_list[parents_index[1]])
                 crossover_solution_score = crossover_solution.score()
+
+                # Create mutation in child.
                 crossover_solution_score, crossover_solution = \
                     mutation(crossover_solution_score, crossover_solution)
 

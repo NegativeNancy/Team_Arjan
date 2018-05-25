@@ -325,7 +325,7 @@ function getColor(critical, count)
         color = '#79b200';
     } else if (count == 5) {
         color = '#679900';
-    } else if (count == 6) {
+    } else if (count >= 6) {
         color = '#567f00';
     } else {
         color = '#000000';

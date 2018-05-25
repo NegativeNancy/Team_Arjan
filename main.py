@@ -53,11 +53,11 @@ def main(argv):
         help='ignore station - default: none')
     optional.add_argument('--start', action='store', type=int, nargs='?',
         default = '0', choices=[0, 1, 2], \
-        help="an integer representing the choice of soluiton to use as input" )
+        help="an integer representing the choice of soluiton to use as input - default: 0" )
     optional.add_argument('--route', action='store', type=int, nargs='?',
-        default ='0', help="an integer representing how many iterations on routes should be ran")
+        default ='0', help="an integer representing how many iterations on routes should be ran - default: 0")
     optional.add_argument('--connection', action='store', type=int, nargs='?',
-        default = '0', help="an integer representing how many iterations on connections should be ran")
+        default = '0', help="an integer representing how many iterations on connections should be ran - default: 0")
 
     args = parser.parse_args()
 

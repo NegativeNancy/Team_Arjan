@@ -75,7 +75,7 @@ def run_demo(scenario):
     call(['flask', 'run'])
 
 
-def run_times(times, algo, solution, best_solution, best_score, steps, temp, cooling):
+def run_times(times, algo, solution, best_solution, best_score, steps, temperature, cooling):
     score = 0
 
     outfile = file_location_score()
@@ -85,7 +85,7 @@ def run_times(times, algo, solution, best_solution, best_score, steps, temp, coo
             quoting=csv.QUOTE_MINIMAL)
 
         for i in range(times):
-            solution = run_algorithm(algo, solution, steps, temp, cooling)
+            solution = run_algorithm(algo, solution, steps, temperature, cooling)
 
             temp = solution.score()
             scorewriter.writerow([temp])
@@ -100,7 +100,7 @@ def run_times(times, algo, solution, best_solution, best_score, steps, temp, coo
     return best_solution, best_score, outfile, score
 
 
-def run_algorithm(algo, solution, steps, temp, cooling):
+def run_algorithm(algo, solution, steps, temperature, cooling):
     """ Determine which algorithm to run.
 
     Args:
@@ -117,7 +117,7 @@ def run_algorithm(algo, solution, steps, temp, cooling):
     elif algo == "hillclimber":
         solution = hillclimber_alg(ra.create_random_solution(solution))
     elif algo == "annealing":
-        solution == annealing_alg(solution, cooling, steps, temp)
+        solution == annealing_alg(solution, cooling, steps, temperature)
     else:
         exit()
 

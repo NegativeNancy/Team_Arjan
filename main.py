@@ -45,14 +45,19 @@ def main(argv):
         help="create visual of the results - default: false")
 
     optional.add_argument('--version', action='version', version='%(prog)s 1.0')
-    optional.add_argument('--steps', action='store', type=int, nargs='?',
-        default='10000', help="the ammount of steps for the proces to do")
     optional.add_argument('--temp', action='store', type=int, nargs='?',
         default='1000', help="the maximum temp of the cooling function as integer")
     optional.add_argument('--cooling', action='store', type=int, nargs='?',
         default='0', choices=[0, 1, 2, 3], help="an integer representing the choice of cool function")
     optional.add_argument('-i', '--ignore', action='store',
         help='ignore station - default: none')
+    optional.add_argument('--start', action='store', type=int, nargs='?',
+        default = '0', choices=[0, 1, 2], \
+        help="an integer representing the choice of soluiton to use as input" )
+    optional.add_argument('--route', action='store', type=int, nargs='?',
+        default ='0', help="an integer representing how many iterations on routse should be ran")
+    optional.add_argument('--connection', action='store', type=int, nargs='?',
+        default = '0', help="an integer representing how many iterations on connections should be ran")
 
     args = parser.parse_args()
 
@@ -62,10 +67,12 @@ def main(argv):
     store = args.store
     times = args.times
     visual = args.visual
-    steps = args.steps
     temp = args.temp
     cooling = args.cooling
     ignore = args.ignore
+    start_algorithm = args.start
+    route_iterations = args.route
+    connection_iterations = args.connection
 
     station_dict, train, max_time = helper.load_scenario(scenario, ignore)
 
@@ -74,14 +81,15 @@ def main(argv):
         station_dict, train, max_time)
 
     best_solution, best_score, outfile, score = helper.run_times(times, algo, \
-        solution, best_solution, best_score, steps, temp, cooling)
+        solution, best_solution, best_score, temp, cooling, \
+        start_algorithm, route_iterations, connection_iterations)
 
     run_time = time.time() - start_time
 
     best_solution.print_solution()
     helper.print_score(run_time, times, score, outfile, visual, store)
 
-    if store != True: 
+    if store != True:
         os.remove(outfile)
 
     if (demo):

@@ -11,6 +11,8 @@ from functions import loading_files as load
 from subprocess import call
 import random as rd
 import csv, datetime, os, sys
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 def init_solution(station_dict, max_trains, max_minutes):
@@ -125,22 +127,39 @@ def run_times(times, algo, solution, best_solution, best_score, temperature, \
         scorewriter = csv.writer(csvfile, delimiter=" ", quotechar="|",
             quoting=csv.QUOTE_MINIMAL)
 
-        for _ in range(times):
-            solution.route_list = []
+        for j in range(9):
+            # total_scores_array = [0] * 100
+            mean = 0
+            for _ in range(times):
+                solution.route_list = []
 
-            solution = run_algorithm(algo, solution, temperature, cooling, \
-                start_algorithm, route_iterations, connection_iterations)
+                solution, scores_array = run_algorithm(algo, solution, temperature + (5 * j), cooling, \
+                    start_algorithm, route_iterations, connection_iterations)
 
-            temp = solution.score()
-            scorewriter.writerow([temp])
+                # for i in range(100):
+                #     total_scores_array[i] = total_scores_array[i] + scores_array[i]
 
-            if score <= temp:
-                score = temp
-                print(score)
 
-            best_solution, best_score = keep_best_solution(solution, \
-                best_solution, best_score)
-            store_solution(best_solution)
+
+                temp = solution.score()
+                mean += temp
+                scorewriter.writerow([temp])
+
+                if score <= temp:
+                    score = temp
+                    print(score)
+
+                best_solution, best_score = keep_best_solution(solution, \
+                    best_solution, best_score)
+                store_solution(best_solution)
+            print("For temperature", temperature + (5 * j), "a mean score of", mean / times, "has been found.")
+
+            # for i in range(100):
+            #     total_scores_array[i] = total_scores_array[i] / times
+            # plt.plot(range(len(total_scores_array)), total_scores_array)
+            # plt.xlabel("iteraties (x100)")
+            # plt.ylabel("score")
+            # plt.show()
 
     return best_solution, best_score, outfile, score
 
@@ -154,6 +173,7 @@ def run_algorithm(algo, solution, temperature, cooling, start_algorithm, \
         solution: Empty instance of solution object.
 
     """
+    scores_array = []
     # Make correct start solution.
     if start_algorithm == 1:
         solution = ga.greedy(solution)
@@ -170,17 +190,17 @@ def run_algorithm(algo, solution, temperature, cooling, start_algorithm, \
         # Set default if none specified.
         if route_iterations == 0 and connection_iterations == 0:
             route_iterations = 10000
-        solution = hillclimber_alg(solution, route_iterations, connection_iterations)
+        solution, scores_array = hillclimber_alg(solution, route_iterations, connection_iterations)
     elif algo == "annealing":
         # Set default if none specified.
         if route_iterations == 0 and connection_iterations == 0:
             connection_iterations = 10000
-        solution == annealing_alg(solution, cooling, temperature, \
+        solution, scores_array = annealing_alg(solution, cooling, temperature, \
             route_iterations, connection_iterations)
     else:
         exit()
 
-    return solution
+    return solution, scores_array
 
 
 def keep_best_solution(solution, best_solution, best_score):

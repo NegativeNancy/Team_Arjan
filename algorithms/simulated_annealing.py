@@ -27,29 +27,36 @@ def simulated_annealing(solution, cool_function, max_temp, steps_routes = 0, ste
             solution.route_list.append(route)
 
     score = solution.score()
+    scores_array = []
 
-    for step in range(steps_routes):
-        route_index, new_route = hc.iteration_routes(solution)
-        old_route, new_score, solution = propose_change(solution, route_index, new_route)
-        if determine_accpetance(steps_routes, step, max_temp, \
-            cool_function, score, new_score):
-            score = new_score
-        else:
-            # Revert the change.
-            solution.route_list[route_index] = old_route
 
-    for step in range(steps_connections):
-        # route_index, new_route = hc.iteration_routes(solution)
-        route_index, new_route = hc.iteration_connections(solution)
-        old_route, new_score, solution = propose_change(solution, route_index, new_route)
-        if determine_accpetance(steps_connections, step, max_temp, \
-            cool_function, score, new_score):
-            score = new_score
-        else:
-            # Revert the change.
-            solution.route_list[route_index] = old_route
+    for _ in range(int(steps_routes / 100)):
+        for step in range(100):
+            route_index, new_route = hc.iteration_routes(solution)
+            old_route, new_score, solution = propose_change(solution, route_index, new_route)
+            if determine_accpetance(steps_routes, step, max_temp, \
+                cool_function, score, new_score):
+                score = new_score
+            else:
+                # Revert the change.
+                solution.route_list[route_index] = old_route
+        scores_array.append(solution.score())
 
-    return solution
+
+    for _ in range(int(steps_connections / 100)):
+        for step in range(100):
+            # route_index, new_route = hc.iteration_routes(solution)
+            route_index, new_route = hc.iteration_connections(solution)
+            old_route, new_score, solution = propose_change(solution, route_index, new_route)
+            if determine_accpetance(steps_connections, step, max_temp, \
+                cool_function, score, new_score):
+                score = new_score
+            else:
+                # Revert the change.
+                solution.route_list[route_index] = old_route
+        scores_array.append(solution.score())
+
+    return solution, scores_array
 
 
 def propose_change(solution, route_index, new_route):

@@ -3,6 +3,8 @@ from classes import Route as rt
 from classes import Solution as sn
 from functions import helper
 import random as rd
+import numpy as np
+import matplotlib.pyplot as plt
 
 def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):
     """ Hillclimber algortihm that tries to find the optimal set of routes,
@@ -28,17 +30,23 @@ def hillclimber(solution, route_iterations = 10000, connection_iterations = 0):
 
     score = solution.score()
 
+    scores_array = []
+
     # Perform the route iteration the specified amount of times.
-    for _ in range(route_iterations):
-        route_index, new_route = iteration_routes(solution)
-        score, solution = check_for_improvement(score, solution, route_index, new_route)
+    for _ in range(int(route_iterations / 100)):
+        for _ in range(100):
+            route_index, new_route = iteration_routes(solution)
+            score, solution = check_for_improvement(score, solution, route_index, new_route)
+        scores_array.append(solution.score())
 
     # Perform the connection iteration the specified amount of times.
-    for _ in range(connection_iterations):
-        route_index, new_route = iteration_connections(solution)
-        score, solution = check_for_improvement(score, solution, route_index, new_route)
+    for _ in range(int(connection_iterations / 100)):
+        for _ in range(100):
+            route_index, new_route = iteration_connections(solution)
+            score, solution = check_for_improvement(score, solution, route_index, new_route)
+        scores_array.append(solution.score())
 
-    return solution
+    return solution, scores_array
 
 
 def iteration_routes(solution):

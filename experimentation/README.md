@@ -60,6 +60,18 @@ Ignoring Utrecht Centraal seems to generate a higher score. We think this caused
 
 Amsterdam Centraal is less important, and thus causes a lesser increase in the score. 
 
+## Some tests to the improvementrate of the hillclimbers route iterations.
+
+For the most difficult case, where all intercity stations in Netherland are concidered critical, our hillclimber with route iterations seemed to do very well. Thus it seemed very interesting to have a closer look on the avarage score it produces, and how fast it improves. In order to test this we ran 100 hillclimbers with 10000 route iterations and randomly generated input solutios. The results were promising, but the algorithm was still gaining score at a decent rate, so we ran the algorithm 20 more times, but now with 50000 iterations and random input.
+
+### Results
+
+The 20 runs with 50k iterations gave us a mean score just below 9400. The algorithm barely gained any points anymore,
+
+![the first 100 runs with 10000 iterations] (graps/100_hillclimber_random_input_10k_iterations.png)
+
+![20 runs with 50000 iterations] (graps/20_hillclimbers_random_input_50k_iterations.png)
+
 
 ## Acknowledgements
 

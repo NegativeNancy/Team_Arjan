@@ -59,3 +59,8 @@ The means of the scores are portrayed below.
 Ignoring Utrecht Centraal seems to generate a higher score. We think this caused by the fact that Utrecht is a central point, so it has lots of critical connections. Eliminating Utrecht Centraal from the equation causes there to be less critical connections, and thus less chance of missing a critical connection. 
 
 Amsterdam Centraal is less important, and thus causes a lesser increase in the score. 
+
+
+## Acknowledgements
+
+Spaghetti plots were created with the help of [python-graph-gallery.com](https://python-graph-gallery.com/124-spaghetti-plot/).

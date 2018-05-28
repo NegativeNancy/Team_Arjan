@@ -66,11 +66,15 @@ For the most difficult case, where all intercity stations in Netherland are conc
 
 ### Results
 
-The 20 runs with 50k iterations gave us a mean score just below 9400. The algorithm barely gained any points anymore,
+The 20 runs with 50k iterations gave us a mean score just below 9400.
 
 ![the first 100 runs with 10000 iterations](graphs/100_hillclimber_random_input_10k_iterations.png)
 
 ![20 runs with 50000 iterations](graphs/20_hillclimbers_random_input_50k_iterations.png)
+
+### Conclusion
+
+The hillclimber can reaches scores just below 9400 on avarage, it does this in about 40000 iterations, where after improvement is barely noticable. There were only 20 runs with 50K iterations, which is quite few. So more testing would be needed to be certain the scores won't increase further.
 
 
 ## Acknowledgements

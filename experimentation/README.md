@@ -68,9 +68,9 @@ For the most difficult case, where all intercity stations in Netherland are conc
 
 The 20 runs with 50k iterations gave us a mean score just below 9400. The algorithm barely gained any points anymore,
 
-![the first 100 runs with 10000 iterations] (graps/100_hillclimber_random_input_10k_iterations.png)
+![the first 100 runs with 10000 iterations](graps/100_hillclimber_random_input_10k_iterations.png)
 
-![20 runs with 50000 iterations] (graps/20_hillclimbers_random_input_50k_iterations.png)
+![20 runs with 50000 iterations](graps/20_hillclimbers_random_input_50k_iterations.png)
 
 
 ## Acknowledgements

@@ -60,9 +60,9 @@ Ignoring Utrecht Centraal seems to generate a higher score. We think this caused
 
 Amsterdam Centraal is less important, and thus causes a lesser increase in the score. 
 
-## Some tests to the improvementrate of the hillclimbers route iterations.
+## Some tests to the improvement-rate of the hillclimbers route iterations.
 
-For the most difficult case, where all intercity stations in Netherland are concidered critical, our hillclimber with route iterations seemed to do very well. Thus it seemed very interesting to have a closer look on the avarage score it produces, and how fast it improves. In order to test this we ran 100 hillclimbers with 10000 route iterations and randomly generated input solutios. The results were promising, but the algorithm was still gaining score at a decent rate, so we ran the algorithm 20 more times, but now with 50000 iterations and random input.
+For the most difficult case, where all intercity stations in the Netherlands are considered critical, our hillclimber with route iterations seemed to do very well. Thus, it seemed very interesting to have a closer look on the average score it produces, and how fast it improves. In order to test this we ran 100 hillclimbers with 10000 route iterations and randomly generated input solutions. The results were promising, but the algorithm was still gaining score at a decent rate, so we ran the algorithm 20 more times, but now with 50000 iterations and random input.
 
 ### Results
 
@@ -74,8 +74,7 @@ The 20 runs with 50k iterations gave us a mean score just below 9400.
 
 ### Conclusion
 
-The hillclimber can reaches scores just below 9400 on avarage, it does this in about 40000 iterations, where after improvement is barely noticable. There were only 20 runs with 50K iterations, which is quite few. So more testing would be needed to be certain the scores won't increase further.
-
+The hillclimber can reach scores just below 9400 on average, it does this in about 40000 iterations, where after improvement is barely noticeable. There were only 20 runs with 50K iterations, which is quite few. So more testing is needed to be certain the scores won't increase further.
 
 ## Acknowledgements
 
